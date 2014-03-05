@@ -9,7 +9,14 @@ def drawhistogram(vertices, nbins=20, normed=False, facecolor='green', alpha=0.5
 
     degrees = [vertices.getvertex(i).getindegree() for i in range(vertices.getnbofvertices())]
     n, bins, patches = plt.hist(degrees, bins=nbins, normed=normed, facecolor=facecolor, alpha=alpha, histtype=histtype, log=log)
+
+    normedlabel = ''
+    if normed:
+        normedlabel = ' (normalized)'
+
     plt.title('Degree distribution')
+    plt.xlabel('Indegree')
+    plt.ylabel('Number of nodes'+ normedlabel)
     plt.show()
 
 def logbins(amax, amin=0, base=LOGBINBASE):
@@ -48,5 +55,7 @@ def drawloglogdist(vertices, lbinsbase=LOGBINBASE, density=False):
     plt.plot(x, y, 'bo', xforlog, 10**p(logx), 'r-')
     plt.loglog()
     plt.title(u'Degree distribution (%s = %#.2f)' % (GAMMA, -1 * gamma))
+    plt.xlabel('Indegree')
+    plt.ylabel('Number of nodes')
     plt.show()
 

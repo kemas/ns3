@@ -345,7 +345,8 @@ class Channel(PyVizObject):
 class WiredLink(Link):
     def __init__(self, node1, node2):
         self._set_nodes(node1, node2)
-        self.canvas_item = goocanvas.Path(stroke_color="black", line_width=1.0)
+        ###self.canvas_item = goocanvas.Path(stroke_color="black", line_width=1.0)
+        self.canvas_item = goocanvas.Polyline(end_arrow=True)
         self.canvas_item.set_data("pyviz-object", self)
 
     def _set_nodes(self, node1, node2):
@@ -359,7 +360,8 @@ class WiredLink(Link):
     def update_points(self):
         pos1_x, pos1_y = self.node1.get_position()
         pos2_x, pos2_y = self.node2.get_position()
-        self.canvas_item.set_property("data", "M %r %r L %r %r" % (pos1_x, pos1_y, pos2_x, pos2_y))
+        ###self.canvas_item.set_property("data", "M %r %r L %r %r" % (pos1_x, pos1_y, pos2_x, pos2_y))
+        self.canvas_item.set_property("points", goocanvas.Points([(pos1_x, pos1_y), (pos2_x, pos2_y)]))
 
 #+++++++++++++++++
     def erase(self):

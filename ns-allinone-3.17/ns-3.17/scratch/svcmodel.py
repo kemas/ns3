@@ -150,6 +150,27 @@ def grow(vertices, m_add, m_dep, m_alt, alpha):
     for i in range(m_add):
         addnewnode(vertices, m_dep, m_alt, alpha)
 
+def print_info(vertices, m_init, m_add, m_dep, m_alt, alpha):
+    # print statistic
+    leftwidth = 10
+    print '========================='
+    print 'Parameters'
+    print '%s : %3d' % ('alpha'.ljust(leftwidth), alpha)
+    print '%s : %3d' % ('m_init'.ljust(leftwidth), m_init)
+    print '%s : %3d' % ('m_add'.ljust(leftwidth), m_add)
+    print '%s : %3d' % ('m_dep'.ljust(leftwidth), m_dep)
+    print '%s : %3d' % ('m_alt'.ljust(leftwidth), m_alt)
+
+    leftwidth = 35
+    print '========================='
+    print '%s : %5d' % ('Nodes created'.ljust(leftwidth), vertices.getnbofvertices())
+    print '%s : %5d' % ('Total indegree (outdegree)'.ljust(leftwidth), vertices.gettotdegree())
+    print '%s : %5d' % ('Number of strong ("AND") dependency'.ljust(leftwidth), vertices.gettotmandlinks())
+    print '%s : %8.2f' % ('Average'.ljust(leftwidth), float(vertices.gettotmandlinks()) / vertices.getnbofvertices())
+    print '%s : %5d' % ('Number of weak ("OR") dependency'.ljust(leftwidth), vertices.gettotaltlinks())
+    print '%s : %8.2f' % ('Average'.ljust(leftwidth), float(vertices.gettotaltlinks()) / vertices.getnbofvertices())
+    print '========================='
+
 def __test(argv):
     vertices = svc_nodes.Vertices()
     initnetwork(vertices, 10)

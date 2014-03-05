@@ -31,7 +31,7 @@ class AltLinks:
 
         #pdb.set_trace()
         idxls = self.getidxaltlink(idxvertex)
-        if idxls:
+        if idxls != None:
             # idxls != None, idxvertex exists
             # only add idxalt to the same list as idxvertex
             i = idxls[0]
@@ -81,6 +81,8 @@ class Vertex:
         self._channels = []
         self._altlinks = AltLinks() # list of list of vertex indices connected by outgoing links
         self._isactive = True
+        self._nbofmandlinks = 0
+        self._nbofaltlinks = 0
 
     def isactive(self):
         return self._isactive
@@ -88,6 +90,14 @@ class Vertex:
     def deactivate(self):
         # set active status to False
         self._isactive = False
+
+        # disconnect from all incoming links
+        for idxneighbor in self._inlinks:
+            self.disconnectfrom(idxneighbor)
+
+        # disconnect to all outgoing links
+        for idxneighbor in self._outlinks:
+            self.disconnectto(idxneighbor)
 
     def fail(self):
         # deactivate this vertex
@@ -114,6 +124,12 @@ class Vertex:
 
     def getoutdegree(self):
         return self._data[2]
+
+    def getnbofmandlinks(self):
+        return self._nbofmandlinks
+
+    def getnbofaltlinks(self):
+        return self._nbofaltlinks
 
     def _incrindegree(self, addby = 1):
         self._data[1] += addby
@@ -187,6 +203,9 @@ class Vertex:
     def isconnectedto(self, index):
         return self._outlinks.count(index)
 
+    def isconnectedfrom(self, index):
+        return self._inlinks.count(index)
+
     def ispartiallydepend(self, index):
         # return true if this vertex is partially depend on the vertex at index
         return self.isconnectedto(index) and self._altlinks.getidxaltlink(index)
@@ -204,9 +223,12 @@ class Vertex:
         # increment the out degree
         self._incroutdegree()
 
-        if indexexst:
+        if indexexst != 0:
             # add the information of alternate links to altlinks
             self._altlinks.addalt(indexexst, index)
+            self._nbofaltlinks += 1
+        else:
+            self._nbofmandlinks += 1
 
     def connectfrom(self, index):
         # connect another vertex to this vertex
@@ -235,19 +257,26 @@ class Vertex:
             idxls = self._altlinks.getidxaltlink(index)
             if idxls != None:
                 self._altlinks.delaltbyidxls(idxls[0], idxls[1])
+                self._nbofaltlinks -= 1
             else:
                 # no alternative, deactivate this vertex
-                self.deactivate()
+                # all incoming and outgoing links will be disconnected
+                # this process can be recursive, therefore node may have been deactivated before
+                self._nbofmandlinks -= 1
+                if self.isactive():
+                    self.deactivate()
 
     def disconnectfrom(self, index):
         # disconnect another vertex from this vertex (connected by inlink)
 
-        # get the link id of the vertex
-        idxlink = self.getinlinkbyver(index) 
-        # remove the vertex from inlinks
-        self._inlinks.pop(idxlink)
-        # decrement the indegree
-        self._decrindegree()
+        # checking the connectivity between this vertex and the vertex at index
+        if self.isconnectedfrom(index):
+            # get the link id of the vertex
+            idxlink = self.getinlinkbyver(index) 
+            # remove the vertex from inlinks
+            self._inlinks.pop(idxlink)
+            # decrement the indegree
+            self._decrindegree()
 
     def printinfo(self):
         print "data    : "+ str(self._data)
@@ -267,6 +296,8 @@ class Vertices:
         self._maxindegreeidx = None
         self._maxoutdegree = NODEGREE
         self._maxoutdegreeidx = None
+        self._totmandlinks = 0
+        self._totaltlinks = 0
 
     def getmaxindegree(self):
         return self._maxindegree
@@ -322,6 +353,12 @@ class Vertices:
     def gettotdegree(self):
         return self._totdegree
 
+    def gettotmandlinks(self):
+        return self._totmandlinks
+
+    def gettotaltlinks(self):
+        return self._totaltlinks
+
     def getvertex(self, index):
         return self._vertices[index]
 
@@ -349,6 +386,11 @@ class Vertices:
             # compare current maxoutdegree with the degree of indexp
             self._updmaxoutdegree(indexp)
 
+        if indexexst != None:
+            self._totaltlinks += 1
+        else:
+            self._totmandlinks += 1
+
     def disconnect(self, indexp, indexq):
         # diconnect the link from vertex p to vertex q
 
@@ -356,11 +398,17 @@ class Vertices:
         vertexq = self.getvertex(indexq)
 
         if vertexp.isconnectedto(indexq):
+            nbofmandlinks = vertexp.getnbofmandlinks()
+            nbofaltlinks = vertexp.getnbofaltlinks()
+
             vertexp.disconnectto(indexq)
             vertexq.disconnectfrom(indexp)
             self._totdegree -= 1
             self._updmaxindegree()
             self._updmaxoutdegree()
+
+            self._totmandlinks -= nbofmandlinks - vertexp.getnbofmandlinks()
+            self._totaltlinks -= nbofaltlinks - vertexp.getnbofaltlinks()
 
     def isconnected(self, indexp, indexq):
         # check if vertex p is connected to vertex q

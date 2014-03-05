@@ -156,9 +156,11 @@ def main(argv):
     for i in range(time):
         for j in range(freq):
             ns.core.Simulator.Schedule(ns.core.Seconds(i), svcmodel.grow, vertices, m_add, m_dep, m_alt, alpha)
-    ns.core.Simulator.Schedule(ns.core.Seconds(time + 1), svc_routines.drawloglogdist, vertices, lbinsbase, True)
+    ns.core.Simulator.Schedule(ns.core.Seconds(time), svcmodel.print_info, vertices, m_init, m_add, m_dep, m_alt, alpha)
+    ns.core.Simulator.Schedule(ns.core.Seconds(time + 1), svc_routines.drawhistogram, vertices, 20, False)
+    ns.core.Simulator.Schedule(ns.core.Seconds(time + 2), svc_routines.drawloglogdist, vertices, lbinsbase, True)
 
-    ns.core.Simulator.Stop(ns.core.Seconds(time + 2))
+    ns.core.Simulator.Stop(ns.core.Seconds(time + 3))
     ns.core.Simulator.Run()
     ns.core.Simulator.Destroy()
 
