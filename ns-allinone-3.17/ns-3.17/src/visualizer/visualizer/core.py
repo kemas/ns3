@@ -344,23 +344,22 @@ class Channel(PyVizObject):
 
 class WiredLink(Link):
     def __init__(self, node1, node2):
+        self._set_nodes(node1, node2)
+        self.canvas_item = goocanvas.Path(stroke_color="black", line_width=1.0)
+        self.canvas_item.set_data("pyviz-object", self)
+
+    def _set_nodes(self, node1, node2):
         assert isinstance(node1, Node)
         assert isinstance(node2, (Node, Channel))
         self.node1 = node1
         self.node2 = node2
-        #self.canvas_item = goocanvas.Path(line_width=1.0, stroke_color="black")
-        self.canvas_item = goocanvas.Polyline(line_width=1.0, stroke_color="blue", end_arrow=True)
-        self.canvas_item.set_data("pyviz-object", self)
         self.node1.links.append(self)
         self.node2.links.append(self)
 
     def update_points(self):
         pos1_x, pos1_y = self.node1.get_position()
         pos2_x, pos2_y = self.node2.get_position()
-        # shorten the second node position
-        
-        #self.canvas_item.set_property("data", "M %r %r L %r %r" % (pos1_x, pos1_y, pos2_x, pos2_y))
-        self.canvas_item.set_property("points", goocanvas.Points([(pos1_x, pos1_y), (pos2_x, pos2_y)]))
+        self.canvas_item.set_property("data", "M %r %r L %r %r" % (pos1_x, pos1_y, pos2_x, pos2_y))
 
 #+++++++++++++++++
     def erase(self):
@@ -369,21 +368,27 @@ class WiredLink(Link):
 
 #+++++++++++++++++
 class DirectedLink(WiredLink):
-    def __init__(self, node1, node2):
+    def __init__(self, node1, node2, stroke_color="black", line_width=1.0):
+        self._set_nodes(node1, node2)
+        self.canvas_item = goocanvas.Polyline(stroke_color=stroke_color, line_width=line_width, end_arrow=True)
+        self.canvas_item.set_data("pyviz-object", self)
+
+    def _set_nodes(self, node1, node2):
         assert isinstance(node1, Node)
         assert isinstance(node2, (Node, Channel))
         self.node1 = node1
         self.node2 = node2
-        self.canvas_item = goocanvas.Polyline(line_width=1.0, stroke_color="black", end_arrow=True)
-        self.canvas_item.set_data("pyviz-object", self)
         self.node1.links.append(self)
-        #self.node2.links.append(self)
 
     def update_points():
         pos1_x, pos1_y = self.node1.get_position()
         pos2_x, pos2_y = self.node2.get_position()
         self.canvas_item.set_property("points", goocanvas.Points([(pos1_x, pos1_y), (pos2_x, pos2_y)]))
-        
+
+class AlternateLink(DirectedLink):
+    def __init__(self, node1, node2, stroke_color="blue"):
+        super(AlternateLink, self).__init__(node1, node2, stroke_color=stroke_color)
+
 #+++++++++++++++++
 
 class SimulationThread(threading.Thread):
