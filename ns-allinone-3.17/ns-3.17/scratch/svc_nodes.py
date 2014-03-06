@@ -14,7 +14,8 @@ class AltLinks:
 
     def __init__(self):
         self._ls = [] # list of list of links
-        self._ref = {} # reference dictionary {idxvertex: [index, index], ...}
+        self._ref = {} # reference dictionary {p: [a, b], ...}
+                       # p == _ls[a][b]
 
     def getidxaltlink(self, idxvertex):
         # get the index of idxvertex in _ls
@@ -26,26 +27,30 @@ class AltLinks:
 
     def addalt(self, idxvertex, idxalt):
         # add an alternative of idxvertex
-        # idxvertex maybe exist
-        # idxalt does not exist
+        # idxvertex may have been added to altlinks (return 1)
+        # idxalt has not been added to altlinks (return 2)
 
         #pdb.set_trace()
         idxls = self.getidxaltlink(idxvertex)
         if idxls != None:
-            # idxls != None, idxvertex exists
-            # only add idxalt to the same list as idxvertex
+            # idxls != None, list containing idxvertex exists
+            # add idxalt to the same list as idxvertex
             i = idxls[0]
             self._ls[i].append(idxalt)
             # add the indices of idxalt to the reference dictionary _ref
             self._ref[idxalt] = [i, len(self._ls[i]) - 1]
+
+            return 1
         else:
-            # idxvertex does not exist
+            # idxvertex has not been added
             # add both idvertex and idxalt
             self._ls.append([idxvertex, idxalt])
             i = len(self._ls) - 1
             # add to the reference dictionary _ref
             self._ref[idxvertex] = [i, 0]
             self._ref[idxalt] = [i, 1]
+
+            return 2
 
     def delaltbyidxls(self, i, j):
         # remove index at [i][j]
@@ -70,6 +75,11 @@ class AltLinks:
         # idxvertex is assumed to exist, no checking is needed
         i, j = getidxaltlink(idxvertex)
         self.delaltbyidxls(i, j)
+
+    def printinfo(self):
+        print "** altlinks printinfo"
+        print self._ls
+        print self._ref
 
 class Vertex:
     # class of Vertex in a directed network
@@ -99,23 +109,23 @@ class Vertex:
         for idxneighbor in self._outlinks:
             self.disconnectto(idxneighbor)
 
-    def fail(self):
-        # deactivate this vertex
-        # propagate failure to other fully dependent nodes
-
-        # deactivate
-        self.deactivate()
-        # set color
-        # node...
-
-        # propagate failure
-        for idxneighbor in self._inlinks:
-            ###wrong, idxneighbor != neighbor
-            if not neighbor.ispartiallydepend(index) and neighbor.isactive():
-                # neighbor is fully depend and active
-                # propagate the deactivation
-                neighbor.fail()
-
+#    def fail(self):
+#        # deactivate this vertex
+#        # propagate failure to other fully dependent nodes
+#
+#        # deactivate
+#        self.deactivate()
+#        # set color
+#        # node...
+#
+#        # propagate failure
+#        for idxneighbor in self._inlinks:
+#            ###wrong, idxneighbor != neighbor
+#            if not neighbor.ispartiallydepend(index) and neighbor.isactive():
+#                # neighbor is fully depend and active
+#                # propagate the deactivation
+#                neighbor.fail()
+#
     def getnode(self):
         return self._data[0]
 
@@ -223,10 +233,9 @@ class Vertex:
         # increment the out degree
         self._incroutdegree()
 
-        if indexexst != 0:
+        if indexexst != None:
             # add the information of alternate links to altlinks
-            self._altlinks.addalt(indexexst, index)
-            self._nbofaltlinks += 1
+            self._nbofaltlinks += self._altlinks.addalt(indexexst, index)
         else:
             self._nbofmandlinks += 1
 
@@ -279,10 +288,12 @@ class Vertex:
             self._decrindegree()
 
     def printinfo(self):
+        print "** vertex printinfo"
         print "data    : "+ str(self._data)
         print "status  : "+ str(self.isactive())
         print "inlinks : "+ str(self._inlinks)
         print "outlinks: "+ str(self._outlinks)
+        self._altlinks.printinfo()
 
     def printaltlinks(self):
         print self._altlinks._ls
@@ -296,56 +307,24 @@ class Vertices:
         self._maxindegreeidx = None
         self._maxoutdegree = NODEGREE
         self._maxoutdegreeidx = None
+        self._maxmandlinks = NODEGREE
+        self._maxmandlinksidx = None
+        self._maxaltlinks = NODEGREE
+        self._maxaltlinksidx = None
         self._totmandlinks = 0
         self._totaltlinks = 0
 
     def getmaxindegree(self):
         return self._maxindegree
 
-#    def getmaxoutdegree(self):
-#        return self._maxoutdegree
+    def getmaxindegreeidx(self):
+        return self._maxindegreeidx
 
-    def _updmaxindegree(self, idx=None):
-        if idx != None:
-            # only compares current maxindegree with the degree of the vertex at idx
-            vertex = self.getvertex(idx)
-            if vertex.getindegree() > self._maxindegree:
-                self._maxindegree = vertex.getindegree()
-                self._maxindegreeidx = idx
+    def getmaxoutdegree(self):
+        return self._maxoutdegree
 
-        else:
-            # idx == None, find new max value
-            maxindegree = NODEGREE
-            maxindegreeidx = None
-            for idx in range(self.getnbofvertices()):
-                vertex = self.getvertex(idx)
-                if vertex.getindegree() > maxindegree:
-                    maxindegree = vertex.getindegree()
-                    maxindegreeidx = idx
-
-            self._maxindegree = maxindegree
-            self._maxindegreeidx = maxindegreeidx
-
-    def _updmaxoutdegree(self, idx=None):
-        if idx != None:
-            # only compares current maxoutdegree with the degree of the vertex at idx
-            vertex = self.getvertex(idx)
-            if vertex.getoutdegree() > self._maxoutdegree:
-                self._maxoutdegree = vertex.getoutdegree()
-                self._maxoutdegreeidx = idx
-
-        else:
-            # idx == None, find new max value
-            maxoutdegree = NODEGREE
-            maxoutdegreeidx = None
-            for idx in range(self.getnbofvertices()):
-                vertex = self.getvertex(idx)
-                if vertex.getoutdegree() > maxoutdegree:
-                    maxoutdegree = vertex.getoutdegree()
-                    maxoutdegreeidx = idx
-
-            self._maxoutdegree = maxoutdegree
-            self._maxoutdegreeidx = maxoutdegreeidx
+    def getmaxoutdegreeidx(self):
+        return self._maxoutdegreeidx
 
     def getnbofvertices(self):
         return len(self._vertices)
@@ -359,17 +338,190 @@ class Vertices:
     def gettotaltlinks(self):
         return self._totaltlinks
 
+    def getmaxmandlinks(self):
+        return self._maxmandlinks
+    
+    def getmaxmandlinksidx(self):
+        return self._maxmandlinksidx
+    
+    def getmaxaltlinks(self):
+        return self._maxaltlinks
+    
+    def getmaxaltlinksidx(self):
+        return self._maxaltlinksidx
+
+    def _updallstats(self, idxsource=None, idxtarget=None, ismandincl=True, isaltincl=True):
+        # update values of maxindegree, maxoutdegree, maxmandlinks, maxaltlinks
+        # and their corresponding idx (e.g. maxindegreeidx)
+        # idxsource is the vertex index where outoing links are connected from
+        # idxtarget is the vertex index where incoming links are connected to
+
+        if idxsource != None or idxtarget != None:
+
+            if idxsource != None:
+                vertex = self.getvertex(idxsource)
+
+                if vertex.getoutdegree() > self._maxoutdegree:
+                    self._maxoutdegree = vertex.getoutdegree()
+                    self._maxoutdegreeidx = idxsource
+
+                if ismandincl and vertex.getnbofmandlinks() > self._maxmandlinks:
+                    self._maxmandlinks = vertex.getnbofmandlinks()
+                    self._maxmandlinksidx = idxsource
+
+                if isaltincl and vertex.getnbofaltlinks() > self._maxaltlinks:
+                    self._maxaltlinks = vertex.getnbofaltlinks()
+                    self._maxaltlinksidx = idxsource
+
+            if idxtarget != None:
+                vertex = self.getvertex(idxtarget)
+
+                if vertex.getindegree() > self._maxindegree:
+                    self._maxindegree = vertex.getindegree()
+                    self._maxindegreeidx = idxtarget
+
+        else:
+            # idxsource and idxtarget are None
+            # compare all existing nodes to get the stats
+
+            maxindegree = NODEGREE
+            maxindegreeidx = None
+            maxoutdegree = NODEGREE
+            maxoutdegreeidx = None
+            if ismandincl:
+                maxmandlinks = NODEGREE
+                maxmandlinksidx = None
+            if isaltincl:
+                maxaltlinks = NODEGREE
+                maxaltlinksidx = None
+
+            for idx in range(self.getnbofvertices()):
+                vertex = self.getvertex(idx)
+
+                if vertex.getindegree() > maxindegree:
+                    maxindegree = vertex.getindegree()
+                    maxindegreeidx = idx
+
+                if vertex.getoutdegree() > maxoutdegree:
+                    maxoutdegree = vertex.getoutdegree()
+                    maxoutdegreeidx = idx
+
+                if ismandincl and vertex.getnbofmandlinks() > maxmandlinks:
+                    maxmandlinks = vertex.getnbofmandlinks()
+                    maxmandlinksidx = idx
+
+                if isaltincl and vertex.getnbofaltlinks() > maxaltlinks:
+                    maxaltlinks = vertex.getnbofaltlinks()
+                    maxaltlinksidx = idx
+
+            self._maxindegree = maxindegree
+            self._maxindegreeidx = maxindegreeidx
+            self._maxoutdegree = maxoutdegree
+            self._maxoutdegreeidx = maxoutdegreeidx
+            if ismandincl:
+                self._maxmandlinks = maxmandlinks
+                self._maxmandlinksidx = maxmandlinksidx
+            if isaltincl:
+                self._maxaltlinks = maxaltlinks
+                self._maxaltlinksidx = maxaltlinksidx
+
+#    def _updmaxindegree(self, idx=None):
+#        if idx != None:
+#            # only compares current maxindegree with the degree of the vertex at idx
+#            vertex = self.getvertex(idx)
+#            if vertex.getindegree() > self._maxindegree:
+#                self._maxindegree = vertex.getindegree()
+#                self._maxindegreeidx = idx
+#
+#        else:
+#            # idx == None, find new max value
+#            maxindegree = NODEGREE
+#            maxindegreeidx = None
+#            for idx in range(self.getnbofvertices()):
+#                vertex = self.getvertex(idx)
+#                if vertex.getindegree() > maxindegree:
+#                    maxindegree = vertex.getindegree()
+#                    maxindegreeidx = idx
+#
+#            self._maxindegree = maxindegree
+#            self._maxindegreeidx = maxindegreeidx
+#
+#    def _updmaxoutdegree(self, idx=None):
+#        if idx != None:
+#            # only compares current maxoutdegree with the degree of the vertex at idx
+#            vertex = self.getvertex(idx)
+#            if vertex.getoutdegree() > self._maxoutdegree:
+#                self._maxoutdegree = vertex.getoutdegree()
+#                self._maxoutdegreeidx = idx
+#
+#        else:
+#            # idx == None, find new max value
+#            maxoutdegree = NODEGREE
+#            maxoutdegreeidx = None
+#            for idx in range(self.getnbofvertices()):
+#                vertex = self.getvertex(idx)
+#                if vertex.getoutdegree() > maxoutdegree:
+#                    maxoutdegree = vertex.getoutdegree()
+#                    maxoutdegreeidx = idx
+#
+#            self._maxoutdegree = maxoutdegree
+#            self._maxoutdegreeidx = maxoutdegreeidx
+#
+#    def _updmaxmandlinks(self, idx=None):
+#        if idx != None:
+#            # only compares current maxmandlinks with the one of the vertex at idx
+#            vertex = self.getvertex(idx)
+#            if vertex.getnbofmandlinks() > self._maxmandlinks:
+#                self._maxmandlinks = vertex.getnbofmandlinks()
+#                self._maxmandlinksidx = idx
+#
+#        else:
+#            # idx == None, find new max value
+#            maxmandlinks = NODEGREE
+#            maxmandlinksidx = None
+#            for idx in range(self.getnbofvertices()):
+#                vertex = self.getvertex(idx)
+#                if vertex.getnbofmandlinks() > maxmandlinks:
+#                    maxmandlinks = vertex.getnbofmandlinks()
+#                    maxmandlinksidx = idx
+#
+#            self._maxmandlinks = maxmandlinks
+#            self._maxmandlinksidx = maxmandlinksidx
+#
+#    def _updmaxaltlinks(self, idx=None):
+#        if idx != None:
+#            # only compares current maxaltlinks with the one of the vertex at idx
+#            vertex = self.getvertex(idx)
+#            if vertex.getnbofaltlinks() > self._maxaltlinks:
+#                self._maxaltlinks = vertex.getnbofaltlinks()
+#                self._maxaltlinksidx = idx
+#
+#        else:
+#            # idx == None, find new max value
+#            maxaltlinks = NODEGREE
+#            maxaltlinksidx = None
+#            for idx in range(self.getnbofvertices()):
+#                vertex = self.getvertex(idx)
+#                if vertex.getnbofaltlinks() > maxaltlinks:
+#                    maxaltlinks = vertex.getnbofaltlinks()
+#                    maxaltlinksidx = idx
+#
+#            self._maxaltlinks = maxaltlinks
+#            self._maxaltlinksidx = maxaltlinksidx
+#
     def getvertex(self, index):
         return self._vertices[index]
 
     def addvertex(self, vertex):
-        idxnew = self.getnbofvertices()
+        # add a newly created vertex
+        # currently not connected to existing vertex
+        # no need to update stats
+
+        idxnew = self.getnbofvertices() # new vertex will be appended at the end of the list
         self._vertices.append(vertex)
         self._totdegree += vertex.getindegree()
-        self._updmaxindegree(idxnew)
-        self._updmaxoutdegree(idxnew)
 
-        return self.getnbofvertices() - 1
+        return idxnew
 
     def connect(self, indexp, indexq, channel, indexexst=None):
         # connect vertex p to vertex q
@@ -381,10 +533,9 @@ class Vertices:
             vertexp.connectto(indexq, channel, indexexst)
             vertexq.connectfrom(indexp)
             self._totdegree += 1
-            # compare current maxindegree with the degree of indexq
-            self._updmaxindegree(indexq)
-            # compare current maxoutdegree with the degree of indexp
-            self._updmaxoutdegree(indexp)
+
+            # update stats
+            self._updallstats(indexp, indexq, ismandincl = (indexexst == None), isaltincl = (indexexst != None))
 
         if indexexst != None:
             self._totaltlinks += 1
@@ -404,8 +555,7 @@ class Vertices:
             vertexp.disconnectto(indexq)
             vertexq.disconnectfrom(indexp)
             self._totdegree -= 1
-            self._updmaxindegree()
-            self._updmaxoutdegree()
+            self._updallstats()
 
             self._totmandlinks -= nbofmandlinks - vertexp.getnbofmandlinks()
             self._totaltlinks -= nbofaltlinks - vertexp.getnbofaltlinks()

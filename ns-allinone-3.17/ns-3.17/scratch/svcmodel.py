@@ -165,10 +165,18 @@ def print_info(vertices, m_init, m_add, m_dep, m_alt, alpha):
     print '========================='
     print '%s : %5d' % ('Nodes created'.ljust(leftwidth), vertices.getnbofvertices())
     print '%s : %5d' % ('Total indegree (outdegree)'.ljust(leftwidth), vertices.gettotdegree())
+    print '%s : %5d (#%d)' % ('Max indegree'.ljust(leftwidth), vertices.getmaxindegree(), vertices.getmaxindegreeidx())
+    vertices.getvertex(vertices.getmaxindegreeidx()).printinfo()
+    print '%s : %5d (#%d)' % ('Max outdegree'.ljust(leftwidth), vertices.getmaxoutdegree(), vertices.getmaxoutdegreeidx())
+    vertices.getvertex(vertices.getmaxoutdegreeidx()).printinfo()
     print '%s : %5d' % ('Number of strong ("AND") dependency'.ljust(leftwidth), vertices.gettotmandlinks())
+    print '%s : %5d (#%d)' % ('Max number'.ljust(leftwidth), vertices.getmaxmandlinks(), vertices.getmaxmandlinksidx())
     print '%s : %8.2f' % ('Average'.ljust(leftwidth), float(vertices.gettotmandlinks()) / vertices.getnbofvertices())
+    vertices.getvertex(vertices.getmaxmandlinksidx()).printinfo()
     print '%s : %5d' % ('Number of weak ("OR") dependency'.ljust(leftwidth), vertices.gettotaltlinks())
+    print '%s : %5d (#%d)' % ('Max number'.ljust(leftwidth), vertices.getmaxaltlinks(), vertices.getmaxaltlinksidx())
     print '%s : %8.2f' % ('Average'.ljust(leftwidth), float(vertices.gettotaltlinks()) / vertices.getnbofvertices())
+    vertices.getvertex(vertices.getmaxaltlinksidx()).printinfo()
     print '========================='
 
 def __test(argv):
