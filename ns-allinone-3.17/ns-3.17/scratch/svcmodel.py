@@ -27,9 +27,22 @@ def addnode(vertices):
 
 def randomfail(vertices):
     # choose a node randomly and make it fails
-    nver = vertices.getnbofvertices()
-    index = random.randrange(nver)
-    vertices.getvertex(index).fail()
+    totmandlinks = vertices.gettotmandlinks()
+    totaltlinks = vertices.gettotaltlinks()
+
+    nact = vertices.getnbofactive()
+    if not nact:
+        # no vertices in the network
+        return
+
+    index = random.randrange(nact)
+    vertices.dofail(vertices.getindexbyact(index))
+
+    vertices.analyzer.fail(
+        vertices.getnbofremoved()
+        , vertices.getnboffail()
+        , vertices.analyzer.getmandfail() + totmandlinks - vertices.gettotmandlinks()
+        , vertices.analyzer.getaltfail() + totaltlinks - vertices.gettotaltlinks())
 
 def connect(vertices, indexp, indexq, indexexst=None):
     # connect node p to node q
@@ -55,7 +68,7 @@ def initnetwork(vertices, m_init):
     for i in range(m_init):
         addnode(vertices)
 
-def choosenode(vertices, alpha=0, nbofnodes=1):
+def choosenodes(vertices, alpha=0, nbofnodes=1):
     # choose nbofnodes nodes based on BA preferential attachment with alpha as initial attractiveness
     # a node with higher indegree is more likely to be chosen than nodes with lower indegree
 
@@ -116,13 +129,13 @@ def addnewnode(vertices, m_dep, m_alt, alpha):
         m_dep_i = nver
 
     # choose existing nodes to be connected to using preferential attachment
-    lsnodeidx = choosenode(vertices, alpha, m_dep_i)
+    lsnodeidx = choosenodes(vertices, alpha, m_dep_i)
 
     # add one node
     indexp = addnode(vertices)
 
+    sumalt = 0
     # create m_dep_i links
-    #for j in range(m_dep_i):
     for indexq in lsnodeidx:
 
         # create link to the node if they are not connected
@@ -133,6 +146,7 @@ def addnewnode(vertices, m_dep, m_alt, alpha):
             m_alt_j = random.randrange(m_alt)
             if m_alt_j > nverless:
                 m_alt_j = nverless
+            sumalt += m_alt_j
 
             # create m_alt_j links
             for k in range(m_alt_j):
@@ -150,34 +164,67 @@ def grow(vertices, m_add, m_dep, m_alt, alpha):
     for i in range(m_add):
         addnewnode(vertices, m_dep, m_alt, alpha)
 
-def print_info(vertices, m_init, m_add, m_dep, m_alt, alpha):
+    vertices.analyzer.grow(
+        vertices.getnbofvertices()
+        , vertices.gettotmandlinks()
+        , vertices.gettotaltlinks())
+
+def print_params(vertices, m_init, m_add, m_dep, m_alt, alpha, timegrow, timefail, freq):
     # print statistic
     leftwidth = 10
     print '========================='
     print 'Parameters'
-    print '%s : %3d' % ('alpha'.ljust(leftwidth), alpha)
-    print '%s : %3d' % ('m_init'.ljust(leftwidth), m_init)
-    print '%s : %3d' % ('m_add'.ljust(leftwidth), m_add)
-    print '%s : %3d' % ('m_dep'.ljust(leftwidth), m_dep)
-    print '%s : %3d' % ('m_alt'.ljust(leftwidth), m_alt)
+    print '%s : %6d' % ('alpha'.ljust(leftwidth), alpha)
+    print '%s : %6d' % ('m_init'.ljust(leftwidth), m_init)
+    print '%s : %6d' % ('m_add'.ljust(leftwidth), m_add)
+    print '%s : %6d' % ('m_dep'.ljust(leftwidth), m_dep)
+    print '%s : %6d' % ('m_alt'.ljust(leftwidth), m_alt)
+    print '%s : %6d' % ('timegrow'.ljust(leftwidth), timegrow)
+    print '%s : %6d' % ('timefail'.ljust(leftwidth), timefail)
+    print '%s : %6d' % ('freq'.ljust(leftwidth), freq)
 
+def print_stats(vertices):
     leftwidth = 35
     print '========================='
     print '%s : %5d' % ('Nodes created'.ljust(leftwidth), vertices.getnbofvertices())
     print '%s : %5d' % ('Total indegree (outdegree)'.ljust(leftwidth), vertices.gettotdegree())
     print '%s : %5d (#%d)' % ('Max indegree'.ljust(leftwidth), vertices.getmaxindegree(), vertices.getmaxindegreeidx())
-    vertices.getvertex(vertices.getmaxindegreeidx()).printinfo()
+    #vertices.getvertex(vertices.getmaxindegreeidx()).printinfo()
     print '%s : %5d (#%d)' % ('Max outdegree'.ljust(leftwidth), vertices.getmaxoutdegree(), vertices.getmaxoutdegreeidx())
-    vertices.getvertex(vertices.getmaxoutdegreeidx()).printinfo()
+    #vertices.getvertex(vertices.getmaxoutdegreeidx()).printinfo()
     print '%s : %5d' % ('Number of strong ("AND") dependency'.ljust(leftwidth), vertices.gettotmandlinks())
     print '%s : %5d (#%d)' % ('Max number'.ljust(leftwidth), vertices.getmaxmandlinks(), vertices.getmaxmandlinksidx())
     print '%s : %8.2f' % ('Average'.ljust(leftwidth), float(vertices.gettotmandlinks()) / vertices.getnbofvertices())
-    vertices.getvertex(vertices.getmaxmandlinksidx()).printinfo()
+    #vertices.getvertex(vertices.getmaxmandlinksidx()).printinfo()
     print '%s : %5d' % ('Number of weak ("OR") dependency'.ljust(leftwidth), vertices.gettotaltlinks())
-    print '%s : %5d (#%d)' % ('Max number'.ljust(leftwidth), vertices.getmaxaltlinks(), vertices.getmaxaltlinksidx())
+    print '%s : %5d (#%d)' % ('Max number'.ljust(leftwidth), vertices.getmaxaltlinks() or svc_nodes.NODEGREE, vertices.getmaxaltlinksidx() or svc_nodes.NODEGREE)
     print '%s : %8.2f' % ('Average'.ljust(leftwidth), float(vertices.gettotaltlinks()) / vertices.getnbofvertices())
-    vertices.getvertex(vertices.getmaxaltlinksidx()).printinfo()
+    #vertices.getvertex(vertices.getmaxaltlinksidx()).printinfo()
+
+def print_aftermath(vertices):
+    leftwidth = 35
     print '========================='
+    print '%s : %5d' % ('Nodes created'.ljust(leftwidth), vertices.getnbofvertices())
+    print '%s : %5d' % ('Fail nodes'.ljust(leftwidth), vertices.getnboffail())
+#    print 'nodescreated'
+#    print vertices.analyzer.nodescreated
+#    print 'nodesremoved'
+#    print vertices.analyzer.nodesremoved
+#    print 'nodesfailed'
+#    print vertices.analyzer.nodesfail
+#    print 'linkscreated'
+#    print vertices.analyzer.linkscreated
+#    print 'linksfailed'
+#    print vertices.analyzer.linksfail
+#    print 'altcreated'
+#    print vertices.analyzer.altcreated
+#    print 'altfail'
+#    print vertices.analyzer.altfail
+#    print 'mandcreated'
+#    print vertices.analyzer.mandcreated
+#    print 'mandfail'
+#    print vertices.analyzer.mandfail
+    vertices.analyzer.plotfailure()
 
 def __test(argv):
     vertices = svc_nodes.Vertices()
@@ -185,7 +232,7 @@ def __test(argv):
     print "### Print Info vertices ###"
     vertices.printinfo()
     print "### Choose node ###"
-    print choosenode(vertices, 10, 3)
+    print choosenodes(vertices, 10, 3)
     print "### grow(vertices, 1, 2, 2, 10) ###"
     for i in range(10):
         grow(vertices, 1, 2, 2, 10)

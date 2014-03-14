@@ -40,13 +40,16 @@ import svc_routines
 
 MAX_MINIT = 100
 MAX_MADD = 10
-MAX_MDEP = 10
-MAX_MALT = 10
+MAX_MDEP = 21
+MAX_MALT = 21
 #MAX_ALPHA = 1000
-TIME = 100
-MAX_TIME = 100000
+TIMEGROW = 100
+MAX_TIMEGROW = 100000
+TIMEFAIL = 10
+MAX_TIMEFAIL = 100000
 FREQ = 1
 MAX_FREQ = 10
+FILENAME = 'svcsim.json'
 
 def main(argv):
     cmd = ns.core.CommandLine()
@@ -66,11 +69,17 @@ def main(argv):
     cmd.alpha = None
     cmd.AddValue("alpha", "The inital attractiveness")
 
-    cmd.time = None
-    cmd.AddValue("time", "The duration (seconds) of the network simulation")
+    cmd.timegrow = None
+    cmd.AddValue("timegrow", "The duration (seconds) for the network to grow")
+
+    cmd.timefail = None
+    cmd.AddValue("timefail", "The duration (seconds) when failure is performed to the network")
 
     cmd.freq = None
     cmd.AddValue("freq", "How many times m_add nodes will be added to the network for each second")
+
+    cmd.filename = None
+    cmd.AddValue("filename", "File name to save the result in json format")
 
     cmd.Parse(argv)
 
@@ -78,8 +87,8 @@ def main(argv):
         m_init = svcmodel.M_INIT
     else:
         m_init = int(cmd.m_init)
-        if m_init > MAX_M_INIT:
-            print "Invalid argument: m_init should not be higher than %d" % MAX_M_INIT
+        if m_init > MAX_MINIT:
+            print "Invalid argument: m_init should not be higher than %d" % MAX_MINIT
             sys.exit()
 
     if cmd.m_add is None:
@@ -100,8 +109,8 @@ def main(argv):
         if m_dep > m_init:
             print "Invalid argument: m_dep should not be higher than m_init"
             sys.exit()
-        elif m_dep > MAX_DEP:
-            print "Invalid argument: m_dep should not be higher than %d" % MAX_M_DEP
+        elif m_dep > MAX_MDEP:
+            print "Invalid argument: m_dep should not be higher than %d" % MAX_MDEP
             sys.exit()
 
     if cmd.m_alt is None:
@@ -111,8 +120,8 @@ def main(argv):
         if m_alt > m_init:
             print "Invalid argument: m_alt should not be higher than m_init"
             sys.exit()
-        elif m_alt > MAX_M_ALT:
-            print "Invalid argument: m_alt should not be higher than %d" % MAX_M_ALT
+        elif m_alt > MAX_MALT:
+            print "Invalid argument: m_alt should not be higher than %d" % MAX_MALT
             sys.exit()
 
     if cmd.alpha is None:
@@ -120,12 +129,20 @@ def main(argv):
     else:
         alpha = int(cmd.alpha)
 
-    if cmd.time is None:
-        time = TIME
+    if cmd.timegrow is None:
+        timegrow = TIMEGROW
     else:
-        time = int(cmd.time)
-        if time > MAX_TIME:
-            print "Invalid argument: time should not be higher than %d" % MAX_TIME
+        timegrow = int(cmd.timegrow)
+        if timegrow > MAX_TIMEGROW:
+            print "Invalid argument: timegrow should not be higher than %d" % MAX_TIMEGROW
+            sys.exit()
+
+    if cmd.timefail is None:
+        timefail = TIMEFAIL
+    else:
+        timefail = int(cmd.timefail)
+        if timefail > MAX_TIMEFAIL:
+            print "Invalid argument: timefail should not be higher than %d" % MAX_TIMEFAIL
             sys.exit()
 
     if cmd.freq is None:
@@ -136,13 +153,18 @@ def main(argv):
             print "Invalid argument: freq should not be higher than %d" % MAX_FREQ
             sys.exit()
 
+    if cmd.filename is None:
+        filename = FILENAME
+    else:
+        filename = filename
+
     # prepare the network
     vertices = svc_nodes.Vertices()
     # initialize the network with some number of nodes
     svcmodel.initnetwork(vertices, m_init)
 
     # set lbinsbase value for loglog plotting
-    step = time * freq
+    step = timegrow * freq
     if step >= 10000:
         lbinsbase = 1.2
     elif step >= 1000:
@@ -152,15 +174,27 @@ def main(argv):
     else:
         lbinsbase = 1.01
 
-    #ns.core.Simulator.Stop(ns.core.Seconds(30.0))
-    for i in range(time):
+    ns.core.Simulator.Schedule(ns.core.Seconds(0), svcmodel.print_params, vertices, m_init, m_add, m_dep, m_alt, alpha, timegrow, timefail, freq)
+
+    # network growth
+    for i in range(timegrow):
         for j in range(freq):
             ns.core.Simulator.Schedule(ns.core.Seconds(i), svcmodel.grow, vertices, m_add, m_dep, m_alt, alpha)
-    ns.core.Simulator.Schedule(ns.core.Seconds(time), svcmodel.print_info, vertices, m_init, m_add, m_dep, m_alt, alpha)
-    ns.core.Simulator.Schedule(ns.core.Seconds(time + 1), svc_routines.drawhistogram, vertices, 20, False)
-    ns.core.Simulator.Schedule(ns.core.Seconds(time + 2), svc_routines.drawloglogdist, vertices, lbinsbase, True)
 
-    ns.core.Simulator.Stop(ns.core.Seconds(time + 3))
+#    ns.core.Simulator.Schedule(ns.core.Seconds(timegrow + 1), svc_routines.drawhistogram, vertices, 20, False)
+#    ns.core.Simulator.Schedule(ns.core.Seconds(timegrow + 2), svc_routines.drawloglogdist, vertices, lbinsbase, True)
+    ns.core.Simulator.Schedule(ns.core.Seconds(timegrow), svcmodel.print_stats, vertices)
+
+    # network failure
+    timelimit = timegrow + timefail
+    for i in range(timegrow, timelimit):
+        for j in range(freq):
+            ns.core.Simulator.Schedule(ns.core.Seconds(i), svcmodel.randomfail, vertices)
+
+    ns.core.Simulator.Schedule(ns.core.Seconds(timelimit), svcmodel.print_aftermath, vertices)
+    ns.core.Simulator.Schedule(ns.core.Seconds(timelimit), vertices.analyzer.savetofile, filename)
+
+    ns.core.Simulator.Stop(ns.core.Seconds(timelimit + 1))
     ns.core.Simulator.Run()
     ns.core.Simulator.Destroy()
 

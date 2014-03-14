@@ -5,6 +5,7 @@
 
 #import pdb
 import sys
+import analyzer
 
 NODEGREE = -999
 
@@ -16,6 +17,7 @@ class AltLinks:
         self._ls = [] # list of list of links
         self._ref = {} # reference dictionary {p: [a, b], ...}
                        # p == _ls[a][b]
+        #self._altlength = [] # list of list length
 
     def getidxaltlink(self, idxvertex):
         # get the index of idxvertex in _ls
@@ -66,6 +68,19 @@ class AltLinks:
             lsidx = self._ls.pop(i)
             # remove the lone idxvertex from the reference dictionary
             self._ref.pop(lsidx[0])
+            
+            # update the reference value
+            for k in range(i, len(self._ls)):
+                for idxvertex in self._ls[k]:
+                    self._ref[idxvertex][0] = self._ref[idxvertex][0] - 1
+        else:
+            # there are more than one remaining indices
+            # update the reference value
+            for idxvertex in self._ls[i][j:]:
+                self._ref[idxvertex][1] = self._ref[idxvertex][1] - 1
+#            for k in range(j, len(self._ls[i])):
+#                idxvertex = self._ls[i][k]
+#                self._ref[idxvertex] = [i, k]
 
     def delaltbyidxvertex(self, idxvertex):
         # remove idxvertex
@@ -94,38 +109,19 @@ class Vertex:
         self._nbofmandlinks = 0
         self._nbofaltlinks = 0
 
+    def addtovertices(self, vertices, index):
+        self.vertices = vertices
+        self.index = index
+
     def isactive(self):
         return self._isactive
 
     def deactivate(self):
         # set active status to False
         self._isactive = False
+        # remove from list of active vertices
+        self.vertices.deactivate(self)
 
-        # disconnect from all incoming links
-        for idxneighbor in self._inlinks:
-            self.disconnectfrom(idxneighbor)
-
-        # disconnect to all outgoing links
-        for idxneighbor in self._outlinks:
-            self.disconnectto(idxneighbor)
-
-#    def fail(self):
-#        # deactivate this vertex
-#        # propagate failure to other fully dependent nodes
-#
-#        # deactivate
-#        self.deactivate()
-#        # set color
-#        # node...
-#
-#        # propagate failure
-#        for idxneighbor in self._inlinks:
-#            ###wrong, idxneighbor != neighbor
-#            if not neighbor.ispartiallydepend(index) and neighbor.isactive():
-#                # neighbor is fully depend and active
-#                # propagate the deactivation
-#                neighbor.fail()
-#
     def getnode(self):
         return self._data[0]
 
@@ -270,8 +266,8 @@ class Vertex:
             else:
                 # no alternative, deactivate this vertex
                 # all incoming and outgoing links will be disconnected
-                # this process can be recursive, therefore node may have been deactivated before
                 self._nbofmandlinks -= 1
+                # is it necessary to check isactive?
                 if self.isactive():
                     self.deactivate()
 
@@ -301,6 +297,7 @@ class Vertex:
 class Vertices:
     def __init__(self):
         self._vertices = []
+        self._activevert = []
         self._totdegree = 0 # the sum of the number of indegree for all vertices
                             # this also the same as the sum of the number of outdegree
         self._maxindegree = NODEGREE
@@ -313,6 +310,10 @@ class Vertices:
         self._maxaltlinksidx = None
         self._totmandlinks = 0
         self._totaltlinks = 0
+        self._nbofremoved = 0
+        self._nboffail = 0
+
+        self.analyzer = analyzer.Analyzer()
 
     def getmaxindegree(self):
         return self._maxindegree
@@ -328,6 +329,9 @@ class Vertices:
 
     def getnbofvertices(self):
         return len(self._vertices)
+
+    def getnbofactive(self):
+        return len(self._activevert)
 
     def gettotdegree(self):
         return self._totdegree
@@ -346,9 +350,18 @@ class Vertices:
     
     def getmaxaltlinks(self):
         return self._maxaltlinks
-    
+
     def getmaxaltlinksidx(self):
         return self._maxaltlinksidx
+
+    def getnbofremoved(self):
+        return self._nbofremoved
+
+    def getnboffail(self):
+        return self._nboffail
+
+    def getindexbyact(self, actidx):
+        return self._activevert[actidx]
 
     def _updallstats(self, idxsource=None, idxtarget=None, ismandincl=True, isaltincl=True):
         # update values of maxindegree, maxoutdegree, maxmandlinks, maxaltlinks
@@ -519,9 +532,15 @@ class Vertices:
 
         idxnew = self.getnbofvertices() # new vertex will be appended at the end of the list
         self._vertices.append(vertex)
-        self._totdegree += vertex.getindegree()
+        vertex.addtovertices(self, idxnew)
+        self._activevert.append(idxnew)
+        #self._totdegree += vertex.getindegree()
 
         return idxnew
+
+    def deactivate(self, vertex):
+        idx = vertex.index
+        self._activevert.pop(self._activevert.index(idx))
 
     def connect(self, indexp, indexq, channel, indexexst=None):
         # connect vertex p to vertex q
@@ -563,6 +582,36 @@ class Vertices:
     def isconnected(self, indexp, indexq):
         # check if vertex p is connected to vertex q
         return self.getvertex(indexp).isconnectedto(indexq)
+
+    def fail(self, index):
+        # deactivate a node and propagate the failure 
+        # to the other fully dependent nodes
+
+        self._nboffail += 1
+
+        vertex = self.getvertex(index)
+        # deactivate
+        vertex.deactivate()
+
+        # propagate failure
+        for idxneighbor in vertex._inlinks:
+            neighbor = self.getvertex(idxneighbor)
+            if not neighbor.ispartiallydepend(index) and neighbor.isactive():
+                # neighbor is fully depend and active
+                # propagate the failure
+                self.fail(idxneighbor)
+
+        # disconnect to all outgoing links
+        for idxneighbor in vertex._outlinks:
+            self.disconnect(index, idxneighbor)
+
+        # disconnect from all incoming links
+        for idxneighbor in vertex._inlinks:
+            self.disconnect(index, idxneighbor)
+
+    def dofail(self, index):
+        self._nbofremoved += 1
+        self.fail(index)
 
     def printinfo(self):
         print "** data **"
