@@ -61,10 +61,10 @@ def main(argv):
     cmd.AddValue("m_add", "Number of nodes to be added every timestep")
 
     cmd.m_dep = None
-    cmd.AddValue("m_dep", "The upper limit of number of links to be created of each added node (m_dep <= m_init)")
+    cmd.AddValue("m_dep", "The upper limit of number of links to be created of each added node (m_dep <= m_init + 1)")
 
     cmd.m_alt = None
-    cmd.AddValue("m_alt", "The upper limit of number of alternate links to be created of each added link (m_alt <= m_init)")
+    cmd.AddValue("m_alt", "The upper limit of number of alternate links to be created of each added link (m_alt <= m_init + 1)")
 
     cmd.alpha = None
     cmd.AddValue("alpha", "The inital attractiveness")
@@ -95,10 +95,7 @@ def main(argv):
         m_add = svcmodel.M_ADD
     else:
         m_add = int(cmd.m_add)
-        if m_add > m_init:
-            print "Invalid argument: m_add should not be higher than m_init"
-            sys.exit()
-        elif m_add > MAX_MADD:
+        if m_add > MAX_MADD:
             print "Invalid argument: m_add should not be higher than %d" % MAX_MADD
             sys.exit()
 
@@ -106,8 +103,8 @@ def main(argv):
         m_dep = svcmodel.M_DEP
     else:
         m_dep = int(cmd.m_dep)
-        if m_dep > m_init:
-            print "Invalid argument: m_dep should not be higher than m_init"
+        if m_dep > m_init + 1:
+            print "Invalid argument: m_dep should not be higher than m_init + 1"
             sys.exit()
         elif m_dep > MAX_MDEP:
             print "Invalid argument: m_dep should not be higher than %d" % MAX_MDEP
@@ -117,8 +114,8 @@ def main(argv):
         m_alt = svcmodel.M_ALT
     else:
         m_alt = int(cmd.m_alt)
-        if m_alt > m_init:
-            print "Invalid argument: m_alt should not be higher than m_init"
+        if m_alt > m_init + 1:
+            print "Invalid argument: m_alt should not be higher than m_init + 1"
             sys.exit()
         elif m_alt > MAX_MALT:
             print "Invalid argument: m_alt should not be higher than %d" % MAX_MALT
@@ -156,7 +153,7 @@ def main(argv):
     if cmd.filename is None:
         filename = FILENAME
     else:
-        filename = filename
+        filename = cmd.filename
 
     # prepare the network
     vertices = svc_nodes.Vertices()
@@ -192,6 +189,7 @@ def main(argv):
             ns.core.Simulator.Schedule(ns.core.Seconds(i), svcmodel.randomfail, vertices)
 
     ns.core.Simulator.Schedule(ns.core.Seconds(timelimit), svcmodel.print_aftermath, vertices)
+    ns.core.Simulator.Schedule(ns.core.Seconds(timelimit), vertices.analyzer.loaddegreedist, vertices)
     ns.core.Simulator.Schedule(ns.core.Seconds(timelimit), vertices.analyzer.savetofile, filename)
 
     ns.core.Simulator.Stop(ns.core.Seconds(timelimit + 1))

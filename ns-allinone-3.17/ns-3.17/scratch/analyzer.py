@@ -17,6 +17,10 @@ class Analyzer:
         self.altfail = []
         self.mandcreated = []
         self.mandfail = []
+        self.indegree = []
+        self.maxindegree = 0
+        self.outdegree = []
+        self.maxoutdegree = 0
 
     def advancetime(self):
         # advance to the next timestep
@@ -119,6 +123,13 @@ class Analyzer:
         self.failmands(mands)
         self.failalts(alts)
 
+    def loaddegreedist(self, vertices):
+        for i in range(vertices.getnbofvertices()):
+            self.indegree.append(vertices.getvertex(i).getindegree())
+            self.maxindegree = vertices.getmaxindegree()
+            self.outdegree.append(vertices.getvertex(i).getoutdegree())
+            self.maxoutdegree = vertices.getmaxoutdegree()
+
     def plotfailure(self):
         # nodes removal
         found = False; i = 0
@@ -140,7 +151,7 @@ class Analyzer:
 
         plt.show()
 
-    def savetofile(self, filename='svcsim.json', isall=False, isnodescreated=True, isnodesremoved=True, isnodesfail=True, islinkscreated=True, islinksfail=True, isaltcreated=True, isaltfail=True, ismandcreated=True, ismandfail=True):
+    def savetofile(self, filename='svcsim.json', isall=False, isnodescreated=True, isnodesremoved=True, isnodesfail=True, islinkscreated=True, islinksfail=True, isaltcreated=True, isaltfail=True, ismandcreated=True, ismandfail=True, isindegree=True, isoutdegree=True):
         obj = {}
         if isall or isnodescreated:
             obj['nodescreated'] = self.nodescreated
@@ -160,6 +171,12 @@ class Analyzer:
             obj['mandcreated'] = self.mandcreated
         if isall or ismandfail:
             obj['mandfail'] = self.mandfail
+        if isall or isindegree:
+            obj['indegree'] = self.indegree
+            obj['maxindegree'] = self.maxindegree
+        if isall or isoutdegree:
+            obj['outdegree'] = self.outdegree
+            obj['maxoutdegree'] = self.maxoutdegree
 
         f = open(filename, 'w')
         try:
