@@ -68,6 +68,10 @@ def initnetwork(vertices, m_init):
     for i in range(m_init):
         addnode(vertices)
 
+def chooserandom(vertices, nbofnodes=1):
+    # choose nbofnodes nodes randomly
+    return random.sample(vertices.getnbofvertices(), nbofnodes)
+
 def choosenodes(vertices, alpha=0, nbofnodes=1):
     # choose nbofnodes nodes based on BA preferential attachment with alpha as initial attractiveness
     # a node with higher indegree is more likely to be chosen than nodes with lower indegree
@@ -114,7 +118,7 @@ def choosenodes(vertices, alpha=0, nbofnodes=1):
 
     return nodes
 
-def addnewnode(vertices, m_dep, m_alt, alpha):
+def addnewnode(vertices, m_dep, m_alt, alpha, isscalefree=True):
     # add one node and connect it to m_dep_i links
     # for each link, add m_alt_j alternate links
     # prec:
@@ -128,8 +132,12 @@ def addnewnode(vertices, m_dep, m_alt, alpha):
     if m_dep_i > nver:
         m_dep_i = nver
 
-    # choose existing nodes to be connected to using preferential attachment
-    lsnodeidx = choosenodes(vertices, alpha, m_dep_i)
+    if isscalefree:
+        # choose existing nodes to be connected to using preferential attachment
+        lsnodeidx = choosenodes(vertices, alpha, m_dep_i)
+    else:
+        # choose existing nodes randomly
+        lsnodeidx = chooserandom(vertices)
 
     # add one node
     indexp = addnode(vertices)
@@ -158,11 +166,11 @@ def addnewnode(vertices, m_dep, m_alt, alpha):
                     # create link p->r as an alternative of p->q
                     connect(vertices, indexp, indexr, indexq)
 
-def grow(vertices, m_add, m_dep, m_alt, alpha):
+def grow(vertices, m_add, m_dep, m_alt, alpha, isscalefree=True):
     # add m_add nodes to the network
 
     for i in range(m_add):
-        addnewnode(vertices, m_dep, m_alt, alpha)
+        addnewnode(vertices, m_dep, m_alt, alpha, isscalefree)
 
     vertices.analyzer.grow(
         vertices.getnbofvertices()
@@ -224,7 +232,7 @@ def print_aftermath(vertices):
 #    print vertices.analyzer.mandcreated
 #    print 'mandfail'
 #    print vertices.analyzer.mandfail
-    vertices.analyzer.plotfailure()
+#    vertices.analyzer.plotfailure()
 
 def __test(argv):
     vertices = svc_nodes.Vertices()

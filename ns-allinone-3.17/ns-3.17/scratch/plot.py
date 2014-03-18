@@ -6,7 +6,7 @@ import numpy as np
 import json
 
 GAMMA = u'\u03b3'
-LOGBINBASE = 1.2
+LOGBINBASE = 1.0
 FUNC_FAIL = 'f'
 FUNC_LOGINDEG = 'li'
 FUNC_LOGOUTDEG = 'lo'
@@ -50,7 +50,8 @@ def logbins(amax, amin=0, base=LOGBINBASE):
 
 def drawloglogdist(ds, xlabel, labels, density=False):
     # degree distribution in loglog scale
-
+    
+    lblgamma = u'%s = %%#.2f' % (GAMMA)
     itm = iter(markers)
     i = 0
     for degrees, maxdegree in ds:
@@ -74,18 +75,17 @@ def drawloglogdist(ds, xlabel, labels, density=False):
         gamma, logA = np.polyfit(logx, logy, 1)
         p = np.poly1d([gamma, logA])
         if i < len(labels):
-            plt.plot(x, y, mark[:-1], label=labels[i])
+            plt.plot(x, y, mark[:-1], label = labels[i] +' '+ lblgamma % (-1 * gamma))
             i += 1
         else:
-            plt.plot(x, y, mark[:-1])
+            plt.plot(x, y, mark[:-1], label = lblgamma % (-1 * gamma))
         plt.plot(xforlog, 10**p(logx), mark[0] + mark[2])
 
     plt.loglog()
-    plt.title(u'Degree distribution (%s = %#.2f)' % (GAMMA, -1 * gamma))
+    plt.title(u'Degree distribution')
     plt.xlabel(xlabel)
     plt.ylabel('Number of nodes')
-    if len(labels) > 0:
-        plt.legend()
+    plt.legend()
     plt.show()
 
 def plotfailnodes(ds, labels, xybase=None
@@ -112,7 +112,7 @@ def plotfailnodes(ds, labels, xybase=None
     if xybase:
         # xybase is defined
         # create baseline
-        plt.plot(xybase[0], xybase[1], 'r-', label='x=y')
+        plt.plot(xybase[0], xybase[1], 'r-')
 
     plt.title(title)
     plt.xlabel(xylabels['x'])
@@ -121,7 +121,7 @@ def plotfailnodes(ds, labels, xybase=None
         plt.legend()
     plt.show()
 
-def loaddata(ds, func, data, step=50, norm=True):
+def loaddata(ds, func, data, step=150, norm=True):
     x = []
     y = []
 
