@@ -70,7 +70,7 @@ def initnetwork(vertices, m_init):
 
 def chooserandom(vertices, nbofnodes=1):
     # choose nbofnodes nodes randomly
-    return random.sample(vertices.getnbofvertices(), nbofnodes)
+    return random.sample(range(vertices.getnbofvertices()), nbofnodes)
 
 def choosenodes(vertices, alpha=0, nbofnodes=1):
     # choose nbofnodes nodes based on BA preferential attachment with alpha as initial attractiveness
@@ -118,7 +118,7 @@ def choosenodes(vertices, alpha=0, nbofnodes=1):
 
     return nodes
 
-def addnewnode(vertices, m_dep, m_alt, alpha, isscalefree=True):
+def addnewnode(vertices, m_dep, m_alt, alpha, ispref=True):
     # add one node and connect it to m_dep_i links
     # for each link, add m_alt_j alternate links
     # prec:
@@ -132,7 +132,7 @@ def addnewnode(vertices, m_dep, m_alt, alpha, isscalefree=True):
     if m_dep_i > nver:
         m_dep_i = nver
 
-    if isscalefree:
+    if ispref:
         # choose existing nodes to be connected to using preferential attachment
         lsnodeidx = choosenodes(vertices, alpha, m_dep_i)
     else:
@@ -166,11 +166,11 @@ def addnewnode(vertices, m_dep, m_alt, alpha, isscalefree=True):
                     # create link p->r as an alternative of p->q
                     connect(vertices, indexp, indexr, indexq)
 
-def grow(vertices, m_add, m_dep, m_alt, alpha, isscalefree=True):
+def grow(vertices, m_add, m_dep, m_alt, alpha, ispref=True):
     # add m_add nodes to the network
 
     for i in range(m_add):
-        addnewnode(vertices, m_dep, m_alt, alpha, isscalefree)
+        addnewnode(vertices, m_dep, m_alt, alpha, ispref)
 
     vertices.analyzer.grow(
         vertices.getnbofvertices()

@@ -6,7 +6,7 @@ import numpy as np
 import json
 
 GAMMA = u'\u03b3'
-LOGBINBASE = 1.0
+LOGBINBASE = 1.05
 FUNC_FAIL = 'f'
 FUNC_LOGINDEG = 'li'
 FUNC_LOGOUTDEG = 'lo'
@@ -88,13 +88,17 @@ def drawloglogdist(ds, xlabel, labels, density=False):
     plt.legend()
     plt.show()
 
-def plotfailnodes(ds, labels, xybase=None
+def plotfailnodes(ds, labels, isBase=True
     , title='Random cascading failure in service network'
     , xylabels={'x':'Nodes removed', 'y':'Nodes fail'}):
     # plot fail nodes from data set
     # data set is a list of x and y data to plot
 
+    fig = plt.figure()
+    ax = fig.add_axes([0.1, 0.1, 0.65, 0.8])
+
     itm = iter(markers)
+    maxxy = 0
     i = 0
     for xy in ds:
         try:
@@ -104,24 +108,27 @@ def plotfailnodes(ds, labels, xybase=None
             mark = itm.next()
 
         if i < len(labels):
-            plt.plot(xy[0], xy[1], mark, label=labels[i])
+            ax.plot(xy[0], xy[1], mark, label=labels[i])
             i += 1
         else:
-            plt.plot(xy[0], xy[1], mark, )
+            ax.plot(xy[0], xy[1], mark)
 
-    if xybase:
-        # xybase is defined
-        # create baseline
-        plt.plot(xybase[0], xybase[1], 'r-')
+        currmaxxy = max(max(xy[0]), max(xy[1]))
+        if maxxy < currmaxxy:
+            maxxy = currmaxxy
 
-    plt.title(title)
-    plt.xlabel(xylabels['x'])
-    plt.ylabel(xylabels['y'])
+    if isBase:
+        # create baseline x=y
+        ax.plot([0, maxxy], [0, maxxy], 'g-')
+
+    ax.set_title(title)
+    ax.set_xlabel(xylabels['x'])
+    ax.set_ylabel(xylabels['y'])
     if len(labels) > 0:
-        plt.legend()
+        ax.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
     plt.show()
 
-def loaddata(ds, func, data, step=150, norm=True):
+def loaddata(ds, func, data, step=300, norm=True):
     x = []
     y = []
 

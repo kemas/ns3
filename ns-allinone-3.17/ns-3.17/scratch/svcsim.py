@@ -38,7 +38,7 @@ import svc_nodes
 import svcmodel
 import svc_routines
 
-MAX_MINIT = 100
+MAX_MINIT = 10000
 MAX_MADD = 10
 MAX_MDEP = 21
 MAX_MALT = 21
@@ -50,7 +50,7 @@ MAX_TIMEFAIL = 100000
 FREQ = 1
 MAX_FREQ = 10
 FILENAME = 'svcsim.json'
-MODEL = 'sf'
+MODEL = 'pref' # preferential attachment
 
 def main(argv):
     cmd = ns.core.CommandLine()
@@ -83,7 +83,7 @@ def main(argv):
     cmd.AddValue("filename", "File name to save the result in json format")
 
     cmd.model = None
-    cmd.AddValue("model", "The network model to generate (scale-free: sf, random: r)")
+    cmd.AddValue("model", "The network model to generate (scale-free: pref, random: rand)")
 
     cmd.Parse(argv)
 
@@ -163,8 +163,8 @@ def main(argv):
         model = MODEL
     else:
         model = cmd.model
-        if model not in ['sf', 'r']:
-            print "Possible arguments for model parameter are 'sf' and 'r' for scale-free and random model, respectively"
+        if model not in ['pref', 'rand']:
+            print "Possible arguments for model parameter are 'pref' and 'rand' for preferential attachment and no-preferential (random), respectively"
             sys.exit()
 
     # prepare the network
@@ -188,7 +188,7 @@ def main(argv):
     # network growth
     for i in range(timegrow):
         for j in range(freq):
-            ns.core.Simulator.Schedule(ns.core.Seconds(i), svcmodel.grow, vertices, m_add, m_dep, m_alt, alpha, model == 'sf')
+            ns.core.Simulator.Schedule(ns.core.Seconds(i), svcmodel.grow, vertices, m_add, m_dep, m_alt, alpha, model == 'pref')
 
 #    ns.core.Simulator.Schedule(ns.core.Seconds(timegrow + 1), svc_routines.drawhistogram, vertices, 20, False)
 #    ns.core.Simulator.Schedule(ns.core.Seconds(timegrow + 2), svc_routines.drawloglogdist, vertices, lbinsbase, True)
