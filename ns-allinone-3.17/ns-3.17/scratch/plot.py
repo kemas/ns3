@@ -13,7 +13,8 @@ FUNC_LOGOUTDEG = 'lo'
 FUNC_HISTINDEG = 'hi'
 FUNC_HISTOUTDEG = 'ho'
 
-markers = ['bo-', 'rs-', 'bv-', 'rD-', 'b+-', 'rx-', 'ro-', 'bs-', 'rv-', 'bD-', 'r+-', 'bx-']
+markers = ['bo-', 'rs-', 'bv-', 'rD-', 'b+-', 'rx-', 'b*-', 'r*-', 'b|-', 'r|-', 'bp-', 'rp-', 'ro-', 'bs-', 'rv-', 'bD-', 'r+-', 'bx-', 'r*-', 'b*-', 'r|-', 'b|-', 'rp-', 'bp-']
+#markers = ['bo-', 'ro-', 'bs-', 'rs-', 'bv-', 'rv-', 'bD-', 'rD-', 'b+-', 'r+-', 'bx-', 'rx-', 'b*-', 'r*-', 'b|-', 'r|-', 'bp-', 'rp-']
 
 def drawhistogram(ds, xlabel, labels, nbins=50, normed=False, facecolor='green', alpha=0.5, histtype='bar', log=False):
     # the histogram of the degree distribution
@@ -53,7 +54,7 @@ def drawloglogdist(ds, xlabel, labels, density=False):
     
     lblgamma = u'%s = %%#.2f' % (GAMMA)
     itm = iter(markers)
-    i = 0
+    j = 0
     for degrees, maxdegree in ds:
         lbins = logbins(maxdegree, amin=0, base=LOGBINBASE)
         y, bins = np.histogram(degrees, bins=lbins, density=density)
@@ -74,9 +75,9 @@ def drawloglogdist(ds, xlabel, labels, density=False):
 
         gamma, logA = np.polyfit(logx, logy, 1)
         p = np.poly1d([gamma, logA])
-        if i < len(labels):
-            plt.plot(x, y, mark[:-1], label = labels[i] +' '+ lblgamma % (-1 * gamma))
-            i += 1
+        if j < len(labels):
+            plt.plot(x, y, mark[:-1], label = '%s, %s' % (labels[j], lblgamma % (-1 * gamma)))
+            j += 1
         else:
             plt.plot(x, y, mark[:-1], label = lblgamma % (-1 * gamma))
         plt.plot(xforlog, 10**p(logx), mark[0] + mark[2])
