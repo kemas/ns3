@@ -13,13 +13,12 @@ FUNC_LOGOUTDEG = 'lo'
 FUNC_HISTINDEG = 'hi'
 FUNC_HISTOUTDEG = 'ho'
 
-markers = ['bo-', 'rs-', 'bv-', 'rD-', 'b+-', 'rx-', 'b*-', 'r*-', 'b|-', 'r|-', 'bp-', 'rp-', 'ro-', 'bs-', 'rv-', 'bD-', 'r+-', 'bx-', 'r*-', 'b*-', 'r|-', 'b|-', 'rp-', 'bp-']
-#markers = ['bo-', 'ro-', 'bs-', 'rs-', 'bv-', 'rv-', 'bD-', 'rD-', 'b+-', 'r+-', 'bx-', 'rx-', 'b*-', 'r*-', 'b|-', 'r|-', 'bp-', 'rp-']
+markers = {'var':['bo-', 'rs-', 'bv-', 'rD-', 'b+-', 'rx-', 'b*-', 'r*-', 'b|-', 'r|-', 'bp-', 'rp-', 'ro-', 'bs-', 'rv-', 'bD-', 'r+-', 'bx-', 'r*-', 'b*-', 'r|-', 'b|-', 'rp-', 'bp-']
+        , 'sym':['bo-', 'ro-', 'bs-', 'rs-', 'bv-', 'rv-', 'bD-', 'rD-', 'b+-', 'r+-', 'bx-', 'rx-', 'b*-', 'r*-', 'b|-', 'r|-', 'bp-', 'rp-']}
 
 def drawhistogram(ds, xlabel, labels, nbins=50, normed=False, facecolor='green', alpha=0.5, histtype='bar', log=False):
     # the histogram of the degree distribution
 
-    itm = iter(markers)
     i = 0
     for degrees, maxdegree in ds:
         plt.hist(degrees, bins=nbins, normed=normed, facecolor=facecolor, alpha=alpha, histtype=histtype, log=log)
@@ -49,11 +48,11 @@ def logbins(amax, amin=0, base=LOGBINBASE):
  
     return bins
 
-def drawloglogdist(ds, xlabel, labels, density=False):
+def drawloglogdist(ds, xlabel, labels, markset='var', density=False):
     # degree distribution in loglog scale
     
     lblgamma = u'%s = %%#.2f' % (GAMMA)
-    itm = iter(markers)
+    itm = iter(markers[markset])
     j = 0
     for degrees, maxdegree in ds:
         lbins = logbins(maxdegree, amin=0, base=LOGBINBASE)
@@ -70,7 +69,7 @@ def drawloglogdist(ds, xlabel, labels, density=False):
         try:
             mark = itm.next()
         except AttributeError:
-            itm = iter(markers)
+            itm = iter(markers[markset])
             mark = itm.next()
 
         gamma, logA = np.polyfit(logx, logy, 1)
@@ -89,7 +88,8 @@ def drawloglogdist(ds, xlabel, labels, density=False):
     plt.legend()
     plt.show()
 
-def plotfailnodes(ds, labels, isBase=True
+def plotfailnodes(ds, labels, markset='var'
+    , isBase=True
     , title='Random cascading failure in service network'
     , xylabels={'x':'Nodes removed', 'y':'Nodes fail'}):
     # plot fail nodes from data set
@@ -98,14 +98,14 @@ def plotfailnodes(ds, labels, isBase=True
     fig = plt.figure()
     ax = fig.add_axes([0.1, 0.1, 0.65, 0.8])
 
-    itm = iter(markers)
+    itm = iter(markers[markset])
     maxxy = 0
     i = 0
     for xy in ds:
         try:
             mark = itm.next()
         except AttributeError:
-            itm = iter(markers)
+            itm = iter(markers[markset])
             mark = itm.next()
 
         if i < len(labels):
@@ -159,17 +159,51 @@ def loaddata(ds, func, data, step=300, norm=True):
     elif func in [FUNC_LOGOUTDEG, FUNC_HISTOUTDEG]:
         ds.append([data['outdegree'], data['maxoutdegree']])
 
-def main(argv):
-    if len(sys.argv) < 3:
-        print "Usage: python plot.py <function> <file-1> [file-n] [-l] [label-1 label-n]"
-        print "Example: python plot.py f data1.json data2.json -l \"data 1\" \"data 2\""
+def addtodictarg(dictarg, key, arg):
+    if dictarg.has_key(key):
+        dictarg[key].append(arg)
+    else:
+        dictarg[key] = [arg]
+
+def readargv(argv, pos=1, opt='', dictarg={}):
+    if pos >= len(argv):
         return
 
-    func = sys.argv[1]
+    currarg = argv[pos]
+
+    if pos == 1 or currarg[0] == '-':
+        if currarg in ('-f', '-li', '-hi'):
+            dictarg['func'] = currarg[1:]
+            currarg = 'files'
+
+        elif currarg not in ['-l', '-m']:
+            printusage()
+            return
+
+        readargv(argv, pos + 1, currarg, dictarg)
+
+    else:
+        addtodictarg(dictarg, opt, currarg)
+        readargv(argv, pos + 1, opt, dictarg)
+
+    return dictarg
+
+def getargval(dictarg, key, ifnone=[]):
+    if dictarg.has_key(key):
+        return dictarg[key]
+    else:
+        return ifnone
+
+def printusage():
+    print "Usage: python plot.py -<function option> <file-1> [file-n] [-l label-1 label-n] [-m markset]"
+    print "Example: python plot.py -f data1.json data2.json -l \"data 1\" \"data 2\" -m var"
+
+def main(argv):
+    dictarg = readargv(argv)
+
+    func = dictarg['func']
     ds = []
-    i = 2; stop = False
-    while not stop:
-        filename = sys.argv[i]
+    for filename in dictarg['files']:
         f = open(filename)
         try:
             data = json.load(f)
@@ -177,29 +211,21 @@ def main(argv):
         finally:
             f.close()
 
-        i += 1
-        if i >= len(sys.argv) or sys.argv[i] == '-l':
-            stop = True
-
-    labels = []
-    if i < len(sys.argv):
-        labels = sys.argv[i+1:]
-
     if func in [FUNC_LOGINDEG, FUNC_HISTINDEG]:
         xlabel = 'Indegree'
     elif func in [FUNC_LOGOUTDEG, FUNC_HISTOUTDEG]:
         xlabel = 'Outdegree'
 
     if func == FUNC_FAIL:
-        plotfailnodes(ds, labels)
+        plotfailnodes(ds, getargval(dictarg, '-l'), getargval(dictarg, '-m', ['var'])[0])
 
     elif func in [FUNC_LOGINDEG, FUNC_LOGOUTDEG]:
         # loglog indegree distribution
-        drawloglogdist(ds, xlabel, labels)
+        drawloglogdist(ds, xlabel, getargval(dictarg, '-l'), getargval(dictarg, '-m', ['var'])[0])
 
     elif func in [FUNC_HISTINDEG, FUNC_HISTOUTDEG]:
         # loglog outdegree distribution
-        drawhistogram(ds, xlabel, labels)
+        drawhistogram(ds, xlabel, getargval(dictarg, '-l'))
 
 if __name__ == '__main__':
     sys.exit(main(sys.argv))

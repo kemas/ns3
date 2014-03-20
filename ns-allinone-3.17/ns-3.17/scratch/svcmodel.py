@@ -137,7 +137,7 @@ def addnewnode(vertices, m_dep, m_alt, alpha, ispref=True):
         lsnodeidx = choosenodes(vertices, alpha, m_dep_i)
     else:
         # choose existing nodes randomly
-        lsnodeidx = chooserandom(vertices)
+        lsnodeidx = chooserandom(vertices, m_dep_i)
 
     # add one node
     indexp = addnode(vertices)
