@@ -7,16 +7,17 @@ import json
 
 GAMMA = u'\u03b3'
 LOGBINBASE = 1.05
-FUNC_FAIL = 'f'
-FUNC_LOGINDEG = 'li'
-FUNC_LOGOUTDEG = 'lo'
-FUNC_HISTINDEG = 'hi'
-FUNC_HISTOUTDEG = 'ho'
+FUNC_FAIL = '-f'
+FUNC_LOGINDEG = '-li'
+FUNC_LOGOUTDEG = '-lo'
+FUNC_HISTINDEG = '-hi'
+FUNC_HISTOUTDEG = '-ho'
+FUNCOPTS = (FUNC_FAIL, FUNC_LOGINDEG, FUNC_LOGOUTDEG, FUNC_HISTINDEG, FUNC_HISTOUTDEG)
 
-markers = {'var':['bo-', 'rs-', 'bv-', 'rD-', 'b+-', 'rx-', 'b*-', 'r*-', 'b|-', 'r|-', 'bp-', 'rp-', 'ro-', 'bs-', 'rv-', 'bD-', 'r+-', 'bx-', 'r*-', 'b*-', 'r|-', 'b|-', 'rp-', 'bp-']
+MARKERS = {'var':['bo-', 'rs-', 'bv-', 'rD-', 'b+-', 'rx-', 'b*-', 'r*-', 'b|-', 'r|-', 'bp-', 'rp-', 'ro-', 'bs-', 'rv-', 'bD-', 'r+-', 'bx-', 'r*-', 'b*-', 'r|-', 'b|-', 'rp-', 'bp-']
         , 'sym':['bo-', 'ro-', 'bs-', 'rs-', 'bv-', 'rv-', 'bD-', 'rD-', 'b+-', 'r+-', 'bx-', 'rx-', 'b*-', 'r*-', 'b|-', 'r|-', 'bp-', 'rp-']}
 
-def drawhistogram(ds, xlabel, labels, nbins=50, normed=False, facecolor='green', alpha=0.5, histtype='bar', log=False):
+def drawhistogram(ds, xlabel, labels, filename=None, nbins=50, normed=False, facecolor='green', alpha=0.5, histtype='bar', log=False):
     # the histogram of the degree distribution
 
     i = 0
@@ -32,7 +33,11 @@ def drawhistogram(ds, xlabel, labels, nbins=50, normed=False, facecolor='green',
     plt.ylabel('Number of nodes'+ normedlabel)
     if len(labels) > 0:
         plt.legend()
-    plt.show()
+
+    if filename:
+        plt.savefig(filename)
+    else:
+        plt.show()
 
 def logbins(amax, amin=0, base=LOGBINBASE):
     bins = [amin]
@@ -48,11 +53,11 @@ def logbins(amax, amin=0, base=LOGBINBASE):
  
     return bins
 
-def drawloglogdist(ds, xlabel, labels, markset='var', density=False):
+def drawloglogdist(ds, xlabel, labels, markset='var', filename=None, density=False):
     # degree distribution in loglog scale
     
     lblgamma = u'%s = %%#.2f' % (GAMMA)
-    itm = iter(markers[markset])
+    itm = iter(MARKERS[markset])
     j = 0
     for degrees, maxdegree in ds:
         lbins = logbins(maxdegree, amin=0, base=LOGBINBASE)
@@ -69,7 +74,7 @@ def drawloglogdist(ds, xlabel, labels, markset='var', density=False):
         try:
             mark = itm.next()
         except AttributeError:
-            itm = iter(markers[markset])
+            itm = iter(MARKERS[markset])
             mark = itm.next()
 
         gamma, logA = np.polyfit(logx, logy, 1)
@@ -86,9 +91,13 @@ def drawloglogdist(ds, xlabel, labels, markset='var', density=False):
     plt.xlabel(xlabel)
     plt.ylabel('Number of nodes')
     plt.legend()
-    plt.show()
 
-def plotfailnodes(ds, labels, markset='var'
+    if filename:
+        plt.savefig(filename)
+    else:
+        plt.show()
+
+def plotfailnodes(ds, labels, markset='var', filename=None
     , isBase=True
     , title='Random cascading failure in service network'
     , xylabels={'x':'Nodes removed', 'y':'Nodes fail'}):
@@ -98,14 +107,14 @@ def plotfailnodes(ds, labels, markset='var'
     fig = plt.figure()
     ax = fig.add_axes([0.1, 0.1, 0.65, 0.8])
 
-    itm = iter(markers[markset])
+    itm = iter(MARKERS[markset])
     maxxy = 0
     i = 0
     for xy in ds:
         try:
             mark = itm.next()
         except AttributeError:
-            itm = iter(markers[markset])
+            itm = iter(MARKERS[markset])
             mark = itm.next()
 
         if i < len(labels):
@@ -127,7 +136,11 @@ def plotfailnodes(ds, labels, markset='var'
     ax.set_ylabel(xylabels['y'])
     if len(labels) > 0:
         ax.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
-    plt.show()
+
+    if filename:
+        plt.savefig(filename)
+    else:
+        plt.show()
 
 def loaddata(ds, func, data, step=300, norm=True):
     x = []
@@ -160,6 +173,10 @@ def loaddata(ds, func, data, step=300, norm=True):
         ds.append([data['outdegree'], data['maxoutdegree']])
 
 def addtodictarg(dictarg, key, arg):
+    # assert arguments for -m (markset)
+    if key == '-m':
+        assert arg in MARKERS, "Possible arguments for -m option are: "+", ".join(MARKERS)
+
     if dictarg.has_key(key):
         dictarg[key].append(arg)
     else:
@@ -172,11 +189,11 @@ def readargv(argv, pos=1, opt='', dictarg={}):
     currarg = argv[pos]
 
     if pos == 1 or currarg[0] == '-':
-        if currarg in ('-f', '-li', '-hi'):
-            dictarg['func'] = currarg[1:]
+        if currarg in FUNCOPTS:
+            dictarg['func'] = currarg
             currarg = 'files'
 
-        elif currarg not in ['-l', '-m']:
+        elif currarg not in ['-l', '-m', '-s']:
             printusage()
             return
 
@@ -195,8 +212,8 @@ def getargval(dictarg, key, ifnone=[]):
         return ifnone
 
 def printusage():
-    print "Usage: python plot.py -<function option> <file-1> [file-n] [-l label-1 label-n] [-m markset]"
-    print "Example: python plot.py -f data1.json data2.json -l \"data 1\" \"data 2\" -m var"
+    print "Usage: python plot.py -<function option> <file-1> [file-n] [-l label-1 label-n] [-m markset] [-s filename]"
+    print "Example: python plot.py -f data1.json data2.json -l \"data 1\" \"data 2\" -m var -s \"graph.png\""
 
 def main(argv):
     dictarg = readargv(argv)
@@ -217,15 +234,15 @@ def main(argv):
         xlabel = 'Outdegree'
 
     if func == FUNC_FAIL:
-        plotfailnodes(ds, getargval(dictarg, '-l'), getargval(dictarg, '-m', ['var'])[0])
+        plotfailnodes(ds, getargval(dictarg, '-l'), getargval(dictarg, '-m', ['var'])[0], getargval(dictarg, '-s', [None])[0])
 
     elif func in [FUNC_LOGINDEG, FUNC_LOGOUTDEG]:
         # loglog indegree distribution
-        drawloglogdist(ds, xlabel, getargval(dictarg, '-l'), getargval(dictarg, '-m', ['var'])[0])
+        drawloglogdist(ds, xlabel, getargval(dictarg, '-l'), getargval(dictarg, '-m', ['var'])[0], getargval(dictarg, '-s', [None])[0])
 
     elif func in [FUNC_HISTINDEG, FUNC_HISTOUTDEG]:
         # loglog outdegree distribution
-        drawhistogram(ds, xlabel, getargval(dictarg, '-l'))
+        drawhistogram(ds, xlabel, getargval(dictarg, '-l'), getargval(dictarg, '-s', [None])[0])
 
 if __name__ == '__main__':
     sys.exit(main(sys.argv))
