@@ -177,6 +177,9 @@ def grow(vertices, m_add, m_dep, m_alt, alpha, ispref=True):
         , vertices.gettotmandlinks()
         , vertices.gettotaltlinks())
 
+    # verbose
+    #vertices.printinfo()
+
 def print_params(vertices, m_init, m_add, m_dep, m_alt, alpha, timegrow, timefail, freq):
     # print statistic
     leftwidth = 10

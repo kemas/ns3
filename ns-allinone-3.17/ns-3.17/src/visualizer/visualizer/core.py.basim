@@ -345,8 +345,8 @@ class Channel(PyVizObject):
 class WiredLink(Link):
     def __init__(self, node1, node2):
         self._set_nodes(node1, node2)
-        ###self.canvas_item = goocanvas.Path(stroke_color="black", line_width=1.0)
-        self.canvas_item = goocanvas.Polyline(end_arrow=True)
+        self.canvas_item = goocanvas.Path(stroke_color="black", line_width=1.0)
+        ###self.canvas_item = goocanvas.Polyline(end_arrow=True)
         self.canvas_item.set_data("pyviz-object", self)
 
     def _set_nodes(self, node1, node2):
@@ -360,8 +360,8 @@ class WiredLink(Link):
     def update_points(self):
         pos1_x, pos1_y = self.node1.get_position()
         pos2_x, pos2_y = self.node2.get_position()
-        ###self.canvas_item.set_property("data", "M %r %r L %r %r" % (pos1_x, pos1_y, pos2_x, pos2_y))
-        self.canvas_item.set_property("points", goocanvas.Points([(pos1_x, pos1_y), (pos2_x, pos2_y)]))
+        self.canvas_item.set_property("data", "M %r %r L %r %r" % (pos1_x, pos1_y, pos2_x, pos2_y))
+        ###self.canvas_item.set_property("points", goocanvas.Points([(pos1_x, pos1_y), (pos2_x, pos2_y)]))
 
 #+++++++++++++++++
     def erase(self):
@@ -455,7 +455,7 @@ class Visualizer(gobject.GObject):
     IS_ALLOW_MOD_EDGE = True
     IS_DRAW_TRANS = False
     IS_DRAW_DROPS = False
-    UPDPERIOD = 0
+    UPDPERIOD = 999
     UPDNODES = UPDPERIOD # new nodes are rendered every UPDNODES+1 times update_view
     UPDEDGES = UPDPERIOD # new edges are rendered every UPDEDGES+1 times update_view
     UPDLAYOUT = UPDPERIOD # layout is rearranged every UPDLAYOUT+1 times update_view
@@ -978,30 +978,30 @@ class Visualizer(gobject.GObject):
 
         self.emit("update-view")
 
-#    def _rearrange_layout(self):
-#        #print "** Rearrange all nodes..."
-#        
-##        layout_start = time.time()
-#        self._graph.layout(LAYOUT_ALGORITHM)
-##        layout_end = time.time()
-##        layout_time = layout_end - layout_start
-#        for node in self._graph.iternodes():
-##        grnodes = list(self._graph.iternodes())
-##        i = 1
-##        while i <= len(grnodes) and i < 30:
-##            node = grnodes[len(grnodes) - i]
-##            i += 1
-#            #print node, "=>", node.attr['pos']
-#            node_type, node_id = node.split(' ')
-#            pos_x, pos_y = [float(s) for s in node.attr['pos'].split(',')]
-#            if node_type == 'Node':
-#                obj = self.nodes[int(node_id)]
-#            elif node_type == 'Channel':
-#                obj = self.channels[int(node_id)]
-#            obj.set_position(pos_x, pos_y)
-##        render_time = time.time() - layout_end
-##        print "** Layouting time: %f" % layout_time
-##        print "** Rendering time: %f" % render_time
+    def _rearrange_layout(self):
+        #print "** Rearrange all nodes..."
+        
+#        layout_start = time.time()
+        self._graph.layout(LAYOUT_ALGORITHM)
+#        layout_end = time.time()
+#        layout_time = layout_end - layout_start
+        for node in self._graph.iternodes():
+#        grnodes = list(self._graph.iternodes())
+#        i = 1
+#        while i <= len(grnodes) and i < 30:
+#            node = grnodes[len(grnodes) - i]
+#            i += 1
+            #print node, "=>", node.attr['pos']
+            node_type, node_id = node.split(' ')
+            pos_x, pos_y = [float(s) for s in node.attr['pos'].split(',')]
+            if node_type == 'Node':
+                obj = self.nodes[int(node_id)]
+            elif node_type == 'Channel':
+                obj = self.channels[int(node_id)]
+            obj.set_position(pos_x, pos_y)
+#        render_time = time.time() - layout_end
+#        print "** Layouting time: %f" % layout_time
+#        print "** Rendering time: %f" % render_time
 
     def _simple_square(self, showmsg=False):
         #print "** Rearrange all nodes..."
@@ -1089,11 +1089,11 @@ class Visualizer(gobject.GObject):
             print "** %s, layouting time: %f" % (printmsg, layout_time)
 #            print "** Rendering time: %f" % render_time
 
-    def _rearrange_layout(self, algo='ss', showmsg=False):
+#    def _rearrange_layout(self, algo='ss', showmsg=False):
 #        if algo == 'ss':
 #            self._simple_square(showmsg)
 #        elif algo == 'cs':
-            self._center_square(showmsg)
+#            self._center_square(showmsg)
 
     def _render_new_nodes(self):
         # render new nodes

@@ -92,6 +92,22 @@ def drawloglogdist(ds, xlabel, labels, markset='var', filename=None, density=Fal
     plt.ylabel('Number of nodes')
     plt.legend()
 
+#    # inset
+#    from mpl_toolkits.axes_grid1.inset_locator import zoomed_inset_axes
+#    from mpl_toolkits.axes_grid1.inset_locator import mark_inset
+#
+#    axins = zoomed_inset_axes(ax, 6, loc=1) # zoom = 6
+#    axins.imshow(Z2, extent=extent, interpolation="nearest",
+#                 origin="lower")
+#
+#    # sub region of the original image
+#    x1, x2, y1, y2 = -1.5, -0.9, -2.5, -1.9
+#    axins.set_xlim(x1, x2)
+#    axins.set_ylim(y1, y2)
+#
+#    plt.xticks(visible=False)
+#    plt.yticks(visible=False)
+#
     if filename:
         plt.savefig(filename)
     else:

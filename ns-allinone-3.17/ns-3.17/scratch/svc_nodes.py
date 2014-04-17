@@ -285,6 +285,7 @@ class Vertex:
 
     def printinfo(self):
         print "** vertex printinfo"
+        print "Id      : %i" % self._data[0].GetId()
         print "data    : "+ str(self._data)
         print "status  : "+ str(self.isactive())
         print "inlinks : "+ str(self._inlinks)
@@ -593,6 +594,10 @@ class Vertices:
         # deactivate
         vertex.deactivate()
 
+        # verbose
+        #print "** On fail node **"
+        #vertex.printinfo()
+
         # propagate failure
         for idxneighbor in vertex._inlinks:
             neighbor = self.getvertex(idxneighbor)
@@ -613,7 +618,11 @@ class Vertices:
         self._nbofremoved += 1
         self.fail(index)
 
+        # verbose
+        #self.printinfo()
+
     def printinfo(self):
+        print "=========================="
         print "** data **"
         for vertex in self._vertices:
             vertex.printinfo()
