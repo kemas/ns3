@@ -114,14 +114,14 @@ def main(argv):
     for i in range(time):
         for j in range(freq):
             ns.core.Simulator.Schedule(ns.core.Seconds(i), bamodel.grow, vertices, m_add)
-    ns.core.Simulator.Schedule(ns.core.Seconds(time+1), sf_routines.drawloglogdist, vertices, lbinsbase, True)
+    #ns.core.Simulator.Schedule(ns.core.Seconds(time+1), sf_routines.drawloglogdist, vertices, lbinsbase, True)
+    ns.core.Simulator.Schedule(ns.core.Seconds(time+1), sf_routines.drawhistogram, vertices, 100)
 
     ns.core.Simulator.Stop(ns.core.Seconds(time + 2))
     ns.core.Simulator.Run()
     ns.core.Simulator.Destroy()
 
     return 0
-
 
 if __name__ == '__main__':
     sys.exit(main(sys.argv))

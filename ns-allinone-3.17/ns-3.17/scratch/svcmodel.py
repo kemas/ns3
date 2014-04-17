@@ -157,14 +157,29 @@ def addnewnode(vertices, m_dep, m_alt, alpha, ispref=True):
             sumalt += m_alt_j
 
             # create m_alt_j links
-            for k in range(m_alt_j):
+            if ispref:
+                # choose alternatives using preferential attachment
+                lsaltidx = choosenodes(vertices, alpha, m_alt_j)
+            else:
+                # choose alternatives randomly
+                lsaltidx = chooserandom(vertices, m_alt_j)
 
-                # choose an existing node randomly
-                indexr = random.randrange(nverless)
+            for indexr in lsaltidx:
                 # create link p->r if r is not p and they are not connected
                 if indexp != indexr and not vertices.isconnected(indexp, indexr):
                     # create link p->r as an alternative of p->q
                     connect(vertices, indexp, indexr, indexq)
+
+#                # choose alternatives randomly
+#                for k in range(m_alt_j):
+#
+#                    # choose an existing node randomly
+#                    #indexr = random.randrange(nverless)
+#                    indexr = random.randrange(nver)
+#                    # create link p->r if r is not p and they are not connected
+#                    if indexp != indexr and not vertices.isconnected(indexp, indexr):
+#                        # create link p->r as an alternative of p->q
+#                        connect(vertices, indexp, indexr, indexq)
 
 def grow(vertices, m_add, m_dep, m_alt, alpha, ispref=True):
     # add m_add nodes to the network
