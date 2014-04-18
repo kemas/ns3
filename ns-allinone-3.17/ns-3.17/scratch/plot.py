@@ -12,7 +12,9 @@ FUNC_LOGINDEG = '-li'
 FUNC_LOGOUTDEG = '-lo'
 FUNC_HISTINDEG = '-hi'
 FUNC_HISTOUTDEG = '-ho'
-FUNCOPTS = (FUNC_FAIL, FUNC_LOGINDEG, FUNC_LOGOUTDEG, FUNC_HISTINDEG, FUNC_HISTOUTDEG)
+FUNC_DISTINDEG = '-di'
+FUNC_DISTOUTDEG = '-do'
+FUNCOPTS = (FUNC_FAIL, FUNC_LOGINDEG, FUNC_LOGOUTDEG, FUNC_HISTINDEG, FUNC_HISTOUTDEG, FUNC_DISTINDEG, FUNC_DISTOUTDEG)
 
 MARKERS = {'var':['bo-', 'rs-', 'bv-', 'rD-', 'b+-', 'rx-', 'b*-', 'r*-', 'b|-', 'r|-', 'bp-', 'rp-', 'ro-', 'bs-', 'rv-', 'bD-', 'r+-', 'bx-', 'r*-', 'b*-', 'r|-', 'b|-', 'rp-', 'bp-']
         , 'sym':['bo-', 'ro-', 'bs-', 'rs-', 'bv-', 'rv-', 'bD-', 'rD-', 'b+-', 'r+-', 'bx-', 'rx-', 'b*-', 'r*-', 'b|-', 'r|-', 'bp-', 'rp-']}
@@ -55,7 +57,7 @@ def logbins(amax, amin=0, base=LOGBINBASE):
 
 def drawloglogdist(ds, xlabel, labels, markset='var', filename=None, density=False):
     # degree distribution in loglog scale
-    
+
     lblgamma = u'%s = %%#.2f' % (GAMMA)
     itm = iter(MARKERS[markset])
     j = 0
@@ -113,11 +115,11 @@ def drawloglogdist(ds, xlabel, labels, markset='var', filename=None, density=Fal
     else:
         plt.show()
 
-def plotfailnodes(ds, labels, markset='var', filename=None
-    , isBase=True
-    , title='Random cascading failure in service network'
-    , xylabels={'x':'Nodes removed', 'y':'Nodes fail'}):
-    # plot fail nodes from data set
+def plotdata(ds, labels, title
+    , xylabels # {'x':'...', 'y':'...'}
+    , markset='var', filename=None
+    , isBase=True):
+    # plot degree distribution from data set
     # data set is a list of x and y data to plot
 
     fig = plt.figure()
@@ -158,16 +160,40 @@ def plotfailnodes(ds, labels, markset='var', filename=None
     else:
         plt.show()
 
-def loaddata(ds, func, data, step=300, norm=True):
-    x = []
-    y = []
+def plotdegdist(ds, labels, markset='var', filename=None
+    , isBase=True
+    , title='Degree distribution'
+    , xylabels={'x':'Degree', 'y':'Number of Nodes'}):
+    # plot degree distribution from data set
+    # data set is a list of x and y data to plot
 
+    ###belum selesai!!!
+    y, bins = np.histogram(degrees, bins=lbins, density=density)
+    x = bins[:-1]
+
+    plotdata(ds, labels, title, xylabels
+        , markset, filename, isBase)
+
+def plotfailnodes(ds, labels, markset='var', filename=None
+    , isBase=True
+    , title='Random cascading failure in service network'
+    , xylabels={'x':'Nodes removed', 'y':'Nodes fail'}):
+    # plot fail nodes from data set
+    # data set is a list of x and y data to plot
+
+    plotdata(ds, labels, title, xylabels
+        , markset, filename, isBase)
+
+def loaddata(ds, func, data, step=300, norm=True):
     nbofnodes = 1
     if norm:
         # get the number of nodes
         nbofnodes = float(data['nodescreated'][-1])
 
     if func == FUNC_FAIL:
+        x = []
+        y = []
+
         nodesremoved = data['nodesremoved']
         found = False; i = 0
         while not found and i < len(nodesremoved):
@@ -181,6 +207,17 @@ def loaddata(ds, func, data, step=300, norm=True):
             y = [fail / nbofnodes for fail in data['nodesfail'][i::step]]
 
         ds.append([x, y])
+
+    elif func in [FUNC_DISTINDEG, FUNC_DISTOUTDEG]:
+        x = []
+        y = []
+
+        if FUNC_DISTINDEG:
+            degrees = data['indegree']
+        else:
+            degrees = data['outdegree']
+
+        ds.append(degrees)
 
     elif func in [FUNC_LOGINDEG, FUNC_HISTINDEG]:
         ds.append([data['indegree'], data['maxindegree']])
@@ -253,12 +290,17 @@ def main(argv):
         plotfailnodes(ds, getargval(dictarg, '-l'), getargval(dictarg, '-m', ['var'])[0], getargval(dictarg, '-s', [None])[0])
 
     elif func in [FUNC_LOGINDEG, FUNC_LOGOUTDEG]:
-        # loglog indegree distribution
+        # loglog degree distribution
         drawloglogdist(ds, xlabel, getargval(dictarg, '-l'), getargval(dictarg, '-m', ['var'])[0], getargval(dictarg, '-s', [None])[0])
 
     elif func in [FUNC_HISTINDEG, FUNC_HISTOUTDEG]:
-        # loglog outdegree distribution
+        # histogram degree distribution
         drawhistogram(ds, xlabel, getargval(dictarg, '-l'), getargval(dictarg, '-s', [None])[0])
+
+    elif func in [FUNC_DISTINDEG, FUNC_DISTOUTDEG]:
+        # degree distribution plot
+        plotdata(ds, xlabel, getargval(dictarg, '-l'), getargval(dictarg, '-s', [None])[0])
 
 if __name__ == '__main__':
     sys.exit(main(sys.argv))
+

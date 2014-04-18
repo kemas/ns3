@@ -53,26 +53,34 @@ def initnodes(vertices, m0):
             # they are not connected, make connection
             linknodes(vertices, indexp, indexq)
 
-def choosenode(vertices):
-    # choose a node according to BA model
-    # a node with higher degree is more likely to be chosen than nodes with lower degree
+def choosenode(vertices, pref=True):
+    # choose a node according to BA model if pref==True, 
+    # else choose a node randomly
 
-    # generate a random number between 1 to totdegree
-    totdegree = vertices.gettotdegree()
-    #pdb.set_trace()
-    r = random.randint(1, totdegree)
+    if pref:
+        # choose a node using preferential attachment (BA model)
 
-    i = 0
-    verlen = vertices.getlength()
-    sumdegree = 0
-    while i < verlen and sumdegree < r:
-        sumdegree += vertices.getvertex(i).getdegree()
-        if sumdegree < r:
-            i += 1
+        # generate a random number between 1 to totdegree
+        totdegree = vertices.gettotdegree()
+        #pdb.set_trace()
+        r = random.randint(1, totdegree)
+
+        i = 0
+        verlen = vertices.getlength()
+        sumdegree = 0
+        while i < verlen and sumdegree < r:
+            sumdegree += vertices.getvertex(i).getdegree()
+            if sumdegree < r:
+                i += 1
+
+    else:
+        # choose a node randomly from existing nodes
+        # excluding the newly added node (nbofvertices - 1)
+        i = random.randrange(vertices.getlength() - 1)
 
     return i
 
-def grow(vertices, m_add):
+def grow(vertices, m_add, pref=True):
     # add a node and connect to m_add existing nodes
 
     verlen = vertices.getlength()
@@ -82,9 +90,11 @@ def grow(vertices, m_add):
     indexp = addnode(vertices)
 
     for i in range(m_add):
-        indexq = choosenode(vertices)
+        # choose existing node to connect
+        indexq = choosenode(vertices, pref)
         while indexp == indexq:
-            indexq = choosenode(vertices)
+            indexq = choosenode(vertices, pref)
+
         # connect these two if they are not connected
         if not vertices.is_connected(indexp, indexq):
             linknodes(vertices, indexp, indexq)

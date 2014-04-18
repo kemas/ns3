@@ -44,6 +44,7 @@ TIME = 100
 MAX_TIME = 100000
 FREQ = 1
 MAX_FREQ = 10
+MODEL = 'sf' # scale-free model
 
 def main(argv):
     cmd = ns.core.CommandLine()
@@ -59,6 +60,9 @@ def main(argv):
 
     cmd.freq = None
     cmd.AddValue("freq", "How many times m_add nodes will be added to the network for each second")
+
+    cmd.model = None
+    cmd.AddValue("model", "The network model to generate (scale-free: pref, random: rand)")
 
     cmd.Parse(argv)
 
@@ -97,6 +101,14 @@ def main(argv):
             print "Invalid argument: freq should not be higher than %d" % MAX_FREQ
             sys.exit()
 
+    if cmd.model is None:
+        model = MODEL
+    else:
+        model = cmd.model
+        if model not in ['sf', 'exp']:
+            print "Possible arguments for model parameter are 'sf' and 'exp' for BA scale-free and exponential network, respectively"
+            sys.exit()
+
     vertices = sf_nodes.Vertices()
     bamodel.initnodes(vertices, m0)
 
@@ -113,9 +125,9 @@ def main(argv):
     #ns.core.Simulator.Stop(ns.core.Seconds(30.0))
     for i in range(time):
         for j in range(freq):
-            ns.core.Simulator.Schedule(ns.core.Seconds(i), bamodel.grow, vertices, m_add)
+            ns.core.Simulator.Schedule(ns.core.Seconds(i), bamodel.grow, vertices, m_add, model==MODEL)
     #ns.core.Simulator.Schedule(ns.core.Seconds(time+1), sf_routines.drawloglogdist, vertices, lbinsbase, True)
-    ns.core.Simulator.Schedule(ns.core.Seconds(time+1), sf_routines.drawhistogram, vertices, 100)
+    ns.core.Simulator.Schedule(ns.core.Seconds(time+1), sf_routines.drawhistogram, vertices, 30)
 
     ns.core.Simulator.Stop(ns.core.Seconds(time + 2))
     ns.core.Simulator.Run()

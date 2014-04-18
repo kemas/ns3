@@ -1,16 +1,27 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import json
 
 GAMMA = u'\u03b3'
 LOGBINBASE = 1.2
 
-def drawhistogram(vertices, nbins=20, normed=False, facecolor='green', alpha=0.5, histtype='bar', log=False):
+def drawhistogram(vertices, nbins=20, normed=False, facecolor='green', alpha=0.5, histtype='bar', log=False, savetofile=True):
     # the histogram of the degree distribution
 
     degrees = [vertices.getvertex(i).getdegree() for i in range(vertices.getlength())]
     n, bins, patches = plt.hist(degrees, bins=nbins, normed=normed, facecolor=facecolor, alpha=alpha, histtype=histtype, log=log)
     plt.title('Degree distribution')
+    plt.xlabel('Degree')
+    plt.ylabel('Number of nodes')
     plt.show()
+
+    if savetofile:
+        obj = [int(i) for i in n]
+        f = open('histogram.json', 'w')
+        try:
+            json.dump(obj, f)
+        finally:
+            f.close()
 
 def logbins(amax, amin=0, base=LOGBINBASE):
     bins = [amin]
