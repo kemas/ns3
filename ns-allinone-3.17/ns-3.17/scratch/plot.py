@@ -118,7 +118,10 @@ def drawloglogdist(ds, xlabel, labels, markset='var', filename=None, density=Fal
 def plotdata(ds, labels, title
     , xylabels # {'x':'...', 'y':'...'}
     , markset='var', filename=None
-    , isBase=True):
+    , isBase=True
+    , logx=False
+    , logy=False
+    , isline=True):
     # plot degree distribution from data set
     # data set is a list of x and y data to plot
 
@@ -131,6 +134,8 @@ def plotdata(ds, labels, title
     for xy in ds:
         try:
             mark = itm.next()
+            if not isline:
+                mark = mark[:-1]
         except AttributeError:
             itm = iter(MARKERS[markset])
             mark = itm.next()
@@ -155,24 +160,36 @@ def plotdata(ds, labels, title
     if len(labels) > 0:
         ax.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
 
+    if logx and logy:
+        ax.loglog()
+    elif logx:
+        ax.semilogx()
+    elif logy:
+        ax.semilogy()
+
     if filename:
         plt.savefig(filename)
     else:
         plt.show()
 
 def plotdegdist(ds, labels, markset='var', filename=None
-    , isBase=True
     , title='Degree distribution'
-    , xylabels={'x':'Degree', 'y':'Number of Nodes'}):
+    , xylabels={'x':'Degree', 'y':'Number of Nodes'}
+    , nbins=20
+    , density=False
+    , logx=False
+    , logy=True):
     # plot degree distribution from data set
     # data set is a list of x and y data to plot
 
-    ###belum selesai!!!
-    y, bins = np.histogram(degrees, bins=lbins, density=density)
+    y, bins = np.histogram(ds[0], bins=nbins, density=density)
     x = bins[:-1]
 
-    plotdata(ds, labels, title, xylabels
-        , markset, filename, isBase)
+    ###belum selesai!!!
+    #bikin list of list, hapus elemen yang nol
+
+    plotdata([[x, y]], labels, title, xylabels
+        , markset, filename, isBase=False, logx=logx, logy=logy, isline=False)
 
 def plotfailnodes(ds, labels, markset='var', filename=None
     , isBase=True
@@ -209,9 +226,6 @@ def loaddata(ds, func, data, step=300, norm=True):
         ds.append([x, y])
 
     elif func in [FUNC_DISTINDEG, FUNC_DISTOUTDEG]:
-        x = []
-        y = []
-
         if FUNC_DISTINDEG:
             degrees = data['indegree']
         else:
@@ -299,7 +313,16 @@ def main(argv):
 
     elif func in [FUNC_DISTINDEG, FUNC_DISTOUTDEG]:
         # degree distribution plot
-        plotdata(ds, xlabel, getargval(dictarg, '-l'), getargval(dictarg, '-s', [None])[0])
+
+        if FUNC_DISTINDEG:
+            title = 'Indegree distribution'
+            xylabels = {'x':'Indegree', 'y':'Number of Nodes'}
+        else:
+            title = 'Outdegree distribution'
+            xylabels = {'x':'Outdegree', 'y':'Number of Nodes'}
+
+        plotdegdist(ds, getargval(dictarg, '-l'), getargval(dictarg, '-m', ['var'])[0], getargval(dictarg, '-s', [None])[0]
+            , title=title, xylabels=xylabels, nbins=50)
 
 if __name__ == '__main__':
     sys.exit(main(sys.argv))
