@@ -182,13 +182,13 @@ def plotdegdist(ds, labels, markset='var', filename=None
     # plot degree distribution from data set
     # data set is a list of x and y data to plot
 
-    y, bins = np.histogram(ds[0], bins=nbins, density=density)
-    x = bins[:-1]
+    lsdeg = []
+    for degrees in ds:
+        y, bins = np.histogram(degrees, bins=nbins, density=density)
+        x = bins[:-1]
+        lsdeg.append([x, y])
 
-    ###belum selesai!!!
-    #bikin list of list, hapus elemen yang nol
-
-    plotdata([[x, y]], labels, title, xylabels
+    plotdata(lsdeg, labels, title, xylabels
         , markset, filename, isBase=False, logx=logx, logy=logy, isline=False)
 
 def plotfailnodes(ds, labels, markset='var', filename=None
