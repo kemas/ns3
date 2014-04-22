@@ -1,0 +1,1 @@
+python scratch/plot.py li simdata/svcsim_10k_10k_d9_a3_i10.json simdata/svcsim_10k_10k_d9_a3_i10.json simdata/svcsim_10k_10k_d9_a3_i10.json simdata/svcsim_10k_10k_d9_a3_i10.json simdata/svcsim_10k_10k_d9_a3_i10.json simdata/svcsim_10k_10k_d9_a3_i10.json simdata/svcsim_10k_10k_d9_a3_i10.json simdata/svcsim_10k_10k_d9_a3_i10.json
