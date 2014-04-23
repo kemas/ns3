@@ -1,15 +1,19 @@
 import sys
 import json
+import types
 
 OPT_AVGFILE = '-a'
 OPT_FILES = '-f'
 OPT_FIELDS = '-c'
 OPTS = (OPT_AVGFILE, OPT_FILES, OPT_FIELDS)
 
+def rounddiv(n, d):
+    return (((n << 1) // d) + 1) >> 1
+
 def average(avgfile, **kwargs):
     # **kwargs: *files, *fields
-    # calculate the average of data in each field from each file
-    # save it to a new file
+    # calculate the average of data in each field for all files
+    # save it to a new file avgfile
 
     fileset = []
     for filename in kwargs['files']:
@@ -25,9 +29,8 @@ def average(avgfile, **kwargs):
         # add the first dataset of fileset to avgds dictionary
         avgds[col] = fileset[0][col]
 
-        # add the remaining data from fileset
-        if len(fileset) > 1:
-            collen = len(avgds[col])
+        if type(avgds[col]) == types.ListType:
+            collen = min(len(i[col]) for i in fileset)
 
             for ds in fileset[1:]:
                 for i in range(collen):
@@ -35,7 +38,15 @@ def average(avgfile, **kwargs):
 
             # calculate the average (divide by the length of fileset)
             for i in range(collen):
-                avgds[col][i] = round(avgds[col][i] / float(len(fileset)), 2)
+                avgds[col][i] = rounddiv(avgds[col][i], len(fileset))
+
+        else:
+            # types.IntegerType
+            for ds in fileset[1:]:
+                avgds[col] += ds[col]
+
+            # calculate the average (divide by the length of fileset)
+            avgds[col] = rounddiv(avgds[col], len(fileset))
 
     # save avgds to avgfile
     fnew = open(avgfile, 'w')
@@ -47,6 +58,7 @@ def average(avgfile, **kwargs):
 def printusage():
     print "Usage: python simdata.py -a <avgfile> -f <file-1>[ <file-n>] -c <field-1>[ <file-m>]"
     print "Example: python simdata.py -a avgfile.json -f data1.json data2.json -c field1 field2"
+    sys.exit()
 
 def readargv(argv, pos=1, opt='', dictarg={}):
     if pos >= len(argv):
@@ -56,7 +68,6 @@ def readargv(argv, pos=1, opt='', dictarg={}):
     if pos == 1 or currarg[0] == '-':
         if currarg not in OPTS:
             printusage()
-            return
 
         readargv(argv, pos + 1, currarg, dictarg)
 
@@ -70,14 +81,14 @@ def readargv(argv, pos=1, opt='', dictarg={}):
     return dictarg
 
 def getargval(dictarg, key, ifnone=[]):
-    if dictarg.has_key(key):
+    try:
         return dictarg[key]
-    else:
-        return ifnone
+    except:
+        printusage()
 
 def main(argv):
     dictarg = readargv(argv)
-    average(getargval(dictarg, '-a')[0], getargval(dictarg, '-f'), getargval(dictarg, '-c'))
+    average(getargval(dictarg, '-a')[0], files=getargval(dictarg, '-f'), fields=getargval(dictarg, '-c'))
 
 if __name__ == '__main__':
     sys.exit(main(sys.argv))

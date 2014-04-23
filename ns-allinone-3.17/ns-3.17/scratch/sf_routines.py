@@ -5,7 +5,14 @@ import json
 GAMMA = u'\u03b3'
 LOGBINBASE = 1.2
 
-def drawhistogram(vertices, nbins=20, normed=False, facecolor='green', alpha=0.5, histtype='bar', log=False, savetofile=True):
+def savetofile(obj, filename):
+    f = open(filename or 'basim.json', 'w')
+    try:
+        json.dump(obj, f)
+    finally:
+        f.close()
+
+def drawhistogram(vertices, nbins=20, filename=None, normed=False, facecolor='green', alpha=0.5, histtype='bar', log=False):
     # the histogram of the degree distribution
 
     degrees = [vertices.getvertex(i).getdegree() for i in range(vertices.getlength())]
@@ -15,13 +22,8 @@ def drawhistogram(vertices, nbins=20, normed=False, facecolor='green', alpha=0.5
     plt.ylabel('Number of nodes')
     plt.show()
 
-    if savetofile:
-        obj = [int(i) for i in n]
-        f = open('histogram.json', 'w')
-        try:
-            json.dump(obj, f)
-        finally:
-            f.close()
+    # save to file
+    savetofile({'indegree': degrees}, filename)
 
 def logbins(amax, amin=0, base=LOGBINBASE):
     bins = [amin]
@@ -37,7 +39,7 @@ def logbins(amax, amin=0, base=LOGBINBASE):
  
     return bins
 
-def drawloglogdist(vertices, lbinsbase=LOGBINBASE, density=False):
+def drawloglogdist(vertices, lbinsbase=LOGBINBASE, density=False, filename=None):
     # the degree distribution in loglog scale
 
     lbins = logbins(vertices.maxdegree, amin=0, base=lbinsbase)
@@ -60,4 +62,7 @@ def drawloglogdist(vertices, lbinsbase=LOGBINBASE, density=False):
     plt.loglog()
     plt.title(u'Degree distribution (%s = %#.2f)' % (GAMMA, -1 * gamma))
     plt.show()
+
+    # save to file
+    savetofile({'indegree': degrees}, filename)
 

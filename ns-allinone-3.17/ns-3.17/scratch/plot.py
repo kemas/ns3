@@ -126,7 +126,7 @@ def plotdata(ds, labels, title
     # data set is a list of x and y data to plot
 
     fig = plt.figure()
-    ax = fig.add_axes([0.1, 0.1, 0.65, 0.8])
+    ax = fig.add_axes([0.1, 0.1, 0.6, 0.8])
 
     itm = iter(MARKERS[markset])
     maxxy = 0
@@ -177,7 +177,7 @@ def plotdegdist(ds, labels, markset='var', filename=None
     , xylabels={'x':'Degree', 'y':'Number of Nodes'}
     , nbins=20
     , density=False
-    , logx=False
+    , logx=True
     , logy=True):
     # plot degree distribution from data set
     # data set is a list of x and y data to plot
@@ -186,7 +186,15 @@ def plotdegdist(ds, labels, markset='var', filename=None
     for degrees in ds:
         y, bins = np.histogram(degrees, bins=nbins, density=density)
         x = bins[:-1]
-        lsdeg.append([x, y])
+
+        lsy = []; lsx = []
+        for i in range(len(y)):
+            if y[i] > 0:
+                lsy.append(y[i])
+                lsx.append(x[i])
+
+        lsdeg.append([lsx, lsy])
+#        lsdeg.append([x, y])
 
     plotdata(lsdeg, labels, title, xylabels
         , markset, filename, isBase=False, logx=logx, logy=logy, isline=False)
@@ -202,14 +210,13 @@ def plotfailnodes(ds, labels, markset='var', filename=None
         , markset, filename, isBase)
 
 def loaddata(ds, func, data, step=300, norm=True):
-    nbofnodes = 1
-    if norm:
-        # get the number of nodes
-        nbofnodes = float(data['nodescreated'][-1])
-
     if func == FUNC_FAIL:
-        x = []
-        y = []
+        nbofnodes = 1
+        if norm:
+            # get the number of nodes
+            nbofnodes = float(data['nodescreated'][-1])
+            x = []
+            y = []
 
         nodesremoved = data['nodesremoved']
         found = False; i = 0

@@ -45,6 +45,7 @@ MAX_TIME = 100000
 FREQ = 1
 MAX_FREQ = 10
 MODEL = 'sf' # scale-free model
+FILENAME = 'basim.json'
 
 def main(argv):
     cmd = ns.core.CommandLine()
@@ -62,7 +63,10 @@ def main(argv):
     cmd.AddValue("freq", "How many times m_add nodes will be added to the network for each second")
 
     cmd.model = None
-    cmd.AddValue("model", "The network model to generate (scale-free: pref, random: rand)")
+    cmd.AddValue("model", "The network model to generate (scale-free: sf, exponential: exp)")
+
+    cmd.filename = None
+    cmd.AddValue("filename", "File name to save the result in json format")
 
     cmd.Parse(argv)
 
@@ -109,6 +113,11 @@ def main(argv):
             print "Possible arguments for model parameter are 'sf' and 'exp' for BA scale-free and exponential network, respectively"
             sys.exit()
 
+    if cmd.filename is None:
+        filename = FILENAME
+    else:
+        filename = cmd.filename
+
     vertices = sf_nodes.Vertices()
     bamodel.initnodes(vertices, m0)
 
@@ -127,7 +136,7 @@ def main(argv):
         for j in range(freq):
             ns.core.Simulator.Schedule(ns.core.Seconds(i), bamodel.grow, vertices, m_add, model==MODEL)
     #ns.core.Simulator.Schedule(ns.core.Seconds(time+1), sf_routines.drawloglogdist, vertices, lbinsbase, True)
-    ns.core.Simulator.Schedule(ns.core.Seconds(time+1), sf_routines.drawhistogram, vertices, 30)
+    ns.core.Simulator.Schedule(ns.core.Seconds(time+1), sf_routines.drawhistogram, vertices, 30, filename)
 
     ns.core.Simulator.Stop(ns.core.Seconds(time + 2))
     ns.core.Simulator.Run()
