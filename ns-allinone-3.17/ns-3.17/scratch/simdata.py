@@ -22,31 +22,54 @@ def average(avgfile, **kwargs):
             fileset.append(json.load(f))
         finally:
             f.close()
+    lenfset = len(fileset)
+
+    if kwargs['fields'][0] == '*':
+        # all fields based on the first file
+        fields = fileset[0].keys()
+    else:
+        fields = kwargs['fields'] 
 
     # average the data
     avgds = {}
-    for col in kwargs['fields']:
-        # add the first dataset of fileset to avgds dictionary
-        avgds[col] = fileset[0][col]
+    for col in fields:
+        firstds = fileset[0][col]
 
-        if type(avgds[col]) == types.ListType:
-            collen = min(len(i[col]) for i in fileset)
+        if type(firstds) == types.ListType:
+            collen = max(len(i[col]) for i in fileset)
+
+            # add the first dataset of fileset to avgds dictionary
+            #avgds[col] = firstds[:collen]
+            lenfds = len(firstds)
+            avgds[col] = firstds + [firstds[-1] for i in range(collen - lenfds)]
+            #recavgds = [1 for i in range(lenfds)] + [0 for i in range(collen - lenfds)]
+            #recavgds = [1 for i in range(collen)]
 
             for ds in fileset[1:]:
-                for i in range(collen):
+                currlen = len(ds[col])
+                for i in range(currlen):
                     avgds[col][i] += ds[col][i]
+                    #recavgds[i] += 1
 
-            # calculate the average (divide by the length of fileset)
+                for i in range(collen - currlen):
+                    avgds[col][-i - 1] += ds[col][-1]
+                #avgds[col][i] += [ds[col][-1] for i in range(collen - currlen)]
+
+            # calculate the average (divide by the number of records at each value)
             for i in range(collen):
-                avgds[col][i] = rounddiv(avgds[col][i], len(fileset))
+                #avgds[col][i] = rounddiv(avgds[col][i], recavgds[i])
+                avgds[col][i] = rounddiv(avgds[col][i], lenfset)
 
         else:
+            # add the first dataset of fileset to avgds dictionary
+            avgds[col] = firstds
+
             # types.IntegerType
             for ds in fileset[1:]:
                 avgds[col] += ds[col]
 
             # calculate the average (divide by the length of fileset)
-            avgds[col] = rounddiv(avgds[col], len(fileset))
+            avgds[col] = rounddiv(avgds[col], lenfset)
 
     # save avgds to avgfile
     fnew = open(avgfile, 'w')
