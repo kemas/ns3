@@ -165,3 +165,76 @@ python scratch/plot.py -f \
 -l "<dep>=1" "<dep>=1" "<dep>=1.5" "<dep>=1.5" "<dep>=2" "<dep>=2" "<dep>=2.5" "<dep>=2.5" "<dep>=3" "<dep>=3" \
     "<dep>=3.5" "<dep>=3.5" "<dep>=4" "<dep>=4" "<dep>=4.5" "<dep>=4.5" "<dep>=5" "<dep>=5" \
 -m sym
+
+python scratch/plot.py -e \
+    simdata/svcsim_10k_10k_d3_a1_i10_avg1_4.json \
+    simdata/svcsim_10k_10k_d3_a2_i10_avg1_4.json \
+    simdata/svcsim_10k_10k_d3_a3_i10_avg1_4.json \
+    simdata/svcsim_10k_10k_d3_a4_i10_avg1_4.json \
+    simdata/svcsim_10k_10k_d3_a5_i10_avg1_4.json \
+    simdata/svcsim_10k_10k_d3_a6_i10_avg1_4.json \
+    simdata/svcsim_10k_10k_d3_a7_i10_avg1_4.json \
+    simdata/svcsim_10k_10k_d3_a8_i10_avg1_6.json \
+    simdata/svcsim_10k_10k_d3_a9_i10_avg1_6.json \
+    simdata/svcsim_10k_10k_d3_a10_i10_avg1_6.json \
+    simdata/svcsim_10k_10k_d3_a11_i10_avg1_4.json \
+-r 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 \
+-l r=0.1 r=0.2 r=0.3 r=0.4 r=0.5 r=0.6 r=0.7 r=0.8 r=0.9 \
+-xl "The average number of alternate services" \
+-yl "Number of cascaded fail nodes" \
+-t "The effect of alternate services on cascading failure" \
+-x 0 0.5 1 1.5 2 2.5 3 3.5 4 4.5 5 5.5
+
+python scratch/plot.py -e \
+    simdata/svcsim_10k_10k_d3_a3_i10_avg1_4.json \
+    simdata/svcsim_10k_10k_d4_a3_i10_avg1_4.json \
+    simdata/svcsim_10k_10k_d5_a3_i10_avg1_4.json \
+    simdata/svcsim_10k_10k_d6_a3_i10_avg1_4.json \
+    simdata/svcsim_10k_10k_d7_a3_i10_avg1_4.json \
+    simdata/svcsim_10k_10k_d8_a3_i10_avg1_6.json \
+    simdata/svcsim_10k_10k_d9_a3_i10_avg1_6.json \
+    simdata/svcsim_10k_10k_d10_a3_i10_avg1_6.json \
+    simdata/svcsim_10k_10k_d11_a3_i10_avg1_4.json \
+-r 0.1 0.2 0.3 0.4 0.5 0.6 0.7 \
+-l r=0.1 r=0.2 r=0.3 r=0.4 r=0.5 r=0.6 r=0.7 \
+-xl "The degree of dependency" \
+-yl "Number of cascaded fail nodes" \
+-t "The effect of dependency on cascading failure" \
+-x 1 1.5 2 2.5 3 3.5 4 4.5 5 5.5
+
+python scratch/plot.py -e \
+    simdata/rsvcsim_10k_10k_d3_a1_i10_avg1_4.json \
+    simdata/rsvcsim_10k_10k_d3_a2_i10_avg1_4.json \
+    simdata/rsvcsim_10k_10k_d3_a3_i10_avg1_4.json \
+    simdata/rsvcsim_10k_10k_d3_a4_i10_avg1_4.json \
+    simdata/rsvcsim_10k_10k_d3_a5_i10_avg1_4.json \
+    simdata/rsvcsim_10k_10k_d3_a6_i10_avg1_4.json \
+    simdata/rsvcsim_10k_10k_d3_a7_i10_avg1_4.json \
+    simdata/rsvcsim_10k_10k_d3_a8_i10_avg1_6.json \
+    simdata/rsvcsim_10k_10k_d3_a9_i10_avg1_6.json \
+    simdata/rsvcsim_10k_10k_d3_a10_i10_avg1_6.json \
+    simdata/rsvcsim_10k_10k_d3_a11_i10_avg1_4.json \
+-r 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 \
+-l r=0.1 r=0.2 r=0.3 r=0.4 r=0.5 r=0.6 r=0.7 r=0.8 r=0.9 \
+-xl "The average number of alternate services" \
+-yl "Number of cascaded fail nodes" \
+-t "The effect of alternate services on cascading failure" \
+-x 0 0.5 1 1.5 2 2.5 3 3.5 4 4.5 5 5.5
+
+python scratch/plot.py -e \
+    simdata/rsvcsim_10k_10k_d3_a3_i10_avg1_4.json \
+    simdata/rsvcsim_10k_10k_d4_a3_i10_avg1_4.json \
+    simdata/rsvcsim_10k_10k_d5_a3_i10_avg1_4.json \
+    simdata/rsvcsim_10k_10k_d6_a3_i10_avg1_4.json \
+    simdata/rsvcsim_10k_10k_d7_a3_i10_avg1_4.json \
+    simdata/rsvcsim_10k_10k_d8_a3_i10_avg1_6.json \
+    simdata/rsvcsim_10k_10k_d9_a3_i10_avg1_6.json \
+    simdata/rsvcsim_10k_10k_d10_a3_i10_avg1_6.json \
+    simdata/rsvcsim_10k_10k_d11_a3_i10_avg1_4.json \
+-r 0.1 0.2 0.3 0.4 0.5 0.6 0.7 \
+-l r=0.1 r=0.2 r=0.3 r=0.4 r=0.5 r=0.6 r=0.7 \
+-xl "The degree of dependency" \
+-yl "Number of cascaded fail nodes" \
+-t "The effect of dependency on cascading failure" \
+-x 1 1.5 2 2.5 3 3.5 4 4.5 5 5.5
+

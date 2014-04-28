@@ -8,13 +8,14 @@ import json
 GAMMA = u'\u03b3'
 LOGBINBASE = 1.09
 FUNC_FAIL = '-f'
+FUNC_EFF = '-e'
 FUNC_LOGINDEG = '-li'
 FUNC_LOGOUTDEG = '-lo'
 FUNC_HISTINDEG = '-hi'
 FUNC_HISTOUTDEG = '-ho'
 FUNC_DISTINDEG = '-di'
 FUNC_DISTOUTDEG = '-do'
-FUNCOPTS = (FUNC_FAIL, FUNC_LOGINDEG, FUNC_LOGOUTDEG, FUNC_HISTINDEG, FUNC_HISTOUTDEG, FUNC_DISTINDEG, FUNC_DISTOUTDEG)
+FUNCOPTS = (FUNC_FAIL, FUNC_EFF, FUNC_LOGINDEG, FUNC_LOGOUTDEG, FUNC_HISTINDEG, FUNC_HISTOUTDEG, FUNC_DISTINDEG, FUNC_DISTOUTDEG)
 
 MARKERS = {'var':['bo-', 'rs-', 'bv-', 'rD-', 'b+-', 'rx-', 'b*-', 'r|-', 'bp-', 'r.-', 'b,-', 'r1-', 'b2-', 'r3-', 'b4-',\
                  'ro-', 'bs-', 'rv-', 'bD-', 'r+-', 'bx-', 'r*-', 'b|-', 'rp-', 'b.-', 'r,-', 'b1-', 'r2-', 'b3-', 'r4-']
@@ -120,7 +121,7 @@ def drawloglogdist(ds, xlabel, labels, markset='var', filename=None, density=Fal
 def plotdata(ds, labels, title
     , xylabels # {'x':'...', 'y':'...'}
     , markset='var', filename=None
-    , isBase=True
+    , isbase=True
     , logx=False
     , logy=False
     , isline=True):
@@ -148,11 +149,12 @@ def plotdata(ds, labels, title
         else:
             ax.plot(xy[0], xy[1], mark)
 
-        currmaxxy = max(max(xy[0]), max(xy[1]))
-        if maxxy < currmaxxy:
-            maxxy = currmaxxy
+        if isbase:
+            currmaxxy = max(max(xy[0]), max(xy[1]))
+            if maxxy < currmaxxy:
+                maxxy = currmaxxy
 
-    if isBase:
+    if isbase:
         # create baseline x=y
         ax.plot([0, maxxy], [0, maxxy], 'g-')
 
@@ -199,20 +201,60 @@ def plotdegdist(ds, labels, markset='var', filename=None
 #        lsdeg.append([x, y])
 
     plotdata(lsdeg, labels, title, xylabels
-        , markset, filename, isBase=False, logx=logx, logy=logy, isline=False)
+        , markset, filename, isbase=False, logx=logx, logy=logy, isline=False)
 
 def plotfailnodes(ds, labels, markset='var', filename=None
-    , isBase=True
+    , isbase=True
     , title='Random cascading failure in service network'
     , xylabels={'x':'Nodes removed', 'y':'Nodes fail'}):
     # plot fail nodes from data set
     # data set is a list of x and y data to plot
 
     plotdata(ds, labels, title, xylabels
-        , markset, filename, isBase)
+        , markset, filename, isbase)
+
+def plotcasceff(ds, labels, randomfails, xylabels, xaxis
+    , markset='var'
+    , filename=None
+    , isbase=False
+    , title='Random cascading failure in service network'):
+    # plot cascading effect where the data series are different number of nodes fail randomly
+    # the y axis (cascading effect, number of active nodes) is the number of cascading fail nodes
+    # the x axis is either the number of alternative, the number of dependency, the combination of both
+
+    plots = []
+    # series
+    for r in randomfails:
+
+        x = [] # holds the degree of interdependency 
+        y = [] # holds the number of cascaded fail nodes
+        # geting xy coordinates
+        for i in range(len(ds)):
+            val = ds[i]
+            nodesremoved = val[0] # number of randomly fail nodes
+            nodesfail = val[1] # number of nodes fail (both randomly chosen and cascaded fail nodes)
+            reccount = len(nodesremoved)
+
+            j = 0
+            found = False
+            while j < reccount and not found:
+                if float(r) > nodesremoved[j]:
+                    j += 1
+                else:
+                    # found
+                    found = True
+
+            if found:
+                x.append(float(xaxis[i]))
+                y.append(nodesfail[j] - nodesremoved[j])
+
+        plots.append([x, y])
+
+    plotdata(plots, labels, title, xylabels
+        , markset, filename, isbase)
 
 def loaddata(ds, func, data, step=300, norm=True):
-    if func == FUNC_FAIL:
+    if func in [FUNC_FAIL, FUNC_EFF]:
         nbofnodes = 1
         if norm:
             # get the number of nodes
@@ -233,6 +275,10 @@ def loaddata(ds, func, data, step=300, norm=True):
             y = [fail / nbofnodes for fail in data['nodesfail'][i::step]]
 
         ds.append([x, y])
+
+#        if func == FUNC_EFF:
+#            # ds = [[nodesremoved, nodesfail, xval], ...]
+#            ds[-1].append(data['xval'])
 
     elif func in [FUNC_DISTINDEG, FUNC_DISTOUTDEG]:
         if FUNC_DISTINDEG:
@@ -269,7 +315,7 @@ def readargv(argv, pos=1, opt='', dictarg={}):
             dictarg['func'] = currarg
             currarg = 'files'
 
-        elif currarg not in ['-l', '-m', '-s']:
+        elif currarg not in ['-l', '-m', '-s', '-x', '-r', '-xl', '-yl', '-t']:
             printusage()
             return
 
@@ -288,7 +334,7 @@ def getargval(dictarg, key, ifnone=[]):
         return ifnone
 
 def printusage():
-    print "Usage: python plot.py -<function option> <file-1> [file-n] [-l label-1 label-n] [-m markset] [-s filename]"
+    print "Usage: python plot.py -<function option> <file-1> [file-n] [-l label-1 label-n] [-m markset] [-s filename] [-x x-1 x-m -r r-1 r-p]"
     print "Example: python plot.py -f data1.json data2.json -l \"data 1\" \"data 2\" -m var -s \"graph.png\""
 
 def main(argv):
@@ -296,10 +342,14 @@ def main(argv):
 
     func = dictarg['func']
     ds = []
-    for filename in dictarg['files']:
-        f = open(filename)
+    for i in range(len(dictarg['files'])):
+        f = open(dictarg['files'][i])
         try:
             data = json.load(f)
+
+            #if func == FUNC_EFF:
+            #    data['xval'] = dictarg['xval'][i]
+
             loaddata(ds, func, data)
         finally:
             f.close()
@@ -311,6 +361,10 @@ def main(argv):
 
     if func == FUNC_FAIL:
         plotfailnodes(ds, getargval(dictarg, '-l'), getargval(dictarg, '-m', ['var'])[0], getargval(dictarg, '-s', [None])[0])
+
+    elif func == FUNC_EFF:
+        plotcasceff(ds, getargval(dictarg, '-l'), getargval(dictarg, '-r'), {'x': getargval(dictarg, '-xl')[0], 'y': getargval(dictarg, '-yl')[0]}
+                    , getargval(dictarg, '-x'), getargval(dictarg, '-m', ['var'])[0], getargval(dictarg, '-s', [None])[0], title=getargval(dictarg, '-t')[0])
 
     elif func in [FUNC_LOGINDEG, FUNC_LOGOUTDEG]:
         # loglog degree distribution
