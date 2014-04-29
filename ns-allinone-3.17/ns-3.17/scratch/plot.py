@@ -7,7 +7,9 @@ import json
 
 GAMMA = u'\u03b3'
 LOGBINBASE = 1.09
+STEP = 300 #300
 FUNC_FAIL = '-f'
+FUNC_FAILCASC = '-fc'
 FUNC_EFF = '-e'
 FUNC_LOGINDEG = '-li'
 FUNC_LOGOUTDEG = '-lo'
@@ -15,7 +17,7 @@ FUNC_HISTINDEG = '-hi'
 FUNC_HISTOUTDEG = '-ho'
 FUNC_DISTINDEG = '-di'
 FUNC_DISTOUTDEG = '-do'
-FUNCOPTS = (FUNC_FAIL, FUNC_EFF, FUNC_LOGINDEG, FUNC_LOGOUTDEG, FUNC_HISTINDEG, FUNC_HISTOUTDEG, FUNC_DISTINDEG, FUNC_DISTOUTDEG)
+FUNCOPTS = (FUNC_FAIL, FUNC_FAILCASC, FUNC_EFF, FUNC_LOGINDEG, FUNC_LOGOUTDEG, FUNC_HISTINDEG, FUNC_HISTOUTDEG, FUNC_DISTINDEG, FUNC_DISTOUTDEG)
 
 MARKERS = {'var':['bo-', 'rs-', 'bv-', 'rD-', 'b+-', 'rx-', 'b*-', 'r|-', 'bp-', 'r.-', 'b,-', 'r1-', 'b2-', 'r3-', 'b4-',\
                  'ro-', 'bs-', 'rv-', 'bD-', 'r+-', 'bx-', 'r*-', 'b|-', 'rp-', 'b.-', 'r,-', 'b1-', 'r2-', 'b3-', 'r4-']
@@ -120,7 +122,8 @@ def drawloglogdist(ds, xlabel, labels, markset='var', filename=None, density=Fal
 
 def plotdata(ds, labels, title
     , xylabels # {'x':'...', 'y':'...'}
-    , markset='var', filename=None
+    , markset='var'
+    , filename=None
     , isbase=True
     , logx=False
     , logy=False
@@ -253,14 +256,12 @@ def plotcasceff(ds, labels, randomfails, xylabels, xaxis
     plotdata(plots, labels, title, xylabels
         , markset, filename, isbase)
 
-def loaddata(ds, func, data, step=300, norm=True):
-    if func in [FUNC_FAIL, FUNC_EFF]:
+def loaddata(ds, func, data, step=STEP, norm=True):
+    if func in [FUNC_FAIL, FUNC_FAILCASC, FUNC_EFF]:
         nbofnodes = 1
         if norm:
             # get the number of nodes
             nbofnodes = float(data['nodescreated'][-1])
-            x = []
-            y = []
 
         nodesremoved = data['nodesremoved']
         found = False; i = 0
@@ -270,9 +271,24 @@ def loaddata(ds, func, data, step=300, norm=True):
             else:
                 i += 1
 
+        x = []
+        y = []
         if found:
-            x = [rmv / nbofnodes for rmv in nodesremoved[i::step]]
-            y = [fail / nbofnodes for fail in data['nodesfail'][i::step]]
+            if func == FUNC_FAILCASC:
+                # for y axis, only calculate the number of nodes that fail because of cascading failure
+                # excluding those randomly chosen to be fail
+
+                for j in range(i, len(nodesremoved), step):
+                    xval = nodesremoved[j] / nbofnodes
+                    yval = data['nodesfail'][j] / nbofnodes - xval
+                    x.append(xval)
+                    y.append(yval)
+
+            else:
+                # FUNC_FAIL, FUNC_EFF
+
+                x = [rmv / nbofnodes for rmv in nodesremoved[i::step]]
+                y = [fail / nbofnodes for fail in data['nodesfail'][i::step]]
 
         ds.append([x, y])
 
@@ -359,8 +375,14 @@ def main(argv):
     elif func in [FUNC_LOGOUTDEG, FUNC_HISTOUTDEG]:
         xlabel = 'Outdegree'
 
-    if func == FUNC_FAIL:
-        plotfailnodes(ds, getargval(dictarg, '-l'), getargval(dictarg, '-m', ['var'])[0], getargval(dictarg, '-s', [None])[0])
+    if func in [FUNC_FAIL, FUNC_FAILCASC]:
+        if func == FUNC_FAIL:
+            xylabels={'x':'Number of nodes fail randomly', 'y':'Total number of nodes fail (randomly + cascaded fail)'}
+        else:
+            # FUNC_FAILCASC
+            xylabels={'x':'Number of nodes fail randomly', 'y':'Number of cascaded fail nodes'}
+
+        plotfailnodes(ds, getargval(dictarg, '-l'), getargval(dictarg, '-m', ['var'])[0], getargval(dictarg, '-s', [None])[0], isbase=func==FUNC_FAIL, xylabels=xylabels)
 
     elif func == FUNC_EFF:
         plotcasceff(ds, getargval(dictarg, '-l'), getargval(dictarg, '-r'), {'x': getargval(dictarg, '-xl')[0], 'y': getargval(dictarg, '-yl')[0]}
