@@ -4,7 +4,7 @@
 python scratch/plot.py -li \
     simdata/svcsim_10k_10k_d3_a1_i10_avg1_4.json \
     simdata/svcsim_10k_10k_d3_a2_i10_avg1_4.json \
-    simdata/svcsim_10k_10k_d3_a3_i10_avg1_4.json \
+    simdata/svcsim_10k_10k_d3_a3_i10_avg1_6.json \
     simdata/svcsim_10k_10k_d3_a4_i10_avg1_4.json \
     simdata/svcsim_10k_10k_d3_a5_i10_avg1_4.json \
     simdata/svcsim_10k_10k_d3_a6_i10_avg1_4.json \
@@ -18,7 +18,7 @@ python scratch/plot.py -li \
 python scratch/plot.py -f \
     simdata/svcsim_10k_10k_d3_a1_i10_avg1_4.json \
     simdata/svcsim_10k_10k_d3_a2_i10_avg1_4.json \
-    simdata/svcsim_10k_10k_d3_a3_i10_avg1_4.json \
+    simdata/svcsim_10k_10k_d3_a3_i10_avg1_6.json \
     simdata/svcsim_10k_10k_d3_a4_i10_avg1_4.json \
     simdata/svcsim_10k_10k_d3_a5_i10_avg1_4.json \
     simdata/svcsim_10k_10k_d3_a6_i10_avg1_4.json \
@@ -38,27 +38,27 @@ python scratch/plot.py -f \
 
 # plotting scale-free network with <alt> = 1, <dep> from 1 to 5
 python scratch/plot.py -li \
-    simdata/svcsim_10k_10k_d3_a3_i10_avg1_4.json \
+    simdata/svcsim_10k_10k_d3_a3_i10_avg1_6.json \
     simdata/svcsim_10k_10k_d4_a3_i10_avg1_4.json \
     simdata/svcsim_10k_10k_d5_a3_i10_avg1_4.json \
     simdata/svcsim_10k_10k_d6_a3_i10_avg1_4.json \
-    simdata/svcsim_10k_10k_d7_a3_i10_avg1_4.json \
-    simdata/svcsim_10k_10k_d8_a3_i10_avg1_6.json \
+    simdata/svcsim_10k_10k_d7_a3_i10_avg23456.json \
+    simdata/svcsim_10k_10k_d8_a3_i10_avg1456.json \
     simdata/svcsim_10k_10k_d9_a3_i10_avg1_6.json \
     simdata/svcsim_10k_10k_d10_a3_i10_avg1_6.json \
-    simdata/svcsim_10k_10k_d11_a3_i10_avg1_4.json \
+    simdata/svcsim_10k_10k_d11_a3_i10_avg12346.json \
 -l "<dep>=1" "<dep>=1.5" "<dep>=2" "<dep>=2.5" "<dep>=3" "<dep>=3.5" "<dep>=4" "<dep>=4.5" "<dep>=5"
 
 python scratch/plot.py -f \
-    simdata/svcsim_10k_10k_d3_a3_i10_avg1_4.json \
+    simdata/svcsim_10k_10k_d3_a3_i10_avg1_6.json \
     simdata/svcsim_10k_10k_d4_a3_i10_avg1_4.json \
     simdata/svcsim_10k_10k_d5_a3_i10_avg1_4.json \
     simdata/svcsim_10k_10k_d6_a3_i10_avg1_4.json \
-    simdata/svcsim_10k_10k_d7_a3_i10_avg1_4.json \
-    simdata/svcsim_10k_10k_d8_a3_i10_avg1_6.json \
+    simdata/svcsim_10k_10k_d7_a3_i10_avg23456.json \
+    simdata/svcsim_10k_10k_d8_a3_i10_avg1456.json \
     simdata/svcsim_10k_10k_d9_a3_i10_avg1_6.json \
     simdata/svcsim_10k_10k_d10_a3_i10_avg1_6.json \
-    simdata/svcsim_10k_10k_d11_a3_i10_avg1_4.json \
+    simdata/svcsim_10k_10k_d11_a3_i10_avg12346.json \
 -l "<dep>=1" "<dep>=1.5" "<dep>=2" "<dep>=2.5" "<dep>=3" "<dep>=3.5" "<dep>=4" "<dep>=4.5" "<dep>=5"
 
 # plotting exponential network with <dep> = 1 <alt> = no alt, 1-5
@@ -121,7 +121,7 @@ python scratch/plot.py -f \
     simdata/rsvcsim_10k_10k_d3_a1_i10_avg1_4.json \
     simdata/svcsim_10k_10k_d3_a2_i10_avg1_4.json \
     simdata/rsvcsim_10k_10k_d3_a2_i10_avg1_4.json \
-    simdata/svcsim_10k_10k_d3_a3_i10_avg1_4.json \
+    simdata/svcsim_10k_10k_d3_a3_i10_avg1_6.json \
     simdata/rsvcsim_10k_10k_d3_a3_i10_avg1_4.json \
     simdata/svcsim_10k_10k_d3_a4_i10_avg1_4.json \
     simdata/rsvcsim_10k_10k_d3_a4_i10_avg1_4.json \
@@ -144,7 +144,7 @@ python scratch/plot.py -f \
 -m sym
 
 python scratch/plot.py -f \
-    simdata/svcsim_10k_10k_d3_a3_i10_avg1_4.json \
+    simdata/svcsim_10k_10k_d3_a3_i10_avg1_6.json \
     simdata/rsvcsim_10k_10k_d3_a3_i10_avg1_4.json \
     simdata/svcsim_10k_10k_d4_a3_i10_avg1_4.json \
     simdata/rsvcsim_10k_10k_d4_a3_i10_avg1_4.json \
@@ -169,7 +169,7 @@ python scratch/plot.py -f \
 python scratch/plot.py -e \
     simdata/svcsim_10k_10k_d3_a1_i10_avg1_4.json \
     simdata/svcsim_10k_10k_d3_a2_i10_avg1_4.json \
-    simdata/svcsim_10k_10k_d3_a3_i10_avg1_4.json \
+    simdata/svcsim_10k_10k_d3_a3_i10_avg1_6.json \
     simdata/svcsim_10k_10k_d3_a4_i10_avg1_4.json \
     simdata/svcsim_10k_10k_d3_a5_i10_avg1_4.json \
     simdata/svcsim_10k_10k_d3_a6_i10_avg1_4.json \
@@ -186,15 +186,15 @@ python scratch/plot.py -e \
 -x 0 0.5 1 1.5 2 2.5 3 3.5 4 4.5 5 5.5
 
 python scratch/plot.py -e \
-    simdata/svcsim_10k_10k_d3_a3_i10_avg1_4.json \
+    simdata/svcsim_10k_10k_d3_a3_i10_avg1_6.json \
     simdata/svcsim_10k_10k_d4_a3_i10_avg1_4.json \
     simdata/svcsim_10k_10k_d5_a3_i10_avg1_4.json \
     simdata/svcsim_10k_10k_d6_a3_i10_avg1_4.json \
-    simdata/svcsim_10k_10k_d7_a3_i10_avg1_4.json \
-    simdata/svcsim_10k_10k_d8_a3_i10_avg1_6.json \
+    simdata/svcsim_10k_10k_d7_a3_i10_avg23456.json \
+    simdata/svcsim_10k_10k_d8_a3_i10_avg1456.json \
     simdata/svcsim_10k_10k_d9_a3_i10_avg1_6.json \
     simdata/svcsim_10k_10k_d10_a3_i10_avg1_6.json \
-    simdata/svcsim_10k_10k_d11_a3_i10_avg1_4.json \
+    simdata/svcsim_10k_10k_d11_a3_i10_avg12346.json \
 -r 0.1 0.2 0.3 0.4 0.5 0.6 0.7 \
 -l r=0.1 r=0.2 r=0.3 r=0.4 r=0.5 r=0.6 r=0.7 \
 -xl "The degree of dependency" \
