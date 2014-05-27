@@ -8,6 +8,7 @@ import json
 GAMMA = u'\u03b3'
 LOGBINBASE = 1.09
 STEP = 300 #300
+IFNONE = [] # to be returned when getargval does not find a key
 FUNC_FAIL = '-f'
 FUNC_FAILCASC = '-fc'
 FUNC_EFF = '-e'
@@ -19,10 +20,15 @@ FUNC_DISTINDEG = '-di'
 FUNC_DISTOUTDEG = '-do'
 FUNCOPTS = (FUNC_FAIL, FUNC_FAILCASC, FUNC_EFF, FUNC_LOGINDEG, FUNC_LOGOUTDEG, FUNC_HISTINDEG, FUNC_HISTOUTDEG, FUNC_DISTINDEG, FUNC_DISTOUTDEG)
 
-MARKERS = {'var':['bo-', 'rs-', 'bv-', 'rD-', 'b+-', 'rx-', 'b*-', 'r|-', 'bp-', 'r.-', 'b,-', 'r1-', 'b2-', 'r3-', 'b4-',\
-                 'ro-', 'bs-', 'rv-', 'bD-', 'r+-', 'bx-', 'r*-', 'b|-', 'rp-', 'b.-', 'r,-', 'b1-', 'r2-', 'b3-', 'r4-']
-        , 'sym':['bo-', 'ro-', 'bs-', 'rs-', 'bv-', 'rv-', 'bD-', 'rD-', 'b+-', 'r+-', 'bx-', 'rx-', 'b*-', 'r*-', 'b|-', 'r|-',\
-                 'bp-', 'rp-', 'b.-', 'r.-', 'b,-', 'r,-', 'b1-', 'r1-', 'b2-', 'r2-', 'b3-', 'r3-', 'b4-', 'r4-']}
+MARKERS = {'var-':['wo-', 'ks-', 'wv-', 'kD-', 'w+-', 'kx-', 'w*-', 'k|-', 'wp-', 'k.-', 'w,-', 'k1-', 'w2-', 'k3-', 'w4-',\
+                 'ko-', 'ws-', 'kv-', 'wD-', 'k+-', 'wx-', 'k*-', 'w|-', 'kp-', 'w.-', 'k,-', 'w1-', 'k2-', 'w3-', 'k4-']
+        , 'sym-':['wo-', 'ko-', 'ws-', 'ks-', 'wv-', 'kv-', 'wD-', 'kD-', 'w+-', 'k+-', 'wx-', 'kx-', 'w*-', 'k*-', 'w|-', 'k|-',\
+                 'wp-', 'kp-', 'w.-', 'k.-', 'w,-', 'k,-', 'w1-', 'k1-', 'w2-', 'k2-', 'w3-', 'k3-', 'w4-', 'k4-']
+        , 'var':['wo', 'ks', 'wv', 'kD', 'w+', 'kx', 'w*', 'k|', 'wp', 'k.', 'w,', 'k1', 'w2', 'k3', 'w4',\
+                 'ko', 'ws', 'kv', 'wD', 'k+', 'wx', 'k*', 'w|', 'kp', 'w.', 'k,', 'w1', 'k2', 'w3', 'k4']
+        , 'sym':['wo', 'ko', 'ws', 'ks', 'wv', 'kv', 'wD', 'kD', 'w+', 'k+', 'wx', 'kx', 'w*', 'k*', 'w|', 'k|',\
+                 'wp', 'kp', 'w.', 'k.', 'w,', 'k,', 'w1', 'k1', 'w2', 'k2', 'w3', 'k3', 'w4', 'k4']
+        , 'black-':['ko-', 'ks-', 'kv-', 'kD-', 'k+-', 'kx-', 'k*-', 'k|-', 'kp-', 'k.-', 'k,-', 'k1-', 'k2-', 'k3-', 'k4-']}
 
 def drawhistogram(ds, xlabel, labels, filename=None, nbins=50, normed=False, facecolor='green', alpha=0.5, histtype='step', log=False):
     # the histogram of the degree distribution
@@ -184,27 +190,37 @@ def plotdegdist(ds, labels, markset='var', filename=None
     , xylabels={'x':'Degree', 'y':'Number of Nodes'}
     , nbins=20
     , density=False
-    , logx=True
-    , logy=True):
+    , logx=False
+    , logy=False
+    , norm=True):
     # plot degree distribution from data set
     # data set is a list of x and y data to plot
 
     lsdeg = []
     for degrees in ds:
-        y, bins = np.histogram(degrees, bins=nbins, density=density)
+        y, bins = np.histogram(degrees, bins=nbins, density=density, normed=False)
+        #print bins
         x = bins[:-1]
+
+        if norm:
+            nbofnodes = float(sum(y))
 
         lsy = []; lsx = []
         for i in range(len(y)):
             if y[i] > 0:
-                lsy.append(y[i])
-                lsx.append(x[i])
+                if norm:
+                    lsy.append(y[i] / nbofnodes)
+                else:        
+                    lsy.append(y[i])
+                lsx.append(round(x[i]))
 
         lsdeg.append([lsx, lsy])
 #        lsdeg.append([x, y])
 
     plotdata(lsdeg, labels, title, xylabels
         , markset, filename, isbase=False, logx=logx, logy=logy, isline=False)
+
+    #print lsdeg
 
 def plotfailnodes(ds, labels, markset='var', filename=None
     , isbase=True
@@ -331,7 +347,7 @@ def readargv(argv, pos=1, opt='', dictarg={}):
             dictarg['func'] = currarg
             currarg = 'files'
 
-        elif currarg not in ['-l', '-m', '-s', '-x', '-r', '-xl', '-yl', '-t']:
+        elif currarg not in ['-l', '-m', '-s', '-x', '-r', '-xl', '-yl', '-t', '-logx', '-logy']:
             printusage()
             return
 
@@ -343,7 +359,7 @@ def readargv(argv, pos=1, opt='', dictarg={}):
 
     return dictarg
 
-def getargval(dictarg, key, ifnone=[]):
+def getargval(dictarg, key, ifnone=IFNONE):
     if dictarg.has_key(key):
         return dictarg[key]
     else:
@@ -400,14 +416,24 @@ def main(argv):
         # degree distribution plot
 
         if FUNC_DISTINDEG:
-            title = 'Indegree distribution'
-            xylabels = {'x':'Indegree', 'y':'Number of Nodes'}
+            title = 'Degree distribution'
+            xylabels = {'x':'Degree', 'y':'Number of nodes (fraction)'}
         else:
             title = 'Outdegree distribution'
-            xylabels = {'x':'Outdegree', 'y':'Number of Nodes'}
+            xylabels = {'x':'Outdegree', 'y':'Number of nodes'}
+
+        logx = False
+        arglogx = getargval(dictarg, '-logx')
+        if arglogx:
+            logx = int(arglogx[0]) > 0
+
+        logy = False
+        arglogy = getargval(dictarg, '-logy')
+        if arglogy:
+            logy = int(arglogy[0]) > 0
 
         plotdegdist(ds, getargval(dictarg, '-l'), getargval(dictarg, '-m', ['var'])[0], getargval(dictarg, '-s', [None])[0]
-            , title=title, xylabels=xylabels, nbins=50)
+            , title=title, xylabels=xylabels, nbins=50, logx=logx,  logy=logy)
 
 if __name__ == '__main__':
     sys.exit(main(sys.argv))

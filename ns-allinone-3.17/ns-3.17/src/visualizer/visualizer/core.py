@@ -4,7 +4,7 @@ from __future__ import division
 
 LAYOUT_ALGORITHM = 'neato' # ['neato'|'dot'|'twopi'|'circo'|'fdp'|'nop']
 REPRESENT_CHANNELS_AS_NODES = 1
-DEFAULT_NODE_SIZE = 1.0 #3.0 # default node size in meters
+DEFAULT_NODE_SIZE = 3.0 #3.0 # default node size in meters
 DEFAULT_TRANSMISSIONS_MEMORY = 5 # default number of of past intervals whose transmissions are remembered
 BITRATE_FONT_SIZE = 10
 
@@ -345,9 +345,11 @@ class Channel(PyVizObject):
 class WiredLink(Link):
     def __init__(self, node1, node2):
         self._set_nodes(node1, node2)
-        ###self.canvas_item = goocanvas.Path(stroke_color="black", line_width=1.0)
-        self.canvas_item = goocanvas.Polyline(end_arrow=True)
-        self.canvas_item.set_data("pyviz-object", self)
+        # undirected
+        self.canvas_item = goocanvas.Path(stroke_color="black", line_width=1.0)
+        # directed
+#        self.canvas_item = goocanvas.Polyline(end_arrow=True)
+#        self.canvas_item.set_data("pyviz-object", self)
 
     def _set_nodes(self, node1, node2):
         assert isinstance(node1, Node)
@@ -360,8 +362,10 @@ class WiredLink(Link):
     def update_points(self):
         pos1_x, pos1_y = self.node1.get_position()
         pos2_x, pos2_y = self.node2.get_position()
-        ###self.canvas_item.set_property("data", "M %r %r L %r %r" % (pos1_x, pos1_y, pos2_x, pos2_y))
-        self.canvas_item.set_property("points", goocanvas.Points([(pos1_x, pos1_y), (pos2_x, pos2_y)]))
+        # undirected
+        self.canvas_item.set_property("data", "M %r %r L %r %r" % (pos1_x, pos1_y, pos2_x, pos2_y))
+        # directed
+#        self.canvas_item.set_property("points", goocanvas.Points([(pos1_x, pos1_y), (pos2_x, pos2_y)]))
 
 #+++++++++++++++++
     def erase(self):
@@ -978,30 +982,30 @@ class Visualizer(gobject.GObject):
 
         self.emit("update-view")
 
-#    def _rearrange_layout(self):
-#        #print "** Rearrange all nodes..."
-#        
-##        layout_start = time.time()
-#        self._graph.layout(LAYOUT_ALGORITHM)
-##        layout_end = time.time()
-##        layout_time = layout_end - layout_start
-#        for node in self._graph.iternodes():
-##        grnodes = list(self._graph.iternodes())
-##        i = 1
-##        while i <= len(grnodes) and i < 30:
-##            node = grnodes[len(grnodes) - i]
-##            i += 1
-#            #print node, "=>", node.attr['pos']
-#            node_type, node_id = node.split(' ')
-#            pos_x, pos_y = [float(s) for s in node.attr['pos'].split(',')]
-#            if node_type == 'Node':
-#                obj = self.nodes[int(node_id)]
-#            elif node_type == 'Channel':
-#                obj = self.channels[int(node_id)]
-#            obj.set_position(pos_x, pos_y)
-##        render_time = time.time() - layout_end
-##        print "** Layouting time: %f" % layout_time
-##        print "** Rendering time: %f" % render_time
+    def _rearrange_layout(self):
+        #print "** Rearrange all nodes..."
+        
+#        layout_start = time.time()
+        self._graph.layout(LAYOUT_ALGORITHM)
+#        layout_end = time.time()
+#        layout_time = layout_end - layout_start
+        for node in self._graph.iternodes():
+#        grnodes = list(self._graph.iternodes())
+#        i = 1
+#        while i <= len(grnodes) and i < 30:
+#            node = grnodes[len(grnodes) - i]
+#            i += 1
+            #print node, "=>", node.attr['pos']
+            node_type, node_id = node.split(' ')
+            pos_x, pos_y = [float(s) for s in node.attr['pos'].split(',')]
+            if node_type == 'Node':
+                obj = self.nodes[int(node_id)]
+            elif node_type == 'Channel':
+                obj = self.channels[int(node_id)]
+            obj.set_position(pos_x, pos_y)
+#        render_time = time.time() - layout_end
+#        print "** Layouting time: %f" % layout_time
+#        print "** Rendering time: %f" % render_time
 
     def _simple_square(self, showmsg=False):
         #print "** Rearrange all nodes..."
@@ -1089,12 +1093,12 @@ class Visualizer(gobject.GObject):
             print "** %s, layouting time: %f" % (printmsg, layout_time)
 #            print "** Rendering time: %f" % render_time
 
-    def _rearrange_layout(self, algo='ss', showmsg=False):
-#        if algo == 'ss':
-#            self._simple_square(showmsg)
-#        elif algo == 'cs':
-            self._center_square(showmsg)
-
+#    def _rearrange_layout(self, algo='ss', showmsg=False):
+##        if algo == 'ss':
+##            self._simple_square(showmsg)
+##        elif algo == 'cs':
+#            self._center_square(showmsg)
+#
     def _render_new_nodes(self):
         # render new nodes
 

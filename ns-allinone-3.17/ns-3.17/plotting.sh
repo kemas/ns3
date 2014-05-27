@@ -166,6 +166,15 @@ python scratch/plot.py -f \
     "<dep>=3.5" "<dep>=3.5" "<dep>=4" "<dep>=4" "<dep>=4.5" "<dep>=4.5" "<dep>=5" "<dep>=5" \
 -m sym
 
+python scratch/plot.py -fc \
+    simdata/svcsim_10k_10k_d3_a3_i10_avg1_6.json \
+    simdata/rsvcsim_10k_10k_d3_a3_i10_avg1_4.json \
+    simdata/svcsim_10k_10k_d4_a3_i10_avg1_4.json \
+    simdata/rsvcsim_10k_10k_d4_a3_i10_avg1_4.json \
+    simdata/svcsim_10k_10k_d5_a3_i10_avg1_4.json \
+    simdata/rsvcsim_10k_10k_d5_a3_i10_avg1_4.json \
+-m sym
+
 python scratch/plot.py -e \
     simdata/svcsim_10k_10k_d3_a1_i10_avg1_4.json \
     simdata/svcsim_10k_10k_d3_a2_i10_avg1_4.json \
