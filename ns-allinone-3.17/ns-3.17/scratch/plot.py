@@ -4,6 +4,7 @@ import sys
 import matplotlib.pyplot as plt
 import numpy as np
 import json
+import textwrap
 
 GAMMA = u'\u03b3'
 LOGBINBASE = 1.09
@@ -26,7 +27,7 @@ MARKERS = {'var-':['wo-', 'ks-', 'wv-', 'kD-', 'w+-', 'kx-', 'w*-', 'k|-', 'wp-'
                  'wp-', 'kp-', 'w.-', 'k.-', 'w,-', 'k,-', 'w1-', 'k1-', 'w2-', 'k2-', 'w3-', 'k3-', 'w4-', 'k4-']
         , 'var':['wo', 'ks', 'wv', 'kD', 'w+', 'kx', 'w*', 'k|', 'wp', 'k.', 'w,', 'k1', 'w2', 'k3', 'w4',\
                  'ko', 'ws', 'kv', 'wD', 'k+', 'wx', 'k*', 'w|', 'kp', 'w.', 'k,', 'w1', 'k2', 'w3', 'k4']
-        , 'sym':['wo', 'ko', 'ws', 'ks', 'wv', 'kv', 'wD', 'kD', 'w+', 'k+', 'wx', 'kx', 'w*', 'k*', 'w|', 'k|',\
+        , 'sym':['wo', 'ko', 'ws', 'ks', 'wv', 'kv', 'wD', 'kD', 'w^', 'k^', 'wx', 'kx', 'w*', 'k*', 'w|', 'k|',\
                  'wp', 'kp', 'w.', 'k.', 'w,', 'k,', 'w1', 'k1', 'w2', 'k2', 'w3', 'k3', 'w4', 'k4']
         , 'black-':['ko-', 'ks-', 'kv-', 'kD-', 'k+-', 'kx-', 'k*-', 'k|-', 'kp-', 'k.-', 'k,-', 'k1-', 'k2-', 'k3-', 'k4-']}
 
@@ -66,7 +67,7 @@ def logbins(amax, amin=0, base=LOGBINBASE):
  
     return bins
 
-def drawloglogdist(ds, xlabel, labels, markset='var', filename=None, density=False):
+def drawloglogdist(ds, xlabel, ylabel, title, labels, markset='var', filename=None, density=True):
     # degree distribution in loglog scale
 
     lblgamma = u'%s = %%#.2f' % (GAMMA)
@@ -75,6 +76,8 @@ def drawloglogdist(ds, xlabel, labels, markset='var', filename=None, density=Fal
     for degrees, maxdegree in ds:
         lbins = logbins(maxdegree, amin=0, base=LOGBINBASE)
         y, bins = np.histogram(degrees, bins=lbins, density=density)
+        #y, bins = np.histogram(degrees, bins=100, density=density)
+        print sum(y)
         x = bins[:-1]
 
         xforlog = []; logx = []; logy = []
@@ -97,12 +100,12 @@ def drawloglogdist(ds, xlabel, labels, markset='var', filename=None, density=Fal
             j += 1
         else:
             plt.plot(x, y, mark[:-1], label = lblgamma % (-1 * gamma))
-        plt.plot(xforlog, 10**p(logx), mark[0] + mark[2])
+        plt.plot(xforlog, 10**p(logx), mark[0] + ':')
 
     plt.loglog()
-    plt.title(u'Degree distribution')
+    plt.title('\n'.join(textwrap.wrap(title, 50)))
     plt.xlabel(xlabel)
-    plt.ylabel('Number of nodes')
+    plt.ylabel(ylabel)
     plt.legend()
 
 #    # inset
@@ -133,7 +136,8 @@ def plotdata(ds, labels, title
     , isbase=True
     , logx=False
     , logy=False
-    , isline=True):
+    , isline=True
+    , legloc=2):
     # plot degree distribution from data set
     # data set is a list of x and y data to plot
 
@@ -167,11 +171,14 @@ def plotdata(ds, labels, title
         # create baseline x=y
         ax.plot([0, maxxy], [0, maxxy], 'g-')
 
-    ax.set_title(title)
+    #ax.set_title(title)
+    ax.set_title('\n'.join(textwrap.wrap(title, 50)))
     ax.set_xlabel(xylabels['x'])
     ax.set_ylabel(xylabels['y'])
     if len(labels) > 0:
-        ax.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+        #ax.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+        #ax.legend(bbox_to_anchor=(0, 1), ncol=2, loc=2, borderaxespad=0.)
+        ax.legend(ncol=2, loc=legloc, borderaxespad=0.)
 
     if logx and logy:
         ax.loglog()
@@ -236,7 +243,8 @@ def plotcasceff(ds, labels, randomfails, xylabels, xaxis
     , markset='var'
     , filename=None
     , isbase=False
-    , title='Random cascading failure in service network'):
+    , title='Random cascading failure in service network'
+    , legloc=2):
     # plot cascading effect where the data series are different number of nodes fail randomly
     # the y axis (cascading effect, number of active nodes) is the number of cascading fail nodes
     # the x axis is either the number of alternative, the number of dependency, the combination of both
@@ -270,7 +278,7 @@ def plotcasceff(ds, labels, randomfails, xylabels, xaxis
         plots.append([x, y])
 
     plotdata(plots, labels, title, xylabels
-        , markset, filename, isbase)
+        , markset, filename, isbase, legloc=legloc)
 
 def loaddata(ds, func, data, step=STEP, norm=True):
     if func in [FUNC_FAIL, FUNC_FAILCASC, FUNC_EFF]:
@@ -347,7 +355,7 @@ def readargv(argv, pos=1, opt='', dictarg={}):
             dictarg['func'] = currarg
             currarg = 'files'
 
-        elif currarg not in ['-l', '-m', '-s', '-x', '-r', '-xl', '-yl', '-t', '-logx', '-logy']:
+        elif currarg not in ['-l', '-m', '-s', '-x', '-r', '-xl', '-yl', '-t', '-logx', '-logy', '-loc']:
             printusage()
             return
 
@@ -387,26 +395,26 @@ def main(argv):
             f.close()
 
     if func in [FUNC_LOGINDEG, FUNC_HISTINDEG]:
-        xlabel = 'Indegree'
+        xlabel = 'In-degree'
     elif func in [FUNC_LOGOUTDEG, FUNC_HISTOUTDEG]:
-        xlabel = 'Outdegree'
+        xlabel = 'Out-degree'
 
     if func in [FUNC_FAIL, FUNC_FAILCASC]:
-        if func == FUNC_FAIL:
-            xylabels={'x':'Number of nodes fail randomly', 'y':'Total number of nodes fail (randomly + cascaded fail)'}
-        else:
-            # FUNC_FAILCASC
-            xylabels={'x':'Number of nodes fail randomly', 'y':'Number of cascaded fail nodes'}
+#        if func == FUNC_FAIL:
+#            xylabels={'x':'Number of nodes fail randomly', 'y':'Total number of nodes fail (randomly + cascaded fail)'}
+#        else:
+#            # FUNC_FAILCASC
+#            xylabels={'x':'Number of nodes fail randomly', 'y':'Number of cascaded fail nodes'}
 
-        plotfailnodes(ds, getargval(dictarg, '-l'), getargval(dictarg, '-m', ['var'])[0], getargval(dictarg, '-s', [None])[0], isbase=func==FUNC_FAIL, xylabels=xylabels)
+        plotfailnodes(ds, getargval(dictarg, '-l'), getargval(dictarg, '-m', ['var'])[0], getargval(dictarg, '-s', [None])[0], isbase=func==FUNC_FAIL, xylabels={'x': getargval(dictarg, '-xl')[0], 'y': getargval(dictarg, '-yl')[0]}, title=getargval(dictarg, '-t')[0])
 
     elif func == FUNC_EFF:
         plotcasceff(ds, getargval(dictarg, '-l'), getargval(dictarg, '-r'), {'x': getargval(dictarg, '-xl')[0], 'y': getargval(dictarg, '-yl')[0]}
-                    , getargval(dictarg, '-x'), getargval(dictarg, '-m', ['var'])[0], getargval(dictarg, '-s', [None])[0], title=getargval(dictarg, '-t')[0])
+                    , getargval(dictarg, '-x'), getargval(dictarg, '-m', ['var'])[0], getargval(dictarg, '-s', [None])[0], title=getargval(dictarg, '-t')[0], legloc=int(getargval(dictarg, '-loc')[0]))
 
     elif func in [FUNC_LOGINDEG, FUNC_LOGOUTDEG]:
         # loglog degree distribution
-        drawloglogdist(ds, xlabel, getargval(dictarg, '-l'), getargval(dictarg, '-m', ['var'])[0], getargval(dictarg, '-s', [None])[0])
+        drawloglogdist(ds, xlabel=getargval(dictarg, '-xl')[0], ylabel=getargval(dictarg, '-yl')[0], title=getargval(dictarg, '-t')[0], labels=getargval(dictarg, '-l'), markset=getargval(dictarg, '-m', ['var'])[0], filename=getargval(dictarg, '-s', [None])[0])
 
     elif func in [FUNC_HISTINDEG, FUNC_HISTOUTDEG]:
         # histogram degree distribution
@@ -416,8 +424,8 @@ def main(argv):
         # degree distribution plot
 
         if FUNC_DISTINDEG:
-            title = 'Degree distribution'
-            xylabels = {'x':'Degree', 'y':'Number of nodes (fraction)'}
+            title = 'Degree distribution of exponential network'
+            xylabels = {'x':'k (degree)', 'y':'P(k)'}
         else:
             title = 'Outdegree distribution'
             xylabels = {'x':'Outdegree', 'y':'Number of nodes'}

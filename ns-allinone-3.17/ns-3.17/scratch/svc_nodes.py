@@ -584,7 +584,7 @@ class Vertices:
         # check if vertex p is connected to vertex q
         return self.getvertex(indexp).isconnectedto(indexq)
 
-    def fail(self, index):
+    def fail(self, index, depth=0):
         # deactivate a node and propagate the failure 
         # to the other fully dependent nodes
 
@@ -599,12 +599,14 @@ class Vertices:
         #vertex.printinfo()
 
         # propagate failure
+        #lsdepth = []
         for idxneighbor in vertex._inlinks:
             neighbor = self.getvertex(idxneighbor)
             if not neighbor.ispartiallydepend(index) and neighbor.isactive():
                 # neighbor is fully depend and active
                 # propagate the failure
                 self.fail(idxneighbor)
+                #lsdepth.append(self.fail(idxneighbor, depth))
 
         # disconnect to all outgoing links
         for idxneighbor in vertex._outlinks:
@@ -614,9 +616,16 @@ class Vertices:
         for idxneighbor in vertex._inlinks:
             self.disconnect(index, idxneighbor)
 
+#        ###
+#        if lsdepth:
+#            return max(lsdepth) + 1
+#        else:
+#            return 1    
+
     def dofail(self, index):
         self._nbofremoved += 1
         self.fail(index)
+        #print self.fail(index)
 
         # verbose
         #self.printinfo()

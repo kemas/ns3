@@ -23,7 +23,7 @@ def drawhistogram(vertices, nbins=20, filename=None, normed=False, facecolor='gr
     plt.show()
 
     # save to file
-    savetofile({'indegree': degrees}, filename)
+    savetofile({'indegree': degrees, 'maxindegree': max(degrees)}, filename)
 
 def logbins(amax, amin=0, base=LOGBINBASE):
     bins = [amin]
