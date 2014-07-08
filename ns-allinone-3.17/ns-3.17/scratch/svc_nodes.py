@@ -108,6 +108,8 @@ class Vertex:
         self._isactive = True
         self._nbofmandlinks = 0
         self._nbofaltlinks = 0
+        self._depth = 0 # initial depth is zero, because no outlink
+        self._maxdepthidx = None # the vertex index listed in _outlinks and having the highest depth
 
     def addtovertices(self, vertices, index):
         self.vertices = vertices
@@ -136,6 +138,16 @@ class Vertex:
 
     def getnbofaltlinks(self):
         return self._nbofaltlinks
+
+    def getdepth(self):
+        return self._depth
+
+    def getmaxdepthidx(self):
+        return self._maxdepthidx
+
+    def upddepth(self, depth, index):
+        self._depth = depth
+        self._maxdepthidx = index
 
     def _incrindegree(self, addby = 1):
         self._data[1] += addby
@@ -367,7 +379,7 @@ class Vertices:
     def _updallstats(self, idxsource=None, idxtarget=None, ismandincl=True, isaltincl=True):
         # update values of maxindegree, maxoutdegree, maxmandlinks, maxaltlinks
         # and their corresponding idx (e.g. maxindegreeidx)
-        # idxsource is the vertex index where outoing links are connected from
+        # idxsource is the vertex index where outgoing links are connected from
         # idxtarget is the vertex index where incoming links are connected to
 
         if idxsource != None or idxtarget != None:
@@ -554,7 +566,15 @@ class Vertices:
             vertexq.connectfrom(indexp)
             self._totdegree += 1
 
-            # update stats
+            # update depth vertexp
+            depth_p = vertexp.getdepth()
+            depth_q = vertexq.getdepth()
+            if depth_p == 0:
+                vertexp.upddepth(1, indexq)
+            elif depth_q >= depth_p:
+                vertexp.upddepth(depth_q + 1, indexq)
+
+            # update stats, ## update stat depth!!!
             self._updallstats(indexp, indexq, ismandincl = (indexexst == None), isaltincl = (indexexst != None))
 
         if indexexst != None:
@@ -577,8 +597,41 @@ class Vertices:
             self._totdegree -= 1
             self._updallstats()
 
+            # update depth vertexp
+            if vertexp.getmaxdepthidx() == indexq:
+                # search new maxdepth
+
+                maxdepth = 0; maxdepthidx = None
+                for i in vertexp.itroutlinks():
+                    idepth = self.getvertex(i).getdepth()
+
+                    if idepth >= maxdepth:
+                        maxdepth = idepth + 1
+                        maxdepthidx = i
+
+                vertexp.upddepth(maxdepth, maxdepthidx)
+
             self._totmandlinks -= nbofmandlinks - vertexp.getnbofmandlinks()
             self._totaltlinks -= nbofaltlinks - vertexp.getnbofaltlinks()
+
+    def upddepth(self, indexp):
+        # update the depth of vertex at indexp
+
+        vertexp = self.getvertex(indexp)
+
+        # update depth vertexp
+        if vertexp.getmaxdepthidx() == indexq:
+            # search new maxdepth
+
+            maxdepth = 0; maxdepthidx = None
+            for i in vertexp.itroutlinks():
+                idepth = self.getvertex(i).getdepth()
+
+                if idepth >= maxdepth:
+                    maxdepth = idepth + 1
+                    maxdepthidx = i
+
+            vertexp.upddepth(maxdepth, maxdepthidx)
 
     def isconnected(self, indexp, indexq):
         # check if vertex p is connected to vertex q
@@ -677,3 +730,4 @@ def __main(argv):
 
 if __name__ == "__main__":
     sys.exit(__main(sys.argv))
+

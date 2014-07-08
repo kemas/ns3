@@ -2,7 +2,8 @@
 from __future__ import division
 #from __future__ import with_statement
 
-LAYOUT_ALGORITHM = 'neato' # ['neato'|'dot'|'twopi'|'circo'|'fdp'|'nop']
+LAYOUT_ALGORITHM = 'neato' #'neato' # ['neato'|'dot'|'twopi'|'circo'|'fdp'|'nop']
+    # added: 'ss', 'cs'
 REPRESENT_CHANNELS_AS_NODES = 1
 DEFAULT_NODE_SIZE = 3.0 #3.0 # default node size in meters
 DEFAULT_TRANSMISSIONS_MEMORY = 5 # default number of of past intervals whose transmissions are remembered
@@ -68,13 +69,13 @@ PI_OVER_2 = math.pi/2
 PI_TIMES_2 = math.pi*2
 
 class Node(PyVizObject):
-    
+
     __gsignals__ = {
 
         # signal emitted whenever a tooltip is about to be shown for the node
         # the first signal parameter is a python list of strings, to which information can be appended
         'query-extra-tooltip-info': (gobject.SIGNAL_RUN_LAST, None, (object,)),
-        
+
         }
 
     def __init__(self, visualizer, node_index):
@@ -108,7 +109,7 @@ class Node(PyVizObject):
         @param file_base_name: base file name, including .svg
         extension, of the svg file.  Place the file in the folder
         src/contrib/visualizer/resource.
-        
+
         @param width: scale to the specified width, in meters
         @param width: scale to the specified height, in meters
 
@@ -270,10 +271,13 @@ class Node(PyVizObject):
             self._label_canvas_item.set_properties(visibility=goocanvas.ITEM_VISIBLE_ABOVE_THRESHOLD,
                                                    text=self._label)
             self._update_position()
-    
+
     def set_position(self, x, y):
         self.canvas_item.set_property("center_x", x)
         self.canvas_item.set_property("center_y", y)
+        fill_color_rgba = 0x808080ff + (0x01 * len(self.links) * 2 << 16)
+        self.canvas_item.set_properties(fill_color_rgba=fill_color_rgba)
+
         if self.svg_item is not None:
             self._update_svg_position(x, y)
 
@@ -372,30 +376,30 @@ class WiredLink(Link):
         self.canvas_item.set_property("line_width", 0.0)
 #+++++++++++++++++
 
-#+++++++++++++++++
-class DirectedLink(WiredLink):
-    def __init__(self, node1, node2, stroke_color="black", line_width=1.0):
-        self._set_nodes(node1, node2)
-        self.canvas_item = goocanvas.Polyline(stroke_color=stroke_color, line_width=line_width, end_arrow=True)
-        self.canvas_item.set_data("pyviz-object", self)
-
-    def _set_nodes(self, node1, node2):
-        assert isinstance(node1, Node)
-        assert isinstance(node2, (Node, Channel))
-        self.node1 = node1
-        self.node2 = node2
-        self.node1.links.append(self)
-
-    def update_points():
-        pos1_x, pos1_y = self.node1.get_position()
-        pos2_x, pos2_y = self.node2.get_position()
-        self.canvas_item.set_property("points", goocanvas.Points([(pos1_x, pos1_y), (pos2_x, pos2_y)]))
-
-class AlternateLink(DirectedLink):
-    def __init__(self, node1, node2, stroke_color="blue"):
-        super(AlternateLink, self).__init__(node1, node2, stroke_color=stroke_color)
-
-#+++++++++++++++++
+##+++++++++++++++++
+#class DirectedLink(WiredLink):
+#    def __init__(self, node1, node2, stroke_color="black", line_width=1.0):
+#        self._set_nodes(node1, node2)
+#        self.canvas_item = goocanvas.Polyline(stroke_color=stroke_color, line_width=line_width, end_arrow=True)
+#        self.canvas_item.set_data("pyviz-object", self)
+#
+#    def _set_nodes(self, node1, node2):
+#        assert isinstance(node1, Node)
+#        assert isinstance(node2, (Node, Channel))
+#        self.node1 = node1
+#        self.node2 = node2
+#        self.node1.links.append(self)
+#
+#    def update_points():
+#        pos1_x, pos1_y = self.node1.get_position()
+#        pos2_x, pos2_y = self.node2.get_position()
+#        self.canvas_item.set_property("points", goocanvas.Points([(pos1_x, pos1_y), (pos2_x, pos2_y)]))
+#
+#class AlternateLink(DirectedLink):
+#    def __init__(self, node1, node2, stroke_color="blue"):
+#        super(AlternateLink, self).__init__(node1, node2, stroke_color=stroke_color)
+#
+##+++++++++++++++++
 
 class SimulationThread(threading.Thread):
     def __init__(self, viz):
@@ -984,25 +988,33 @@ class Visualizer(gobject.GObject):
 
     def _rearrange_layout(self):
         #print "** Rearrange all nodes..."
-        
+
 #        layout_start = time.time()
-        self._graph.layout(LAYOUT_ALGORITHM)
 #        layout_end = time.time()
 #        layout_time = layout_end - layout_start
-        for node in self._graph.iternodes():
-#        grnodes = list(self._graph.iternodes())
-#        i = 1
-#        while i <= len(grnodes) and i < 30:
-#            node = grnodes[len(grnodes) - i]
-#            i += 1
-            #print node, "=>", node.attr['pos']
-            node_type, node_id = node.split(' ')
-            pos_x, pos_y = [float(s) for s in node.attr['pos'].split(',')]
-            if node_type == 'Node':
-                obj = self.nodes[int(node_id)]
-            elif node_type == 'Channel':
-                obj = self.channels[int(node_id)]
-            obj.set_position(pos_x, pos_y)
+
+        algo = LAYOUT_ALGORITHM
+        if algo == 'ss':
+            self._simple_square()
+        elif algo == 'cs':
+            self._center_square()
+        else:
+            self._graph.layout(algo)
+            for node in self._graph.iternodes():
+    #        grnodes = list(self._graph.iternodes())
+    #        i = 1
+    #        while i <= len(grnodes) and i < 30:
+    #            node = grnodes[len(grnodes) - i]
+    #            i += 1
+                #print node, "=>", node.attr['pos']
+                node_type, node_id = node.split(' ')
+                pos_x, pos_y = [float(s) for s in node.attr['pos'].split(',')]
+                if node_type == 'Node':
+                    obj = self.nodes[int(node_id)]
+                elif node_type == 'Channel':
+                    obj = self.channels[int(node_id)]
+                obj.set_position(pos_x, pos_y)
+
 #        render_time = time.time() - layout_end
 #        print "** Layouting time: %f" % layout_time
 #        print "** Rendering time: %f" % render_time
@@ -1062,18 +1074,21 @@ class Visualizer(gobject.GObject):
                     pos_y -= self._gridstep
                     if pos_y == 0:
                         pos_x += self._gridstep
+
             elif pos_x > 0 and pos_y <= 0:
                 # quadrant IV
                 if pos_y > -pos_x:
                     pos_y -= self._gridstep
                 else:
                     pos_x -= self._gridstep
+
             elif pos_x <= 0 and pos_y < 0:
                 # quadrant III
                 if pos_x > pos_y:
                     pos_x -= self._gridstep
                 else:
                     pos_y += self._gridstep
+
             else:
                 # quadrant II
                 if pos_y < -pos_x:
