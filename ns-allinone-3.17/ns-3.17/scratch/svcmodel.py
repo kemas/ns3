@@ -226,6 +226,8 @@ def print_stats(vertices):
     print '%s : %5d (#%d)' % ('Max number'.ljust(leftwidth), vertices.getmaxaltlinks() or svc_nodes.NODEGREE, vertices.getmaxaltlinksidx() or svc_nodes.NODEGREE)
     print '%s : %8.2f' % ('Average'.ljust(leftwidth), float(vertices.gettotaltlinks()) / vertices.getnbofvertices())
     #vertices.getvertex(vertices.getmaxaltlinksidx()).printinfo()
+    print '%s : %5d (#%d)' % ('Max depth'.ljust(leftwidth), vertices.getmaxdepth() or svc_nodes.NODEGREE, vertices.getmaxdepthidx() or svc_nodes.NODEGREE)
+    #print '%s : %8.2f' % ('Average'.ljust(leftwidth), vertices.getavgdepth())
 
 def print_aftermath(vertices):
     leftwidth = 35

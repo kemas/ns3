@@ -68,7 +68,7 @@ class AltLinks:
             lsidx = self._ls.pop(i)
             # remove the lone idxvertex from the reference dictionary
             self._ref.pop(lsidx[0])
-            
+
             # update the reference value
             for k in range(i, len(self._ls)):
                 for idxvertex in self._ls[k]:
@@ -321,6 +321,9 @@ class Vertices:
         self._maxmandlinksidx = None
         self._maxaltlinks = NODEGREE
         self._maxaltlinksidx = None
+        self._maxdepth = NODEGREE
+        self._maxdepthidx = None
+        self._avgdepth = NODEGREE
         self._totmandlinks = 0
         self._totaltlinks = 0
         self._nbofremoved = 0
@@ -367,6 +370,18 @@ class Vertices:
     def getmaxaltlinksidx(self):
         return self._maxaltlinksidx
 
+    def getmaxdepth(self):
+        return self._maxdepth
+
+    def getmaxdepthidx(self):
+        return self._maxdepthidx
+
+    def getavgdepth(self):
+        return self._avgdepth
+
+    def setavgdepth(self, avgdepth):
+        self._avgdepth = avgdepth
+
     def getnbofremoved(self):
         return self._nbofremoved
 
@@ -376,7 +391,7 @@ class Vertices:
     def getindexbyact(self, actidx):
         return self._activevert[actidx]
 
-    def _updallstats(self, idxsource=None, idxtarget=None, ismandincl=True, isaltincl=True):
+    def _updallstats(self, idxsource=None, idxtarget=None, ismandincl=True, isaltincl=True, isdepthincl=True):
         # update values of maxindegree, maxoutdegree, maxmandlinks, maxaltlinks
         # and their corresponding idx (e.g. maxindegreeidx)
         # idxsource is the vertex index where outgoing links are connected from
@@ -398,6 +413,10 @@ class Vertices:
                 if isaltincl and vertex.getnbofaltlinks() > self._maxaltlinks:
                     self._maxaltlinks = vertex.getnbofaltlinks()
                     self._maxaltlinksidx = idxsource
+
+                if isdepthincl and vertex.getdepth() > self._maxdepth:
+                    self._maxdepth = vertex.getdepth()
+                    self._maxdepthidx = idxsource
 
             if idxtarget != None:
                 vertex = self.getvertex(idxtarget)
@@ -574,7 +593,7 @@ class Vertices:
             elif depth_q >= depth_p:
                 vertexp.upddepth(depth_q + 1, indexq)
 
-            # update stats, ## update stat depth!!!
+            # update stats
             self._updallstats(indexp, indexq, ismandincl = (indexexst == None), isaltincl = (indexexst != None))
 
         if indexexst != None:
@@ -582,7 +601,7 @@ class Vertices:
         else:
             self._totmandlinks += 1
 
-    def disconnect(self, indexp, indexq):
+    def disconnect(self, indexp, indexq, isupddepth=False):
         # diconnect the link from vertex p to vertex q
 
         vertexp = self.getvertex(indexp)
@@ -598,18 +617,9 @@ class Vertices:
             self._updallstats()
 
             # update depth vertexp
-            if vertexp.getmaxdepthidx() == indexq:
+            if isupddepth and vertexp.getmaxdepthidx() == indexq:
                 # search new maxdepth
-
-                maxdepth = 0; maxdepthidx = None
-                for i in vertexp.itroutlinks():
-                    idepth = self.getvertex(i).getdepth()
-
-                    if idepth >= maxdepth:
-                        maxdepth = idepth + 1
-                        maxdepthidx = i
-
-                vertexp.upddepth(maxdepth, maxdepthidx)
+                self.upddepth(indexp)
 
             self._totmandlinks -= nbofmandlinks - vertexp.getnbofmandlinks()
             self._totaltlinks -= nbofaltlinks - vertexp.getnbofaltlinks()
@@ -619,19 +629,15 @@ class Vertices:
 
         vertexp = self.getvertex(indexp)
 
-        # update depth vertexp
-        if vertexp.getmaxdepthidx() == indexq:
-            # search new maxdepth
+        vpmaxdepth = 0; vpmaxdepthidx = None
+        for i in vertexp.itroutlinks():
+            idepth = self.getvertex(i).getdepth()
 
-            maxdepth = 0; maxdepthidx = None
-            for i in vertexp.itroutlinks():
-                idepth = self.getvertex(i).getdepth()
+            if idepth >= vpmaxdepth:
+                vpmaxdepth = idepth + 1
+                vpmaxdepthidx = i
 
-                if idepth >= maxdepth:
-                    maxdepth = idepth + 1
-                    maxdepthidx = i
-
-            vertexp.upddepth(maxdepth, maxdepthidx)
+        vertexp.upddepth(vpmaxdepth, vpmaxdepthidx)
 
     def isconnected(self, indexp, indexq):
         # check if vertex p is connected to vertex q

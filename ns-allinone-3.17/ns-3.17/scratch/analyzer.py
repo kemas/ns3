@@ -21,6 +21,9 @@ class Analyzer:
         self.maxindegree = 0
         self.outdegree = []
         self.maxoutdegree = 0
+        self.depth = []
+        self.maxdepth = 0
+        self.avgdepth = 0
 
     def advancetime(self):
         # advance to the next timestep
@@ -124,18 +127,31 @@ class Analyzer:
         self.failalts(alts)
 
     def loaddegreedist(self, vertices):
-        for i in range(vertices.getnbofvertices()):
+        sumdepth = 0
+        nbofvertices = vertices.getnbofvertices()
+
+        for i in range(nbofvertices):
+
             self.indegree.append(vertices.getvertex(i).getindegree())
-            self.maxindegree = vertices.getmaxindegree()
             self.outdegree.append(vertices.getvertex(i).getoutdegree())
-            self.maxoutdegree = vertices.getmaxoutdegree()
+    
+            depth = vertices.getvertex(i).getdepth()
+            self.depth.append(depth)
+            sumdepth += depth
+
+        self.avgdepth = sumdepth / float(nbofvertices)
+        #vertices.setavgdepth(self.avgdepth)
+
+        self.maxindegree = vertices.getmaxindegree()
+        self.maxoutdegree = vertices.getmaxoutdegree()
+        self.maxdepth = vertices.getmaxdepth()
 
     def plotfailure(self):
         # nodes removal
-        found = False; i = 0
+        found = false; i = 0
         while not found and i < len(self.nodesremoved):
             if self.nodesremoved[i] > 0:
-                found = True;
+                found = true;
             else:
                 i += 1
 
@@ -151,7 +167,7 @@ class Analyzer:
 
         plt.show()
 
-    def savetofile(self, filename='svcsim.json', isall=False, isnodescreated=True, isnodesremoved=True, isnodesfail=True, islinkscreated=True, islinksfail=True, isaltcreated=True, isaltfail=True, ismandcreated=True, ismandfail=True, isindegree=True, isoutdegree=True):
+    def savetofile(self, filename='svcsim.json', isall=False, isnodescreated=True, isnodesremoved=True, isnodesfail=True, islinkscreated=True, islinksfail=True, isaltcreated=True, isaltfail=True, ismandcreated=True, ismandfail=True, isindegree=True, isoutdegree=True, isdepth=True):
         obj = {}
         if isall or isnodescreated:
             obj['nodescreated'] = self.nodescreated
@@ -177,6 +193,10 @@ class Analyzer:
         if isall or isoutdegree:
             obj['outdegree'] = self.outdegree
             obj['maxoutdegree'] = self.maxoutdegree
+        if isall or isdepth:
+            obj['depth'] = self.depth
+            obj['maxdepth'] = self.maxdepth
+            obj['avgdepth'] = self.avgdepth
 
         f = open(filename, 'w')
         try:
