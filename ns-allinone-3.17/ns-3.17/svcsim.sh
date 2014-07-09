@@ -35,7 +35,7 @@
 #./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=3 --m_alt=10 --m_init=10 --filename='simdata/svcsim_10k_10k_d3_a10_i10_5.json'"
 #./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=3 --m_alt=10 --m_init=10 --filename='simdata/svcsim_10k_10k_d3_a10_i10_6.json'"
 
-#./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=3 --m_alt=1 --m_init=10 --filename='simdata/svcsim_10k_10k_d3_a1_i10_2d.json'"
+./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=3 --m_alt=1 --m_init=10 --filename='simdata/svcsim_10k_10k_d3_a1_i10_1d.json'"
 ./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=3 --m_alt=2 --m_init=10 --filename='simdata/svcsim_10k_10k_d3_a2_i10_1d.json'"
 ./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=3 --m_alt=3 --m_init=10 --filename='simdata/svcsim_10k_10k_d3_a3_i10_1d.json'"
 ./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=3 --m_alt=4 --m_init=10 --filename='simdata/svcsim_10k_10k_d3_a4_i10_1d.json'"

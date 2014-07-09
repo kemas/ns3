@@ -109,7 +109,9 @@ class Vertex:
         self._nbofmandlinks = 0
         self._nbofaltlinks = 0
         self._depth = 0 # initial depth is zero, because no outlink
+        self._meandepth = 0.0 # (1 + meandepth of all connected nodes) / number of connected nodes
         self._maxdepthidx = None # the vertex index listed in _outlinks and having the highest depth
+        self._maxmeandepthidx = None
 
     def addtovertices(self, vertices, index):
         self.vertices = vertices
@@ -142,11 +144,15 @@ class Vertex:
     def getdepth(self):
         return self._depth
 
+    def getmeandepth(self):
+        return self._meandepth
+
     def getmaxdepthidx(self):
         return self._maxdepthidx
 
-    def upddepth(self, depth, index):
+    def upddepth(self, depth, meandepth, index):
         self._depth = depth
+        self._meandepth = meandepth
         self._maxdepthidx = index
 
     def _incrindegree(self, addby = 1):
@@ -324,6 +330,9 @@ class Vertices:
         self._maxdepth = NODEGREE
         self._maxdepthidx = None
         self._avgdepth = NODEGREE
+        self._maxmeandepth = NODEGREE
+        self._maxmeandepthidx = None
+        self._avgmeandepth = NODEGREE
         self._totmandlinks = 0
         self._totaltlinks = 0
         self._nbofremoved = 0
@@ -379,8 +388,17 @@ class Vertices:
     def getavgdepth(self):
         return self._avgdepth
 
-    def setavgdepth(self, avgdepth):
-        self._avgdepth = avgdepth
+#    def setavgdepth(self, avgdepth):
+#        self._avgdepth = avgdepth
+
+    def getmaxmeandepth(self):
+        return self._maxmeandepth
+
+    def getmaxmeandepthidx(self):
+        return self._maxmeandepthidx
+
+    def getavgmeandepth(self):
+        return self._avgmeandepth
 
     def getnbofremoved(self):
         return self._nbofremoved
@@ -417,6 +435,10 @@ class Vertices:
                 if isdepthincl and vertex.getdepth() > self._maxdepth:
                     self._maxdepth = vertex.getdepth()
                     self._maxdepthidx = idxsource
+
+                if isdepthincl and vertex.getmeandepth() > self._maxmeandepth:
+                    self._maxmeandepth = vertex.getmeandepth()
+                    self._maxmeandepthidx = idxsource
 
             if idxtarget != None:
                 vertex = self.getvertex(idxtarget)
@@ -458,6 +480,14 @@ class Vertices:
                 if isaltincl and vertex.getnbofaltlinks() > maxaltlinks:
                     maxaltlinks = vertex.getnbofaltlinks()
                     maxaltlinksidx = idx
+
+                if isdepthincl and vertex.getdepth() > self._maxdepth:
+                    self._maxdepth = vertex.getdepth()
+                    self._maxdepthidx = idx
+
+                if isdepthincl and vertex.getmeandepth() > self._maxmeandepth:
+                    self._maxmeandepth = vertex.getmeandepth()
+                    self._maxmeandepthidx = idx
 
             self._maxindegree = maxindegree
             self._maxindegreeidx = maxindegreeidx
@@ -581,6 +611,8 @@ class Vertices:
         vertexq = self.getvertex(indexq)
 
         if not vertexp.isconnectedto(indexq):
+            poutlinks = vertexp.getnbofoutlinks()
+        
             vertexp.connectto(indexq, channel, indexexst)
             vertexq.connectfrom(indexp)
             self._totdegree += 1
@@ -588,10 +620,13 @@ class Vertices:
             # update depth vertexp
             depth_p = vertexp.getdepth()
             depth_q = vertexq.getdepth()
-            if depth_p == 0:
-                vertexp.upddepth(1, indexq)
-            elif depth_q >= depth_p:
-                vertexp.upddepth(depth_q + 1, indexq)
+
+            meandepth = (poutlinks * vertexp.getmeandepth() + vertexq.getmeandepth() + 1) / (poutlinks + 1)
+            #if depth_p == 0:
+            #    vertexp.upddepth(1, indexq)
+            if depth_q >= depth_p:
+                depth_p = depth_q + 1
+            vertexp.upddepth(depth_p, meandepth, indexq)
 
             # update stats
             self._updallstats(indexp, indexq, ismandincl = (indexexst == None), isaltincl = (indexexst != None))
@@ -630,6 +665,7 @@ class Vertices:
         vertexp = self.getvertex(indexp)
 
         vpmaxdepth = 0; vpmaxdepthidx = None
+        totmeandepth = 0
         for i in vertexp.itroutlinks():
             idepth = self.getvertex(i).getdepth()
 
@@ -637,7 +673,14 @@ class Vertices:
                 vpmaxdepth = idepth + 1
                 vpmaxdepthidx = i
 
-        vertexp.upddepth(vpmaxdepth, vpmaxdepthidx)
+            totmeandepth += self.getvertex(i).getmeandepth() + 1
+
+        meandepth = 0
+        if vertexp.getnbofoutlinks():
+            # nbofoutlinks > 0
+            meandepth = totmeandepth / float(vertexp.getnbofoutlinks())
+
+        vertexp.upddepth(vpmaxdepth, meandepth, vpmaxdepthidx)
 
     def isconnected(self, indexp, indexq):
         # check if vertex p is connected to vertex q

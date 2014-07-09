@@ -208,6 +208,11 @@ def main(argv):
     ns.core.Simulator.Run()
     ns.core.Simulator.Destroy()
 
+    print ""
+    print "Simulation is complete."
+    if filename:
+        print "Saved to %s" % (filename)
+
     return 0
 
 if __name__ == '__main__':

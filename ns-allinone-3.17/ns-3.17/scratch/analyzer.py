@@ -22,8 +22,11 @@ class Analyzer:
         self.outdegree = []
         self.maxoutdegree = 0
         self.depth = []
+        self.meandepth = []
         self.maxdepth = 0
+        self.maxmeandepth = 0
         self.avgdepth = 0
+        self.avgmeandepth = 0
 
     def advancetime(self):
         # advance to the next timestep
@@ -127,20 +130,25 @@ class Analyzer:
         self.failalts(alts)
 
     def loaddegreedist(self, vertices):
-        sumdepth = 0
+        sumdepth = 0; totmeandepth = 0
         nbofvertices = vertices.getnbofvertices()
 
         for i in range(nbofvertices):
 
             self.indegree.append(vertices.getvertex(i).getindegree())
             self.outdegree.append(vertices.getvertex(i).getoutdegree())
-    
+
             depth = vertices.getvertex(i).getdepth()
             self.depth.append(depth)
             sumdepth += depth
 
+            meandepth = vertices.getvertex(i).getmeandepth()
+            self.meandepth.append(meandepth)
+            totmeandepth += meandepth
+
         self.avgdepth = sumdepth / float(nbofvertices)
         #vertices.setavgdepth(self.avgdepth)
+        self.avgmeandepth = totmeandepth / float(nbofvertices)
 
         self.maxindegree = vertices.getmaxindegree()
         self.maxoutdegree = vertices.getmaxoutdegree()
