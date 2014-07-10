@@ -20,6 +20,9 @@ M_INIT  = 3 # default initial number of nodes
 M_ADD   = 1 # default number of nodes to be added in every timestep
 M_DEP   = 3 # default upper limit number of links to be created from each added node
 M_ALT   = 3 # default upper limit number of alternate links to be created of each link
+MODEL_SF    = 'sf'
+MODEL_EXP   = 'exp'
+MODEL_RAND  = 'rand'
 
 def addnode(vertices):
     vertex = svc_nodes.Vertex(ns.network.Node())
@@ -72,7 +75,7 @@ def chooserandom(vertices, nbofnodes=1):
     # choose nbofnodes nodes randomly
     return random.sample(range(vertices.getnbofvertices()), nbofnodes)
 
-def choosenodes(vertices, alpha=0, nbofnodes=1):
+def choosepref(vertices, alpha=0, nbofnodes=1):
     # choose nbofnodes nodes based on BA preferential attachment with alpha as initial attractiveness
     # a node with higher indegree is more likely to be chosen than nodes with lower indegree
 
@@ -118,9 +121,10 @@ def choosenodes(vertices, alpha=0, nbofnodes=1):
 
     return nodes
 
-def addnewnode(vertices, m_dep, m_alt, alpha, ispref=True):
-    # add one node and connect it to m_dep_i links
+def addnewnode(vertices, m_dep, m_alt, alpha, model, indexp=None):
+    # add one node (except in MODEL_RAND model) and connect it to m_dep_i links
     # for each link, add m_alt_j alternate links
+    # model = 'sf', 'exp', 'rand'
     # prec:
     # - number of existing nodes >= 2
 
@@ -132,15 +136,17 @@ def addnewnode(vertices, m_dep, m_alt, alpha, ispref=True):
     if m_dep_i > nver:
         m_dep_i = nver
 
-    if ispref:
+    if model == MODEL_SF:
         # choose existing nodes to be connected to using preferential attachment
-        lsnodeidx = choosenodes(vertices, alpha, m_dep_i)
+        lsnodeidx = choosepref(vertices, alpha, m_dep_i)
     else:
+        # model == MODEL_EXP or MODEL_RAND
         # choose existing nodes randomly
         lsnodeidx = chooserandom(vertices, m_dep_i)
 
-    # add one node
-    indexp = addnode(vertices)
+    if model != MODEL_RAND:
+        # add one node
+        indexp = addnode(vertices)
 
     sumalt = 0
     # create m_dep_i links
@@ -157,10 +163,11 @@ def addnewnode(vertices, m_dep, m_alt, alpha, ispref=True):
             sumalt += m_alt_j
 
             # create m_alt_j links
-            if ispref:
+            if model == MODEL_SF:
                 # choose alternatives using preferential attachment
-                lsaltidx = choosenodes(vertices, alpha, m_alt_j)
+                lsaltidx = choosepref(vertices, alpha, m_alt_j)
             else:
+                # model == MODEL_EXP or MODEL_RAND
                 # choose alternatives randomly
                 lsaltidx = chooserandom(vertices, m_alt_j)
 
@@ -181,11 +188,20 @@ def addnewnode(vertices, m_dep, m_alt, alpha, ispref=True):
 #                        # create link p->r as an alternative of p->q
 #                        connect(vertices, indexp, indexr, indexq)
 
-def grow(vertices, m_add, m_dep, m_alt, alpha, ispref=True):
+def grow(vertices, m_add, m_dep, m_alt, alpha, model=MODEL_SF):
     # add m_add nodes to the network
 
-    for i in range(m_add):
-        addnewnode(vertices, m_dep, m_alt, alpha, ispref)
+    if model == MODEL_RAND:
+        # for each isolated vertex
+        # create links (dependency and alternate links) to existing nodes randomly
+
+        for indexp in range(vertices.getnbofvertices()):
+            addnewnode(vertices, m_dep, m_alt, alpha, model, indexp)
+
+    else:
+
+        for i in range(m_add):
+            addnewnode(vertices, m_dep, m_alt, alpha, model)
 
     vertices.analyzer.grow(
         vertices.getnbofvertices()
@@ -261,7 +277,7 @@ def __test(argv):
     print "### Print Info vertices ###"
     vertices.printinfo()
     print "### Choose node ###"
-    print choosenodes(vertices, 10, 3)
+    print choosepref(vertices, 10, 3)
     print "### grow(vertices, 1, 2, 2, 10) ###"
     for i in range(10):
         grow(vertices, 1, 2, 2, 10)

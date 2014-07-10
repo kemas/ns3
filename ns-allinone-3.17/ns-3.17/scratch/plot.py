@@ -77,7 +77,7 @@ def drawloglogdist(ds, xlabel, ylabel, title, labels, markset='var', filename=No
         lbins = logbins(maxdegree, amin=0, base=LOGBINBASE)
         y, bins = np.histogram(degrees, bins=lbins, density=density)
         #y, bins = np.histogram(degrees, bins=100, density=density)
-        print sum(y)
+        #print sum(y)
         x = bins[:-1]
 
         xforlog = []; logx = []; logy = []
@@ -406,7 +406,7 @@ def main(argv):
 #            # FUNC_FAILCASC
 #            xylabels={'x':'Number of nodes fail randomly', 'y':'Number of cascaded fail nodes'}
 
-        plotfailnodes(ds, getargval(dictarg, '-l'), getargval(dictarg, '-m', ['var'])[0], getargval(dictarg, '-s', [None])[0], isbase=func==FUNC_FAIL, xylabels={'x': getargval(dictarg, '-xl')[0], 'y': getargval(dictarg, '-yl')[0]}, title=getargval(dictarg, '-t')[0])
+        plotfailnodes(ds, getargval(dictarg, '-l'), getargval(dictarg, '-m', ['var'])[0], getargval(dictarg, '-s', [None])[0], isbase=func==FUNC_FAIL, xylabels={'x': getargval(dictarg, '-xl', [''])[0], 'y': getargval(dictarg, '-yl', [''])[0]}, title=getargval(dictarg, '-t', [''])[0])
 
     elif func == FUNC_EFF:
         plotcasceff(ds, getargval(dictarg, '-l'), getargval(dictarg, '-r'), {'x': getargval(dictarg, '-xl')[0], 'y': getargval(dictarg, '-yl')[0]}
@@ -414,7 +414,7 @@ def main(argv):
 
     elif func in [FUNC_LOGINDEG, FUNC_LOGOUTDEG]:
         # loglog degree distribution
-        drawloglogdist(ds, xlabel=getargval(dictarg, '-xl')[0], ylabel=getargval(dictarg, '-yl')[0], title=getargval(dictarg, '-t')[0], labels=getargval(dictarg, '-l'), markset=getargval(dictarg, '-m', ['var'])[0], filename=getargval(dictarg, '-s', [None])[0])
+        drawloglogdist(ds, xlabel=getargval(dictarg, '-xl', [''])[0], ylabel=getargval(dictarg, '-yl', [''])[0], title=getargval(dictarg, '-t', [''])[0], labels=getargval(dictarg, '-l'), markset=getargval(dictarg, '-m', ['var'])[0], filename=getargval(dictarg, '-s', [None])[0])
 
     elif func in [FUNC_HISTINDEG, FUNC_HISTOUTDEG]:
         # histogram degree distribution
