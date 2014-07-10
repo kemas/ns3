@@ -111,7 +111,6 @@ class Vertex:
         self._depth = 0 # initial depth is zero, because no outlink
         self._meandepth = 0.0 # (1 + meandepth of all connected nodes) / number of connected nodes
         self._maxdepthidx = None # the vertex index listed in _outlinks and having the highest depth
-        self._maxmeandepthidx = None
 
     def addtovertices(self, vertices, index):
         self.vertices = vertices
@@ -150,10 +149,12 @@ class Vertex:
     def getmaxdepthidx(self):
         return self._maxdepthidx
 
-    def upddepth(self, depth, meandepth, index):
+    def upddepth(self, depth, meandepth, maxdepthidx):
         self._depth = depth
         self._meandepth = meandepth
-        self._maxdepthidx = index
+
+        if maxdepthidx:
+            self._maxdepthidx = maxdepthidx
 
     def _incrindegree(self, addby = 1):
         self._data[1] += addby
@@ -327,12 +328,12 @@ class Vertices:
         self._maxmandlinksidx = None
         self._maxaltlinks = NODEGREE
         self._maxaltlinksidx = None
-        self._maxdepth = NODEGREE
+        self._maxdepth = 0
         self._maxdepthidx = None
-        self._avgdepth = NODEGREE
-        self._maxmeandepth = NODEGREE
+#        self._avgdepth = 0.0
+        self._maxmeandepth = 0.0
         self._maxmeandepthidx = None
-        self._avgmeandepth = NODEGREE
+#        self._avgmeandepth = 0.0
         self._totmandlinks = 0
         self._totaltlinks = 0
         self._nbofremoved = 0
@@ -385,8 +386,8 @@ class Vertices:
     def getmaxdepthidx(self):
         return self._maxdepthidx
 
-    def getavgdepth(self):
-        return self._avgdepth
+#    def getavgdepth(self):
+#        return self._avgdepth
 
 #    def setavgdepth(self, avgdepth):
 #        self._avgdepth = avgdepth
@@ -397,8 +398,8 @@ class Vertices:
     def getmaxmeandepthidx(self):
         return self._maxmeandepthidx
 
-    def getavgmeandepth(self):
-        return self._avgmeandepth
+#    def getavgmeandepth(self):
+#        return self._avgmeandepth
 
     def getnbofremoved(self):
         return self._nbofremoved

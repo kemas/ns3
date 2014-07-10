@@ -153,6 +153,7 @@ class Analyzer:
         self.maxindegree = vertices.getmaxindegree()
         self.maxoutdegree = vertices.getmaxoutdegree()
         self.maxdepth = vertices.getmaxdepth()
+        self.maxmeandepth = vertices.getmaxmeandepth()
 
     def plotfailure(self):
         # nodes removal
@@ -205,6 +206,9 @@ class Analyzer:
             obj['depth'] = self.depth
             obj['maxdepth'] = self.maxdepth
             obj['avgdepth'] = self.avgdepth
+            obj['meandepth'] = self.meandepth
+            obj['maxmeandepth'] = self.maxmeandepth
+            obj['avgmeandepth'] = self.avgmeandepth
 
         f = open(filename, 'w')
         try:
