@@ -35,3 +35,17 @@
 #./waf --pyrun "scratch/svcsim.py --model=rand --timegrow=10000 --timefail=10000 --m_dep=3 --m_alt=10 --m_init=10 --filename='simdata/rsvcsim_10k_10k_d3_a10_i10_5.json'"
 #./waf --pyrun "scratch/svcsim.py --model=rand --timegrow=10000 --timefail=10000 --m_dep=3 --m_alt=10 --m_init=10 --filename='simdata/rsvcsim_10k_10k_d3_a10_i10_6.json'"
 
+###
+
+./waf --pyrun "scratch/svcsim.py --model=rand --timegrow=10000 --timefail=10000 --m_dep=3 --m_alt=1 --m_init=10 --filename='simdata/rsvcsim_10k_10k_d3_a1_i10_1d.json'"
+./waf --pyrun "scratch/svcsim.py --model=rand --timegrow=10000 --timefail=10000 --m_dep=3 --m_alt=2 --m_init=10 --filename='simdata/rsvcsim_10k_10k_d3_a2_i10_1d.json'"
+./waf --pyrun "scratch/svcsim.py --model=rand --timegrow=10000 --timefail=10000 --m_dep=3 --m_alt=3 --m_init=10 --filename='simdata/rsvcsim_10k_10k_d3_a3_i10_1d.json'"
+./waf --pyrun "scratch/svcsim.py --model=rand --timegrow=10000 --timefail=10000 --m_dep=3 --m_alt=4 --m_init=10 --filename='simdata/rsvcsim_10k_10k_d3_a4_i10_1d.json'"
+./waf --pyrun "scratch/svcsim.py --model=rand --timegrow=10000 --timefail=10000 --m_dep=3 --m_alt=5 --m_init=10 --filename='simdata/rsvcsim_10k_10k_d3_a5_i10_1d.json'"
+./waf --pyrun "scratch/svcsim.py --model=rand --timegrow=10000 --timefail=10000 --m_dep=3 --m_alt=6 --m_init=10 --filename='simdata/rsvcsim_10k_10k_d3_a6_i10_1d.json'"
+./waf --pyrun "scratch/svcsim.py --model=rand --timegrow=10000 --timefail=10000 --m_dep=3 --m_alt=7 --m_init=10 --filename='simdata/rsvcsim_10k_10k_d3_a7_i10_1d.json'"
+./waf --pyrun "scratch/svcsim.py --model=rand --timegrow=10000 --timefail=10000 --m_dep=3 --m_alt=8 --m_init=10 --filename='simdata/rsvcsim_10k_10k_d3_a8_i10_1d.json'"
+./waf --pyrun "scratch/svcsim.py --model=rand --timegrow=10000 --timefail=10000 --m_dep=3 --m_alt=9 --m_init=10 --filename='simdata/rsvcsim_10k_10k_d3_a9_i10_1d.json'"
+./waf --pyrun "scratch/svcsim.py --model=rand --timegrow=10000 --timefail=10000 --m_dep=3 --m_alt=10 --m_init=10 --filename='simdata/rsvcsim_10k_10k_d3_a10_i10_1d.json'"
+./waf --pyrun "scratch/svcsim.py --model=rand --timegrow=10000 --timefail=10000 --m_dep=3 --m_alt=11 --m_init=10 --filename='simdata/rsvcsim_10k_10k_d3_a11_i10_1d.json'"
+
