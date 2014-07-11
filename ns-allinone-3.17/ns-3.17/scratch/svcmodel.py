@@ -243,7 +243,7 @@ def print_stats(vertices):
     print '%s : %8.2f' % ('Average'.ljust(leftwidth), float(vertices.gettotaltlinks()) / vertices.getnbofvertices())
     #vertices.getvertex(vertices.getmaxaltlinksidx()).printinfo()
     print '%s : %5d (#%d)' % ('Max depth'.ljust(leftwidth), vertices.getmaxdepth(), vertices.getmaxdepthidx())
-    print '%s : %5d (#%d)' % ('Max mean depth'.ljust(leftwidth), vertices.getmaxmeandepth(), vertices.getmaxmeandepthidx())
+    print '%s : %8.2f (#%d)' % ('Max mean depth'.ljust(leftwidth), vertices.getmaxmeandepth(), vertices.getmaxmeandepthidx())
     #print '%s : %8.2f' % ('Average'.ljust(leftwidth), vertices.getavgdepth())
 
 def print_aftermath(vertices):
