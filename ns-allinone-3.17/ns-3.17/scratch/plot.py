@@ -29,7 +29,9 @@ MARKERS = {'var-':['wo-', 'ks-', 'wv-', 'kD-', 'w+-', 'kx-', 'w*-', 'k|-', 'wp-'
                  'ko', 'ws', 'kv', 'wD', 'k+', 'wx', 'k*', 'w|', 'kp', 'w.', 'k,', 'w1', 'k2', 'w3', 'k4']
         , 'sym':['wo', 'ko', 'ws', 'ks', 'wv', 'kv', 'wD', 'kD', 'w^', 'k^', 'wx', 'kx', 'w*', 'k*', 'w|', 'k|',\
                  'wp', 'kp', 'w.', 'k.', 'w,', 'k,', 'w1', 'k1', 'w2', 'k2', 'w3', 'k3', 'w4', 'k4']
-        , 'black-':['ko-', 'ks-', 'kv-', 'kD-', 'k+-', 'kx-', 'k*-', 'k|-', 'kp-', 'k.-', 'k,-', 'k1-', 'k2-', 'k3-', 'k4-']}
+        , 'black-':['ko-', 'ks-', 'kv-', 'kD-', 'k+-', 'kx-', 'k*-', 'k|-', 'kp-', 'k.-', 'k,-', 'k1-', 'k2-', 'k3-', 'k4-']
+        , 'black':['ko', 'ks', 'kv', 'kD', 'k+', 'kx', 'k*', 'k|', 'kp', 'k.', 'k,', 'k1', 'k2', 'k3', 'k4']
+        , 'white':['wo', 'ws', 'wv', 'wD', 'w+', 'wx', 'w*', 'w|', 'wp', 'w.', 'w,', 'w1', 'w2', 'w3', 'w4']}
 
 def drawhistogram(ds, xlabel, labels, filename=None, nbins=50, normed=False, facecolor='green', alpha=0.5, histtype='step', log=False):
     # the histogram of the degree distribution
@@ -232,12 +234,13 @@ def plotdegdist(ds, labels, markset='var', filename=None
 def plotfailnodes(ds, labels, markset='var', filename=None
     , isbase=True
     , title='Random cascading failure in service network'
-    , xylabels={'x':'Nodes removed', 'y':'Nodes fail'}):
+    , xylabels={'x':'Nodes removed', 'y':'Nodes fail'}
+    , legloc=2):
     # plot fail nodes from data set
     # data set is a list of x and y data to plot
 
     plotdata(ds, labels, title, xylabels
-        , markset, filename, isbase)
+        , markset, filename, isbase, legloc=legloc)
 
 def plotcasceff(ds, labels, randomfails, xylabels, xaxis
     , markset='var'
@@ -406,7 +409,15 @@ def main(argv):
 #            # FUNC_FAILCASC
 #            xylabels={'x':'Number of nodes fail randomly', 'y':'Number of cascaded fail nodes'}
 
-        plotfailnodes(ds, getargval(dictarg, '-l'), getargval(dictarg, '-m', ['var'])[0], getargval(dictarg, '-s', [None])[0], isbase=func==FUNC_FAIL, xylabels={'x': getargval(dictarg, '-xl', [''])[0], 'y': getargval(dictarg, '-yl', [''])[0]}, title=getargval(dictarg, '-t', [''])[0])
+        plotfailnodes(ds
+            , getargval(dictarg, '-l')
+            , getargval(dictarg, '-m', ['var'])[0]
+            , getargval(dictarg, '-s', [None])[0]
+            , isbase=func==FUNC_FAIL
+            , xylabels={'x': getargval(dictarg, '-xl', [''])[0]
+            , 'y': getargval(dictarg, '-yl', [''])[0]}
+            , title=getargval(dictarg, '-t', [''])[0]
+            , legloc=int(getargval(dictarg, '-loc')[0]))
 
     elif func == FUNC_EFF:
         plotcasceff(ds, getargval(dictarg, '-l'), getargval(dictarg, '-r'), {'x': getargval(dictarg, '-xl')[0], 'y': getargval(dictarg, '-yl')[0]}
