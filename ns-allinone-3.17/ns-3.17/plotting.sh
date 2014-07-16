@@ -419,3 +419,116 @@ python scratch/plot.py -fc \
 -l scale-free exponential random \
 -m white -loc 4
 
+python scratch/plot.py -fc \
+    simdata/svcsim_10k_10k_d3_a1_i10_avg1_4.json \
+    simdata/rsvcsim_10k_10k_d3_a1_i10_avg1_4.json \
+    simdata/randsvcsim_10k_10k_d3_a1_i10_1d.json \
+    simdata/svcsim_10k_10k_d3_a2_i10_avg1_4.json \
+    simdata/rsvcsim_10k_10k_d3_a2_i10_avg1_4.json \
+    simdata/randsvcsim_10k_10k_d3_a2_i10_1d.json \
+    simdata/svcsim_10k_10k_d3_a3_i10_avg1_6.json \
+    simdata/rsvcsim_10k_10k_d3_a3_i10_avg1_4.json \
+    simdata/randsvcsim_10k_10k_d3_a3_i10_1d.json \
+    simdata/svcsim_10k_10k_d3_a4_i10_avg1_4.json \
+    simdata/rsvcsim_10k_10k_d3_a4_i10_avg1_4.json \
+    simdata/randsvcsim_10k_10k_d3_a4_i10_1d.json \
+    simdata/svcsim_10k_10k_d3_a5_i10_avg1_4.json \
+    simdata/rsvcsim_10k_10k_d3_a5_i10_avg1_4.json \
+    simdata/randsvcsim_10k_10k_d3_a5_i10_1d.json \
+-xl "Number of nodes fail randomly (fraction)" \
+-yl "Number of cascaded fail nodes (fraction)" \
+-t "Cascading failure in service networks with different degree of alternative <alt>" \
+-m trisym
+
+python scratch/plot.py -fc \
+    simdata/svcsim_10k_10k_d3_a3_i10_avg1_6.json \
+    simdata/rsvcsim_10k_10k_d3_a3_i10_avg1_4.json \
+    simdata/randsvcsim_10k_10k_d3_a3_i10_1d.json \
+    simdata/svcsim_10k_10k_d4_a3_i10_avg1_4.json \
+    simdata/rsvcsim_10k_10k_d4_a3_i10_avg1_4.json \
+    simdata/randsvcsim_10k_10k_d4_a3_i10_1d.json \
+    simdata/svcsim_10k_10k_d5_a3_i10_avg1_4.json \
+    simdata/rsvcsim_10k_10k_d5_a3_i10_avg1_4.json \
+    simdata/randsvcsim_10k_10k_d5_a3_i10_1d.json \
+    simdata/svcsim_10k_10k_d6_a3_i10_avg1_4.json \
+    simdata/rsvcsim_10k_10k_d6_a3_i10_avg1_4.json \
+    simdata/randsvcsim_10k_10k_d6_a3_i10_1d.json \
+-xl "Number of nodes fail randomly (fraction)" \
+-yl "Number of cascaded fail nodes (fraction)" \
+-t "Cascading failure in service networks with different degree of dependency <dep>" \
+-m trisym
+
+# depth scale-free
+python scratch/plot.py -pd \
+    simdata/svcsim_10k_10k_d3_a1_i10_1d.json \
+    simdata/svcsim_10k_10k_d3_a2_i10_1d.json \
+    simdata/svcsim_10k_10k_d3_a3_i10_1d.json \
+    simdata/svcsim_10k_10k_d3_a4_i10_1d.json \
+    simdata/svcsim_10k_10k_d3_a5_i10_1d.json \
+    simdata/svcsim_10k_10k_d3_a6_i10_1d.json \
+    simdata/svcsim_10k_10k_d3_a7_i10_1d.json \
+    simdata/svcsim_10k_10k_d3_a8_i10_1d.json \
+    simdata/svcsim_10k_10k_d3_a9_i10_1d.json \
+    simdata/svcsim_10k_10k_d3_a10_i10_1d.json \
+-s simdata/depth_sf_altvar.csv
+
+python scratch/plot.py -pd \
+    simdata/svcsim_10k_10k_d3_a3_i10_1d.json \
+    simdata/svcsim_10k_10k_d4_a3_i10_1d.json \
+    simdata/svcsim_10k_10k_d5_a3_i10_1d.json \
+    simdata/svcsim_10k_10k_d6_a3_i10_1d.json \
+    simdata/svcsim_10k_10k_d7_a3_i10_1d.json \
+    simdata/svcsim_10k_10k_d8_a3_i10_1d.json \
+    simdata/svcsim_10k_10k_d9_a3_i10_1d.json \
+    simdata/svcsim_10k_10k_d10_a3_i10_1d.json \
+    simdata/svcsim_10k_10k_d11_a3_i10_1d.json \
+-s simdata/depth_sf_depvar.csv
+
+# depth exponential
+python scratch/plot.py -pd \
+    simdata/rsvcsim_10k_10k_d3_a1_i10_1d.json \
+    simdata/rsvcsim_10k_10k_d3_a2_i10_1d.json \
+    simdata/rsvcsim_10k_10k_d3_a3_i10_1d.json \
+    simdata/rsvcsim_10k_10k_d3_a4_i10_1d.json \
+    simdata/rsvcsim_10k_10k_d3_a5_i10_1d.json \
+    simdata/rsvcsim_10k_10k_d3_a6_i10_1d.json \
+    simdata/rsvcsim_10k_10k_d3_a7_i10_1d.json \
+    simdata/rsvcsim_10k_10k_d3_a8_i10_1d.json \
+    simdata/rsvcsim_10k_10k_d3_a9_i10_1d.json \
+    simdata/rsvcsim_10k_10k_d3_a10_i10_1d.json \
+-s simdata/depth_exp_altvar.csv
+
+python scratch/plot.py -pd \
+    simdata/rsvcsim_10k_10k_d3_a3_i10_1d.json \
+    simdata/rsvcsim_10k_10k_d4_a3_i10_1d.json \
+    simdata/rsvcsim_10k_10k_d5_a3_i10_1d.json \
+    simdata/rsvcsim_10k_10k_d6_a3_i10_1d.json \
+    simdata/rsvcsim_10k_10k_d7_a3_i10_1d.json \
+    simdata/rsvcsim_10k_10k_d8_a3_i10_1d.json \
+    simdata/rsvcsim_10k_10k_d9_a3_i10_1d.json \
+    simdata/rsvcsim_10k_10k_d10_a3_i10_1d.json \
+    simdata/rsvcsim_10k_10k_d11_a3_i10_1d.json \
+-s simdata/depth_exp_depvar.csv
+
+# depth random
+python scratch/plot.py -pd \
+    simdata/randsvcsim_10k_10k_d3_a1_i10_1d.json \
+    simdata/randsvcsim_10k_10k_d3_a2_i10_1d.json \
+    simdata/randsvcsim_10k_10k_d3_a3_i10_1d.json \
+    simdata/randsvcsim_10k_10k_d3_a4_i10_1d.json \
+    simdata/randsvcsim_10k_10k_d3_a5_i10_1d.json \
+    simdata/randsvcsim_10k_10k_d3_a6_i10_1d.json \
+    simdata/randsvcsim_10k_10k_d3_a7_i10_1d.json \
+    simdata/randsvcsim_10k_10k_d3_a8_i10_1d.json \
+    simdata/randsvcsim_10k_10k_d3_a9_i10_1d.json \
+-s simdata/depth_rand_altvar.csv
+
+python scratch/plot.py -pd \
+    simdata/randsvcsim_10k_10k_d3_a3_i10_1d.json \
+    simdata/randsvcsim_10k_10k_d4_a3_i10_1d.json \
+    simdata/randsvcsim_10k_10k_d5_a3_i10_1d.json \
+    simdata/randsvcsim_10k_10k_d6_a3_i10_1d.json \
+    simdata/randsvcsim_10k_10k_d7_a3_i10_1d.json \
+    simdata/randsvcsim_10k_10k_d8_a3_i10_1d.json \
+    simdata/randsvcsim_10k_10k_d9_a3_i10_1d.json \
+-s simdata/depth_rand_depvar.csv

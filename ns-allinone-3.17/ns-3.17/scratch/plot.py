@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import json
 import textwrap
+import csv
 
 GAMMA = u'\u03b3'
 LOGBINBASE = 1.09
@@ -19,18 +20,23 @@ FUNC_HISTINDEG = '-hi'
 FUNC_HISTOUTDEG = '-ho'
 FUNC_DISTINDEG = '-di'
 FUNC_DISTOUTDEG = '-do'
-FUNCOPTS = (FUNC_FAIL, FUNC_FAILCASC, FUNC_EFF, FUNC_LOGINDEG, FUNC_LOGOUTDEG, FUNC_HISTINDEG, FUNC_HISTOUTDEG, FUNC_DISTINDEG, FUNC_DISTOUTDEG)
+FUNC_PRINTDEPTH = '-pd'
+FUNCOPTS = (FUNC_FAIL, FUNC_FAILCASC, FUNC_EFF, FUNC_LOGINDEG, FUNC_LOGOUTDEG, FUNC_HISTINDEG, FUNC_HISTOUTDEG, FUNC_DISTINDEG, FUNC_DISTOUTDEG, FUNC_PRINTDEPTH)
+LINESTYLES = ('-', '--', '-.', ':')
 
 MARKERS = {'var-':['wo-', 'ks-', 'wv-', 'kD-', 'w+-', 'kx-', 'w*-', 'k|-', 'wp-', 'k.-', 'w,-', 'k1-', 'w2-', 'k3-', 'w4-',\
                  'ko-', 'ws-', 'kv-', 'wD-', 'k+-', 'wx-', 'k*-', 'w|-', 'kp-', 'w.-', 'k,-', 'w1-', 'k2-', 'w3-', 'k4-']
-        , 'sym-':['wo-', 'ko-', 'ws-', 'ks-', 'wv-', 'kv-', 'wD-', 'kD-', 'w+-', 'k+-', 'wx-', 'kx-', 'w*-', 'k*-', 'w|-', 'k|-',\
-                 'wp-', 'kp-', 'w.-', 'k.-', 'w,-', 'k,-', 'w1-', 'k1-', 'w2-', 'k2-', 'w3-', 'k3-', 'w4-', 'k4-']
         , 'var':['wo', 'ks', 'wv', 'kD', 'w+', 'kx', 'w*', 'k|', 'wp', 'k.', 'w,', 'k1', 'w2', 'k3', 'w4',\
                  'ko', 'ws', 'kv', 'wD', 'k+', 'wx', 'k*', 'w|', 'kp', 'w.', 'k,', 'w1', 'k2', 'w3', 'k4']
+        , 'sym-':['wo-', 'ko-', 'ws-', 'ks-', 'wv-', 'kv-', 'wD-', 'kD-', 'w+-', 'k+-', 'wx-', 'kx-', 'w*-', 'k*-', 'w|-', 'k|-',\
+                 'wp-', 'kp-', 'w.-', 'k.-', 'w,-', 'k,-', 'w1-', 'k1-', 'w2-', 'k2-', 'w3-', 'k3-', 'w4-', 'k4-']
         , 'sym':['wo', 'ko', 'ws', 'ks', 'wv', 'kv', 'wD', 'kD', 'w^', 'k^', 'wx', 'kx', 'w*', 'k*', 'w|', 'k|',\
                  'wp', 'kp', 'w.', 'k.', 'w,', 'k,', 'w1', 'k1', 'w2', 'k2', 'w3', 'k3', 'w4', 'k4']
+        , 'trisym-':{'linestyle':'-', 'markers':['o', 's', '^', 'v', 'D', 'p', '+', 'x', '*', '|', '.', ',', '1', '2', '3', '4'],  'markerfacecolors':['white', '0.3', 'black']}
+        , 'trisym':{'linestyle':'', 'markers':['o', 's', '^', 'v', 'D', 'p', '+', 'x', '*', '|', '.', ',', '1', '2', '3', '4'],  'markerfacecolors':['white', '0.3', 'black']}
         , 'black-':['ko-', 'ks-', 'kv-', 'kD-', 'k+-', 'kx-', 'k*-', 'k|-', 'kp-', 'k.-', 'k,-', 'k1-', 'k2-', 'k3-', 'k4-']
         , 'black':['ko', 'ks', 'kv', 'kD', 'k+', 'kx', 'k*', 'k|', 'kp', 'k.', 'k,', 'k1', 'k2', 'k3', 'k4']
+        , 'white-':['wo-', 'ws-', 'wv-', 'wD-', 'w+-', 'wx-', 'w*-', 'w|-', 'wp-', 'w.-', 'w,-', 'w1-', 'w2-', 'w3-', 'w4-']
         , 'white':['wo', 'ws', 'wv', 'wD', 'w+', 'wx', 'w*', 'w|', 'wp', 'w.', 'w,', 'w1', 'w2', 'w3', 'w4']}
 
 def drawhistogram(ds, xlabel, labels, filename=None, nbins=50, normed=False, facecolor='green', alpha=0.5, histtype='step', log=False):
@@ -91,7 +97,7 @@ def drawloglogdist(ds, xlabel, ylabel, title, labels, markset='var', filename=No
 
         try:
             mark = itm.next()
-        except AttributeError:
+        except StopIteration:
             itm = iter(MARKERS[markset])
             mark = itm.next()
 
@@ -146,23 +152,58 @@ def plotdata(ds, labels, title
     fig = plt.figure()
     ax = fig.add_axes([0.1, 0.1, 0.6, 0.8])
 
-    itm = iter(MARKERS[markset])
+    if markset[:3] == 'tri':
+        tri = MARKERS[markset]
+        markers = iter(tri['markers'])
+        markerfacecolors = iter(tri['markerfacecolors'])
+        linestyle = ''
+        if markset[-1] in LINESTYLES:
+            linestyle = markset[-1]
+
+        counter = 0
+    else:
+        itm = iter(MARKERS[markset])
+
     maxxy = 0
     i = 0
     for xy in ds:
-        try:
-            mark = itm.next()
-            if not isline:
-                mark = mark[:-1]
-        except AttributeError:
-            itm = iter(MARKERS[markset])
-            mark = itm.next()
+        if markset[:3] == 'tri':
+            if counter % 3 == 0:
+                try:
+                    marker = markers.next()
+                except StopIteration:
+                    markers = iter(tri['markers'])
+                    marker = markers.next()
+            counter += 1
+
+            try:
+                markerfacecolor = markerfacecolors.next()
+            except StopIteration:
+                markerfacecolors = iter(tri['markerfacecolors'])
+                markerfacecolor = markerfacecolors.next()
+
+        else:
+            try:
+                mark = itm.next()
+                if not isline and markset[:-1] == '-':
+                    mark = mark[:-1]
+            except StopIteration:
+                itm = iter(MARKERS[markset])
+                mark = itm.next()
+
+            markerfacecolor = mark[0]
+            marker = mark[1]
+            linestyle = ''
+            if len(mark) > 2:
+                linestyle = mark[2]
 
         if i < len(labels):
-            ax.plot(xy[0], xy[1], mark, label=labels[i])
+            #ax.plot(xy[0], xy[1], mark, label=labels[i])
+            ax.plot(xy[0], xy[1], label=labels[i], color='black', linestyle=linestyle, marker=marker, markerfacecolor=markerfacecolor)
             i += 1
         else:
-            ax.plot(xy[0], xy[1], mark)
+            #ax.plot(xy[0], xy[1], mark)
+            ax.plot(xy[0], xy[1], color='black', linestyle=linestyle, marker=marker, markerfacecolor=markerfacecolor)
 
         if isbase:
             currmaxxy = max(max(xy[0]), max(xy[1]))
@@ -283,7 +324,25 @@ def plotcasceff(ds, labels, randomfails, xylabels, xaxis
     plotdata(plots, labels, title, xylabels
         , markset, filename, isbase, legloc=legloc)
 
-def loaddata(ds, func, data, step=STEP, norm=True):
+def printdepth(ds, filename):
+    with open(filename, 'wb') as csvfile:
+        writer = csv.writer(csvfile)
+
+        i = 1
+        for series in ds:
+            print series[0]
+            print '%s: %4d' % ('maxdepth'.ljust(13), series[1])
+            print '%s: %7.2f' % ('avgdepth'.ljust(13), series[2])
+            print '%s: %7.2f' % ('maxmeandepth'.ljust(13), series[3])
+            print '%s: %7.2f' % ('avgmeandepth'.ljust(13), series[4])
+            print
+            
+            stats = [stat for stat in series]
+            writer.writerow(stats)
+
+            i += 1
+
+def loaddata(ds, func, data, filename, step=STEP, norm=True):
     if func in [FUNC_FAIL, FUNC_FAILCASC, FUNC_EFF]:
         nbofnodes = 1
         if norm:
@@ -336,6 +395,9 @@ def loaddata(ds, func, data, step=STEP, norm=True):
 
     elif func in [FUNC_LOGOUTDEG, FUNC_HISTOUTDEG]:
         ds.append([data['outdegree'], data['maxoutdegree']])
+
+    elif func in FUNC_PRINTDEPTH:
+        ds.append([filename, data['maxdepth'], data['avgdepth'], data['maxmeandepth'], data['avgmeandepth']])
 
 def addtodictarg(dictarg, key, arg):
     # assert arguments for -m (markset)
@@ -393,7 +455,7 @@ def main(argv):
             #if func == FUNC_EFF:
             #    data['xval'] = dictarg['xval'][i]
 
-            loaddata(ds, func, data)
+            loaddata(ds, func, data, dictarg['files'][i])
         finally:
             f.close()
 
@@ -417,7 +479,7 @@ def main(argv):
             , xylabels={'x': getargval(dictarg, '-xl', [''])[0]
             , 'y': getargval(dictarg, '-yl', [''])[0]}
             , title=getargval(dictarg, '-t', [''])[0]
-            , legloc=int(getargval(dictarg, '-loc')[0]))
+            , legloc=int(getargval(dictarg, '-loc', [2])[0]))
 
     elif func == FUNC_EFF:
         plotcasceff(ds, getargval(dictarg, '-l'), getargval(dictarg, '-r'), {'x': getargval(dictarg, '-xl')[0], 'y': getargval(dictarg, '-yl')[0]}
@@ -433,13 +495,13 @@ def main(argv):
 
     elif func in [FUNC_DISTINDEG, FUNC_DISTOUTDEG]:
         # degree distribution plot
-
+        
         if FUNC_DISTINDEG:
-            title = 'Degree distribution of exponential network'
-            xylabels = {'x':'k (degree)', 'y':'P(k)'}
+            title = getargval(dictarg, '-t', ['Degree distribution of exponential network'])[0]
+            xylabels = {'x':getargval(dictarg, '-xl', ['k (degree)'])[0], 'y':getargval(dictarg, '-yl', ['P(k)'])[0]}
         else:
-            title = 'Outdegree distribution'
-            xylabels = {'x':'Outdegree', 'y':'Number of nodes'}
+            title = getargval(dictarg, '-t', ['Outdegree distribution'])[0]
+            xylabels = {'x':getargval(dictarg, '-xl', ['Outdegree'])[0], 'y':getargval(dictarg, '-yl', ['Number of nodes'])[0]}
 
         logx = False
         arglogx = getargval(dictarg, '-logx')
@@ -453,6 +515,9 @@ def main(argv):
 
         plotdegdist(ds, getargval(dictarg, '-l'), getargval(dictarg, '-m', ['var'])[0], getargval(dictarg, '-s', [None])[0]
             , title=title, xylabels=xylabels, nbins=50, logx=logx,  logy=logy)
+
+    elif func == FUNC_PRINTDEPTH:
+        printdepth(ds, getargval(dictarg, '-s', [None])[0])
 
 if __name__ == '__main__':
     sys.exit(main(sys.argv))
