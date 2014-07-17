@@ -208,6 +208,11 @@ def grow(vertices, m_add, m_dep, m_alt, alpha, model=MODEL_SF):
         , vertices.gettotmandlinks()
         , vertices.gettotaltlinks())
 
+        
+    ###!!!
+    print '** countconnect **'
+    print vertices.countconnect
+
     # verbose
     #vertices.printinfo()
 

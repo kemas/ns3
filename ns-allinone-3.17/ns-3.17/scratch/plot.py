@@ -23,6 +23,7 @@ FUNC_DISTOUTDEG = '-do'
 FUNC_PRINTDEPTH = '-pd'
 FUNCOPTS = (FUNC_FAIL, FUNC_FAILCASC, FUNC_EFF, FUNC_LOGINDEG, FUNC_LOGOUTDEG, FUNC_HISTINDEG, FUNC_HISTOUTDEG, FUNC_DISTINDEG, FUNC_DISTOUTDEG, FUNC_PRINTDEPTH)
 LINESTYLES = ('-', '--', '-.', ':')
+FILENAME = 'depthstat.csv'
 
 MARKERS = {'var-':['wo-', 'ks-', 'wv-', 'kD-', 'w+-', 'kx-', 'w*-', 'k|-', 'wp-', 'k.-', 'w,-', 'k1-', 'w2-', 'k3-', 'w4-',\
                  'ko-', 'ws-', 'kv-', 'wD-', 'k+-', 'wx-', 'k*-', 'w|-', 'kp-', 'w.-', 'k,-', 'w1-', 'k2-', 'w3-', 'k4-']
@@ -325,6 +326,9 @@ def plotcasceff(ds, labels, randomfails, xylabels, xaxis
         , markset, filename, isbase, legloc=legloc)
 
 def printdepth(ds, filename):
+    if not filename:
+        filename = FILENAME
+
     with open(filename, 'wb') as csvfile:
         writer = csv.writer(csvfile)
 
@@ -420,7 +424,7 @@ def readargv(argv, pos=1, opt='', dictarg={}):
             dictarg['func'] = currarg
             currarg = 'files'
 
-        elif currarg not in ['-l', '-m', '-s', '-x', '-r', '-xl', '-yl', '-t', '-logx', '-logy', '-loc']:
+        elif currarg not in ['-l', '-m', '-s', '-x', '-r', '-xl', '-yl', '-t', '-logx', '-logy', '-loc', '-b']:
             printusage()
             return
 
@@ -514,7 +518,7 @@ def main(argv):
             logy = int(arglogy[0]) > 0
 
         plotdegdist(ds, getargval(dictarg, '-l'), getargval(dictarg, '-m', ['var'])[0], getargval(dictarg, '-s', [None])[0]
-            , title=title, xylabels=xylabels, nbins=50, logx=logx,  logy=logy)
+            , title=title, xylabels=xylabels, nbins=int(getargval(dictarg, '-b', ['50'])[0]), logx=logx,  logy=logy)
 
     elif func == FUNC_PRINTDEPTH:
         printdepth(ds, getargval(dictarg, '-s', [None])[0])
