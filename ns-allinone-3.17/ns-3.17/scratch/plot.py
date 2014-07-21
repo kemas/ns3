@@ -8,7 +8,7 @@ import textwrap
 import csv
 
 GAMMA = u'\u03b3'
-LOGBINBASE = 1.09
+LOGBINBASE = 1.1
 STEP = 300 #300
 IFNONE = [] # to be returned when getargval does not find a key
 FUNC_FAIL = '-f'
@@ -20,8 +20,9 @@ FUNC_HISTINDEG = '-hi'
 FUNC_HISTOUTDEG = '-ho'
 FUNC_DISTINDEG = '-di'
 FUNC_DISTOUTDEG = '-do'
+FUNC_PLOTFROMFILE = '-pl'
 FUNC_PRINTDEPTH = '-pd'
-FUNCOPTS = (FUNC_FAIL, FUNC_FAILCASC, FUNC_EFF, FUNC_LOGINDEG, FUNC_LOGOUTDEG, FUNC_HISTINDEG, FUNC_HISTOUTDEG, FUNC_DISTINDEG, FUNC_DISTOUTDEG, FUNC_PRINTDEPTH)
+FUNCOPTS = (FUNC_FAIL, FUNC_FAILCASC, FUNC_EFF, FUNC_LOGINDEG, FUNC_LOGOUTDEG, FUNC_HISTINDEG, FUNC_HISTOUTDEG, FUNC_DISTINDEG, FUNC_DISTOUTDEG, FUNC_PRINTDEPTH, FUNC_PLOTFROMFILE)
 LINESTYLES = ('-', '--', '-.', ':')
 FILENAME = 'depthstat.csv'
 
@@ -33,8 +34,8 @@ MARKERS = {'var-':['wo-', 'ks-', 'wv-', 'kD-', 'w+-', 'kx-', 'w*-', 'k|-', 'wp-'
                  'wp-', 'kp-', 'w.-', 'k.-', 'w,-', 'k,-', 'w1-', 'k1-', 'w2-', 'k2-', 'w3-', 'k3-', 'w4-', 'k4-']
         , 'sym':['wo', 'ko', 'ws', 'ks', 'wv', 'kv', 'wD', 'kD', 'w^', 'k^', 'wx', 'kx', 'w*', 'k*', 'w|', 'k|',\
                  'wp', 'kp', 'w.', 'k.', 'w,', 'k,', 'w1', 'k1', 'w2', 'k2', 'w3', 'k3', 'w4', 'k4']
-        , 'trisym-':{'linestyle':'-', 'markers':['o', 's', '^', 'v', 'D', 'p', '+', 'x', '*', '|', '.', ',', '1', '2', '3', '4'],  'markerfacecolors':['white', '0.3', 'black']}
-        , 'trisym':{'linestyle':'', 'markers':['o', 's', '^', 'v', 'D', 'p', '+', 'x', '*', '|', '.', ',', '1', '2', '3', '4'],  'markerfacecolors':['white', '0.3', 'black']}
+        , 'trisym-':{'linestyle':'-', 'markers':['o', 's', '^', 'v', 'D', 'p', '+', 'x', '*', '|', '.', ',', '1', '2', '3', '4'],  'markerfacecolors':['0.3', 'white', 'black']}
+        , 'trisym':{'linestyle':'', 'markers':['o', 's', '^', 'v', 'D', 'p', '+', 'x', '*', '|', '.', ',', '1', '2', '3', '4'],  'markerfacecolors':['0.3', 'white', 'black']}
         , 'black-':['ko-', 'ks-', 'kv-', 'kD-', 'k+-', 'kx-', 'k*-', 'k|-', 'kp-', 'k.-', 'k,-', 'k1-', 'k2-', 'k3-', 'k4-']
         , 'black':['ko', 'ks', 'kv', 'kD', 'k+', 'kx', 'k*', 'k|', 'kp', 'k.', 'k,', 'k1', 'k2', 'k3', 'k4']
         , 'white-':['wo-', 'ws-', 'wv-', 'wD-', 'w+-', 'wx-', 'w*-', 'w|-', 'wp-', 'w.-', 'w,-', 'w1-', 'w2-', 'w3-', 'w4-']
@@ -76,7 +77,7 @@ def logbins(amax, amin=0, base=LOGBINBASE):
  
     return bins
 
-def drawloglogdist(ds, xlabel, ylabel, title, labels, markset='var', filename=None, density=True):
+def drawloglogdist(ds, xlabel, ylabel, title, labels, markset='var', filename=None, density=True, xlim=None, ylim=None):
     # degree distribution in loglog scale
 
     lblgamma = u'%s = %%#.2f' % (GAMMA)
@@ -110,6 +111,8 @@ def drawloglogdist(ds, xlabel, ylabel, title, labels, markset='var', filename=No
         else:
             plt.plot(x, y, mark[:-1], label = lblgamma % (-1 * gamma))
         plt.plot(xforlog, 10**p(logx), mark[0] + ':')
+
+    setaxislim(xlim, ylim, plt=plt)
 
     plt.loglog()
     plt.title('\n'.join(textwrap.wrap(title, 50)))
@@ -145,6 +148,8 @@ def plotdata(ds, labels, title
     , isbase=True
     , logx=False
     , logy=False
+    , xlim=None
+    , ylim=None
     , isline=True
     , legloc=2):
     # plot degree distribution from data set
@@ -168,6 +173,7 @@ def plotdata(ds, labels, title
     maxxy = 0
     i = 0
     for xy in ds:
+        # markers related
         if markset[:3] == 'tri':
             if counter % 3 == 0:
                 try:
@@ -215,9 +221,14 @@ def plotdata(ds, labels, title
         # create baseline x=y
         ax.plot([0, maxxy], [0, maxxy], 'g-')
 
+    # set xlim ylim
+    setaxislim(xlim, ylim, ax=ax)
+
     #ax.set_title(title)
     ax.set_title('\n'.join(textwrap.wrap(title, 50)))
+    #ax.set_xlabel('$k_{in}$')
     ax.set_xlabel(xylabels['x'])
+    #ax.set_ylabel('$P(k_{in})$')
     ax.set_ylabel(xylabels['y'])
     if len(labels) > 0:
         #ax.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
@@ -243,7 +254,9 @@ def plotdegdist(ds, labels, markset='var', filename=None
     , density=False
     , logx=False
     , logy=False
-    , norm=True):
+    , norm=True
+    , xlim=None
+    , ylim=None):
     # plot degree distribution from data set
     # data set is a list of x and y data to plot
 
@@ -269,7 +282,7 @@ def plotdegdist(ds, labels, markset='var', filename=None
 #        lsdeg.append([x, y])
 
     plotdata(lsdeg, labels, title, xylabels
-        , markset, filename, isbase=False, logx=logx, logy=logy, isline=False)
+        , markset, filename, isbase=False, logx=logx, logy=logy, xlim=xlim, ylim=ylim, isline=False)
 
     #print lsdeg
 
@@ -277,19 +290,25 @@ def plotfailnodes(ds, labels, markset='var', filename=None
     , isbase=True
     , title='Random cascading failure in service network'
     , xylabels={'x':'Nodes removed', 'y':'Nodes fail'}
-    , legloc=2):
+    , legloc=2
+    , xlim=None
+    , ylim=None):
+
     # plot fail nodes from data set
     # data set is a list of x and y data to plot
 
     plotdata(ds, labels, title, xylabels
-        , markset, filename, isbase, legloc=legloc)
+        , markset, filename, isbase, legloc=legloc, xlim=xlim, ylim=ylim)
 
 def plotcasceff(ds, labels, randomfails, xylabels, xaxis
     , markset='var'
     , filename=None
     , isbase=False
     , title='Random cascading failure in service network'
-    , legloc=2):
+    , legloc=2
+    , xlim=None
+    , ylim=None
+    , plotfile=None):
     # plot cascading effect where the data series are different number of nodes fail randomly
     # the y axis (cascading effect, number of active nodes) is the number of cascading fail nodes
     # the x axis is either the number of alternative, the number of dependency, the combination of both
@@ -322,8 +341,16 @@ def plotcasceff(ds, labels, randomfails, xylabels, xaxis
 
         plots.append([x, y])
 
+    if plotfile:
+        # save plot file
+        f = open(plotfile, 'w')
+        try:
+            json.dump(plots, f)
+        finally:
+            f.close()
+
     plotdata(plots, labels, title, xylabels
-        , markset, filename, isbase, legloc=legloc)
+        , markset, filename, isbase, legloc=legloc, xlim=xlim, ylim=ylim)
 
 def printdepth(ds, filename):
     if not filename:
@@ -345,6 +372,33 @@ def printdepth(ds, filename):
             writer.writerow(stats)
 
             i += 1
+
+def setaxislim(xlim, ylim, plt=None, ax=None):
+
+    if xlim:
+        if plt:
+            plt.xlim(xmax=float(xlim[-1]))
+        else:
+            # ax
+            ax.set_xlim(right=float(xlim[-1]))
+        if len(xlim) > 1:
+            if plt:
+                plt.xlim(xmin=float(xlim[0]))
+            else:
+                # ax
+                ax.set_xlim(left=float(xlim[0]))
+    if ylim:
+        if plt:
+            plt.ylim(ymax=float(ylim[-1]))
+        else:
+            # ax
+            ax.set_ylim(top=float(ylim[-1]))
+        if len(ylim) > 1:
+            if plt:
+                plt.ylim(ymin=float(ylim[0]))
+            else:
+                # ax
+                ax.set_ylim(bottom=float(ylim[0]))
 
 def loaddata(ds, func, data, filename, step=STEP, norm=True):
     if func in [FUNC_FAIL, FUNC_FAILCASC, FUNC_EFF]:
@@ -424,7 +478,7 @@ def readargv(argv, pos=1, opt='', dictarg={}):
             dictarg['func'] = currarg
             currarg = 'files'
 
-        elif currarg not in ['-l', '-m', '-s', '-x', '-r', '-xl', '-yl', '-t', '-logx', '-logy', '-loc', '-b']:
+        elif currarg not in ['-l', '-m', '-s', '-x', '-r', '-xl', '-yl', '-t', '-logx', '-logy', '-loc', '-b', '-xlim', '-ylim', '-v']:
             printusage()
             return
 
@@ -463,6 +517,21 @@ def main(argv):
         finally:
             f.close()
 
+    logx = False
+    arglogx = getargval(dictarg, '-logx')
+    if arglogx:
+        logx = int(arglogx[0]) > 0
+
+    logy = False
+    arglogy = getargval(dictarg, '-logy')
+    if arglogy:
+        logy = int(arglogy[0]) > 0
+
+    xlim = getargval(dictarg, '-xlim')
+    ylim = getargval(dictarg, '-ylim')
+
+    plotfile = getargval(dictarg, '-v', [None])[0]
+
     if func in [FUNC_LOGINDEG, FUNC_HISTINDEG]:
         xlabel = 'In-degree'
     elif func in [FUNC_LOGOUTDEG, FUNC_HISTOUTDEG]:
@@ -480,18 +549,35 @@ def main(argv):
             , getargval(dictarg, '-m', ['var'])[0]
             , getargval(dictarg, '-s', [None])[0]
             , isbase=func==FUNC_FAIL
-            , xylabels={'x': getargval(dictarg, '-xl', [''])[0]
-            , 'y': getargval(dictarg, '-yl', [''])[0]}
+            , xylabels={'x': getargval(dictarg, '-xl', [''])[0], 'y': getargval(dictarg, '-yl', [''])[0]}
             , title=getargval(dictarg, '-t', [''])[0]
-            , legloc=int(getargval(dictarg, '-loc', [2])[0]))
+            , legloc=int(getargval(dictarg, '-loc', [2])[0])
+            , xlim=xlim
+            , ylim=ylim)
 
     elif func == FUNC_EFF:
-        plotcasceff(ds, getargval(dictarg, '-l'), getargval(dictarg, '-r'), {'x': getargval(dictarg, '-xl')[0], 'y': getargval(dictarg, '-yl')[0]}
-                    , getargval(dictarg, '-x'), getargval(dictarg, '-m', ['var'])[0], getargval(dictarg, '-s', [None])[0], title=getargval(dictarg, '-t')[0], legloc=int(getargval(dictarg, '-loc')[0]))
+        plotcasceff(ds
+            , getargval(dictarg, '-l')
+            , getargval(dictarg, '-r')
+            , {'x': getargval(dictarg, '-xl')[0], 'y': getargval(dictarg, '-yl')[0]}
+            , getargval(dictarg, '-x')
+            , getargval(dictarg, '-m', ['var'])[0]
+            , getargval(dictarg, '-s', [None])[0]
+            , title=getargval(dictarg, '-t')[0]
+            , legloc=int(getargval(dictarg, '-loc')[0])
+            , plotfile=plotfile)
 
     elif func in [FUNC_LOGINDEG, FUNC_LOGOUTDEG]:
         # loglog degree distribution
-        drawloglogdist(ds, xlabel=getargval(dictarg, '-xl', [''])[0], ylabel=getargval(dictarg, '-yl', [''])[0], title=getargval(dictarg, '-t', [''])[0], labels=getargval(dictarg, '-l'), markset=getargval(dictarg, '-m', ['var'])[0], filename=getargval(dictarg, '-s', [None])[0])
+        drawloglogdist(ds
+            , xlabel=getargval(dictarg, '-xl', [''])[0]
+            , ylabel=getargval(dictarg, '-yl', [''])[0]
+            , title=getargval(dictarg, '-t', [''])[0]
+            , labels=getargval(dictarg, '-l')
+            , markset=getargval(dictarg, '-m', ['var'])[0]
+            , filename=getargval(dictarg, '-s', [None])[0]
+            , xlim=xlim
+            , ylim=ylim)
 
     elif func in [FUNC_HISTINDEG, FUNC_HISTOUTDEG]:
         # histogram degree distribution
@@ -499,7 +585,7 @@ def main(argv):
 
     elif func in [FUNC_DISTINDEG, FUNC_DISTOUTDEG]:
         # degree distribution plot
-        
+
         if FUNC_DISTINDEG:
             title = getargval(dictarg, '-t', ['Degree distribution of exponential network'])[0]
             xylabels = {'x':getargval(dictarg, '-xl', ['k (degree)'])[0], 'y':getargval(dictarg, '-yl', ['P(k)'])[0]}
@@ -507,18 +593,36 @@ def main(argv):
             title = getargval(dictarg, '-t', ['Outdegree distribution'])[0]
             xylabels = {'x':getargval(dictarg, '-xl', ['Outdegree'])[0], 'y':getargval(dictarg, '-yl', ['Number of nodes'])[0]}
 
-        logx = False
-        arglogx = getargval(dictarg, '-logx')
-        if arglogx:
-            logx = int(arglogx[0]) > 0
+        plotdegdist(ds
+            , getargval(dictarg, '-l')
+            , getargval(dictarg, '-m', ['var'])[0]
+            , getargval(dictarg, '-s', [None])[0]
+            , title=title
+            , xylabels=xylabels
+            , nbins=int(getargval(dictarg, '-b', ['50'])[0])
+            , logx=logx, logy=logy
+            , xlim=xlim
+            , ylim=ylim)
 
-        logy = False
-        arglogy = getargval(dictarg, '-logy')
-        if arglogy:
-            logy = int(arglogy[0]) > 0
+    elif func == FUNC_PLOTFROMFILE:
+        f = open(dictarg['files'][0])
+        try:
+            ds = json.load(f)
+        finally:
+            f.close()
 
-        plotdegdist(ds, getargval(dictarg, '-l'), getargval(dictarg, '-m', ['var'])[0], getargval(dictarg, '-s', [None])[0]
-            , title=title, xylabels=xylabels, nbins=int(getargval(dictarg, '-b', ['50'])[0]), logx=logx,  logy=logy)
+        plotdata(ds
+            , getargval(dictarg, '-l')
+            , getargval(dictarg, '-t', [''])[0]
+            , {'x': getargval(dictarg, '-xl', ['Degree of dependency $\langle dep \\rangle$'])[0], 'y': getargval(dictarg, '-yl', ['Number of cascaded fail nodes (fraction)'])[0]}
+            , getargval(dictarg, '-m', ['var'])[0]
+            , getargval(dictarg, '-s', [None])[0]
+            , isbase=False
+            , logx=logx
+            , logy=logy
+            , xlim=xlim
+            , ylim=ylim
+            , legloc=int(getargval(dictarg, '-loc', ['1'])[0]))
 
     elif func == FUNC_PRINTDEPTH:
         printdepth(ds, getargval(dictarg, '-s', [None])[0])

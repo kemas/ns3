@@ -342,7 +342,7 @@ class Vertices:
         self.analyzer = analyzer.Analyzer()
 
         ###!!!
-        self.countconnect = 0
+        #self.countconnect = 0
 
     def getmaxindegree(self):
         return self._maxindegree
@@ -641,7 +641,7 @@ class Vertices:
             self._totmandlinks += 1
         
         ###!!!
-        self.countconnect += 1
+        #self.countconnect += 1
 
     def disconnect(self, indexp, indexq, isupddepth=False):
         # diconnect the link from vertex p to vertex q
