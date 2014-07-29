@@ -613,8 +613,8 @@ def main(argv):
 
         plotdata(ds
             , getargval(dictarg, '-l')
-            , getargval(dictarg, '-t', [''])[0]
-            , {'x': getargval(dictarg, '-xl', ['Degree of dependency $\langle dep \\rangle$'])[0], 'y': getargval(dictarg, '-yl', ['Number of cascaded fail nodes (fraction)'])[0]}
+            , getargval(dictarg, '-t', ['The effect of degree of dependency on cascading failure in service networks'])[0]
+            , {'x': getargval(dictarg, '-xl', ['Degree of dependency $\langle dep \\rangle$'])[0], 'y': getargval(dictarg, '-yl', ['Number of cascaded fail nodes $n_c$ (in fraction)'])[0]}
             , getargval(dictarg, '-m', ['var'])[0]
             , getargval(dictarg, '-s', [None])[0]
             , isbase=False
