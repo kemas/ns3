@@ -77,7 +77,7 @@ def logbins(amax, amin=0, base=LOGBINBASE):
  
     return bins
 
-def drawloglogdist(ds, xlabel, ylabel, title, labels, markset='var', filename=None, density=True, xlim=None, ylim=None):
+def drawloglogdist(ds, xlabel, ylabel, title, labels, markset='var', filename=None, density=True, xlim=None, ylim=None, axisfsize=None):
     # degree distribution in loglog scale
 
     lblgamma = u'%s = %%#.2f' % (GAMMA)
@@ -116,8 +116,9 @@ def drawloglogdist(ds, xlabel, ylabel, title, labels, markset='var', filename=No
 
     plt.loglog()
     plt.title('\n'.join(textwrap.wrap(title, 50)))
-    plt.xlabel(xlabel)
-    plt.ylabel(ylabel)
+    plt.xlabel(xlabel, fontsize=axisfsize)
+    plt.ylabel(ylabel, fontsize=axisfsize)
+
     plt.legend()
 
 #    # inset
@@ -151,7 +152,8 @@ def plotdata(ds, labels, title
     , xlim=None
     , ylim=None
     , isline=True
-    , legloc=2):
+    , legloc=2
+    , axisfsize=None):
     # plot degree distribution from data set
     # data set is a list of x and y data to plot
 
@@ -227,9 +229,9 @@ def plotdata(ds, labels, title
     #ax.set_title(title)
     ax.set_title('\n'.join(textwrap.wrap(title, 50)))
     #ax.set_xlabel('$k_{in}$')
-    ax.set_xlabel(xylabels['x'])
+    ax.set_xlabel(xylabels['x'], fontsize=axisfsize)
     #ax.set_ylabel('$P(k_{in})$')
-    ax.set_ylabel(xylabels['y'])
+    ax.set_ylabel(xylabels['y'], fontsize=axisfsize)
     if len(labels) > 0:
         #ax.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
         #ax.legend(bbox_to_anchor=(0, 1), ncol=2, loc=2, borderaxespad=0.)
@@ -256,7 +258,8 @@ def plotdegdist(ds, labels, markset='var', filename=None
     , logy=False
     , norm=True
     , xlim=None
-    , ylim=None):
+    , ylim=None
+    , axisfsize=None):
     # plot degree distribution from data set
     # data set is a list of x and y data to plot
 
@@ -282,7 +285,7 @@ def plotdegdist(ds, labels, markset='var', filename=None
 #        lsdeg.append([x, y])
 
     plotdata(lsdeg, labels, title, xylabels
-        , markset, filename, isbase=False, logx=logx, logy=logy, xlim=xlim, ylim=ylim, isline=False)
+        , markset, filename, isbase=False, logx=logx, logy=logy, xlim=xlim, ylim=ylim, isline=False, axisfsize=axisfsize)
 
     #print lsdeg
 
@@ -292,13 +295,14 @@ def plotfailnodes(ds, labels, markset='var', filename=None
     , xylabels={'x':'Nodes removed', 'y':'Nodes fail'}
     , legloc=2
     , xlim=None
-    , ylim=None):
+    , ylim=None
+    , axisfsize=None):
 
     # plot fail nodes from data set
     # data set is a list of x and y data to plot
 
     plotdata(ds, labels, title, xylabels
-        , markset, filename, isbase, legloc=legloc, xlim=xlim, ylim=ylim)
+        , markset, filename, isbase, legloc=legloc, xlim=xlim, ylim=ylim, axisfsize=axisfsize)
 
 def plotcasceff(ds, labels, randomfails, xylabels, xaxis
     , markset='var'
@@ -308,7 +312,8 @@ def plotcasceff(ds, labels, randomfails, xylabels, xaxis
     , legloc=2
     , xlim=None
     , ylim=None
-    , plotfile=None):
+    , plotfile=None
+    , axisfsize=None):
     # plot cascading effect where the data series are different number of nodes fail randomly
     # the y axis (cascading effect, number of active nodes) is the number of cascading fail nodes
     # the x axis is either the number of alternative, the number of dependency, the combination of both
@@ -350,7 +355,7 @@ def plotcasceff(ds, labels, randomfails, xylabels, xaxis
             f.close()
 
     plotdata(plots, labels, title, xylabels
-        , markset, filename, isbase, legloc=legloc, xlim=xlim, ylim=ylim)
+        , markset, filename, isbase, legloc=legloc, xlim=xlim, ylim=ylim, axisfsize=axisfsize)
 
 def printdepth(ds, filename):
     if not filename:
@@ -478,7 +483,7 @@ def readargv(argv, pos=1, opt='', dictarg={}):
             dictarg['func'] = currarg
             currarg = 'files'
 
-        elif currarg not in ['-l', '-m', '-s', '-x', '-r', '-xl', '-yl', '-t', '-logx', '-logy', '-loc', '-b', '-xlim', '-ylim', '-v']:
+        elif currarg not in ['-l', '-m', '-s', '-x', '-r', '-xl', '-yl', '-t', '-logx', '-logy', '-loc', '-b', '-xlim', '-ylim', '-v', '-axisfsize']:
             printusage()
             return
 
@@ -537,6 +542,12 @@ def main(argv):
     elif func in [FUNC_LOGOUTDEG, FUNC_HISTOUTDEG]:
         xlabel = 'Out-degree'
 
+    axisfsize = getargval(dictarg, '-axisfsize', ['medium'])[0]
+    try:
+        axisfsize = int(axisfsize)
+    except:
+        pass
+
     if func in [FUNC_FAIL, FUNC_FAILCASC]:
 #        if func == FUNC_FAIL:
 #            xylabels={'x':'Number of nodes fail randomly', 'y':'Total number of nodes fail (randomly + cascaded fail)'}
@@ -553,7 +564,8 @@ def main(argv):
             , title=getargval(dictarg, '-t', [''])[0]
             , legloc=int(getargval(dictarg, '-loc', [2])[0])
             , xlim=xlim
-            , ylim=ylim)
+            , ylim=ylim
+            , axisfsize=axisfsize)
 
     elif func == FUNC_EFF:
         plotcasceff(ds
@@ -577,7 +589,8 @@ def main(argv):
             , markset=getargval(dictarg, '-m', ['var'])[0]
             , filename=getargval(dictarg, '-s', [None])[0]
             , xlim=xlim
-            , ylim=ylim)
+            , ylim=ylim
+            , axisfsize=axisfsize)
 
     elif func in [FUNC_HISTINDEG, FUNC_HISTOUTDEG]:
         # histogram degree distribution
@@ -602,7 +615,8 @@ def main(argv):
             , nbins=int(getargval(dictarg, '-b', ['50'])[0])
             , logx=logx, logy=logy
             , xlim=xlim
-            , ylim=ylim)
+            , ylim=ylim
+            , axisfsize=axisfsize)
 
     elif func == FUNC_PLOTFROMFILE:
         f = open(dictarg['files'][0])

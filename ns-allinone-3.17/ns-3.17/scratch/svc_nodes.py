@@ -672,7 +672,7 @@ class Vertices:
         vertexp = self.getvertex(indexp)
 
         vpmaxdepth = 0; vpmaxdepthidx = None
-        totmeandepth = 0
+        totmeandepth = 0.0
         for i in vertexp.itroutlinks():
             idepth = self.getvertex(i).getdepth()
 
@@ -682,7 +682,7 @@ class Vertices:
 
             totmeandepth += self.getvertex(i).getmeandepth() + 1
 
-        meandepth = 0
+        meandepth = 0.0
         if vertexp.getnbofoutlinks():
             # nbofoutlinks > 0
             meandepth = totmeandepth / float(vertexp.getnbofoutlinks())

@@ -37,6 +37,8 @@ class Analyzer:
             self.nodescreated.append(self.nodescreated[self.lastid])
             self.nodesremoved.append(self.nodesremoved[self.lastid])
             self.nodesfail.append(self.nodesfail[self.lastid])
+            ###!!! salah, harusnya self.linkscreated dihitung dari mand dan altcreated
+            # atau sekalian tidak perlu ada linkscreated karena membingungkan/redundan
             self.linkscreated.append(self.linkscreated[self.lastid])
             self.linksfail.append(self.linksfail[self.lastid])
             self.altcreated.append(self.altcreated[self.lastid])
@@ -95,6 +97,7 @@ class Analyzer:
         self.nodesfail[self.lastid] = n
 
     def createlinks(self, n):
+        ###!!! salah
         self.linkscreated[self.lastid] = n
 
     def faillinks(self, n):

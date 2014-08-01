@@ -177,8 +177,8 @@ python scratch/plot.py -fc \
     simdata/rsvcsim_10k_10k_d3_a4_i10_avg1_4.json \
     simdata/svcsim_10k_10k_d3_a5_i10_avg1_4.json \
     simdata/rsvcsim_10k_10k_d3_a5_i10_avg1_4.json \
--xl 'Number of nodes fail randomly $r$ (in fraction)' \
--yl 'Number of cascaded fail nodes $n_c$ (in fraction)' \
+-xl 'Random failed services $r$ (in fraction)' \
+-yl 'Cascade failed services $n_c$ (in fraction)' \
 -t 'Cascading failure with different degree of alternative $\langle alt \rangle$' \
 -m sym
 
@@ -191,8 +191,8 @@ python scratch/plot.py -fc \
     simdata/rsvcsim_10k_10k_d5_a3_i10_avg1_4.json \
     simdata/svcsim_10k_10k_d6_a3_i10_avg1_4.json \
     simdata/rsvcsim_10k_10k_d6_a3_i10_avg1_4.json \
--xl 'Number of nodes fail randomly $r$ (in fraction)' \
--yl 'Number of cascaded fail nodes $n_c$ (in fraction)' \
+-xl 'Random failed services $r$ (in fraction)' \
+-yl 'Cascade failed services $n_c$ (in fraction)' \
 -t 'Cascading failure with different degree of dependency $\langle dep \rangle$' \
 -m sym
 
@@ -210,7 +210,7 @@ python scratch/plot.py -e \
 -r 0.1 0.2 0.3 0.4 0.5 0.6 0.7 \
 -l r=0.1 r=0.2 r=0.3 r=0.4 r=0.5 r=0.6 r=0.7 \
 -xl 'Degree of alternative $\langle alt \rangle$' \
--yl 'Number of cascaded fail nodes $n_c$ (in fraction)' \
+-yl 'Cascade failed services $n_c$ (in fraction)' \
 -t 'The effect of degree of alternative on cascading failure in scale-free service network' \
 -x 0 0.5 1 1.5 2 2.5 3 3.5 4 4.5 \
 -m black- -loc 1
@@ -227,7 +227,7 @@ python scratch/plot.py -e \
 -r 0.1 0.2 0.3 0.4 0.5 0.6 0.7 \
 -l r=0.1 r=0.2 r=0.3 r=0.4 r=0.5 r=0.6 r=0.7 \
 -xl 'Degree of dependency $\langle dep \rangle$' \
--yl 'Number of cascaded fail nodes $n_c$ (in fraction)' \
+-yl 'Cascade failed services $n_c$ (in fraction)' \
 -t 'The effect of degree of dependency on cascading failure in scale-free service network' \
 -x 1 1.5 2 2.5 3 3.5 4 4.5 \
 -m black- -loc 2
@@ -246,7 +246,7 @@ python scratch/plot.py -e \
 -r 0.1 0.2 0.3 0.4 0.5 0.6 0.7 \
 -l r=0.1 r=0.2 r=0.3 r=0.4 r=0.5 r=0.6 r=0.7 \
 -xl 'Degree of alternative $\langle alt \rangle$' \
--yl 'Number of cascaded fail nodes $n_c$ (in fraction)' \
+-yl 'Cascade failed services $n_c$ (in fraction)' \
 -t 'The effect of degree of alternative on cascading failure in exponential service network' \
 -x 0 0.5 1 1.5 2 2.5 3 3.5 4 4.5 \
 -m black- -loc 1
@@ -263,7 +263,7 @@ python scratch/plot.py -e \
 -r 0.1 0.2 0.3 0.4 0.5 0.6 0.7 \
 -l r=0.1 r=0.2 r=0.3 r=0.4 r=0.5 r=0.6 r=0.7 \
 -xl 'Degree of dependency $\langle dep \rangle$' \
--yl 'Number of cascaded fail nodes $n_c$ (in fraction)' \
+-yl 'Cascade failed services $n_c$ (in fraction)' \
 -t 'The effect of degree of dependency on cascading failure in exponential service network' \
 -x 1 1.5 2 2.5 3 3.5 4 4.5 \
 -m black- -loc 2
@@ -282,7 +282,7 @@ python scratch/plot.py -e \
 -r 0.1 0.2 0.3 0.4 0.5 0.6 0.7 \
 -l r=0.1 r=0.2 r=0.3 r=0.4 r=0.5 r=0.6 r=0.7 \
 -xl 'Degree of alternative $\langle alt \rangle$' \
--yl 'Number of cascaded fail nodes $n_c$ (in fraction)' \
+-yl 'Cascade failed services $n_c$ (in fraction)' \
 -t 'The effect of degree of alternative on cascading failure in random service network' \
 -x 0 0.5 1 1.5 2 2.5 3 3.5 4 4.5 \
 -m black- -loc 1
@@ -298,7 +298,7 @@ python scratch/plot.py -e \
 -r 0.1 0.2 0.3 0.4 0.5 0.6 0.7 \
 -l r=0.1 r=0.2 r=0.3 r=0.4 r=0.5 r=0.6 r=0.7 \
 -xl 'Degree of dependency $\langle dep \rangle$' \
--yl 'Number of cascaded fail nodes $n_c$ (in fraction)' \
+-yl 'Cascade failed services $n_c$ (in fraction)' \
 -t 'The effect of degree of dependency on cascading failure in random service network' \
 -x 1 1.5 2 2.5 3 3.5 4 \
 -m black- -loc 2
@@ -315,7 +315,7 @@ python scratch/plot.py -e \
 #-r 0.1 0.2 0.3 0.4 0.5 0.6 0.7 \
 #-l r=0.1 r=0.2 r=0.3 r=0.4 r=0.5 r=0.6 r=0.7 \
 #-xl 'Degree of dependency $\langle dep \rangle$' \
-#-yl 'Number of cascaded fail nodes $n_c$ (in fraction)' \
+#-yl 'Cascade failed services $n_c$ (in fraction)' \
 #-t 'The effect of degree of dependency on cascading failure in exponential service network' \
 #-x 1 1.5 2 2.5 3 3.5 4 4.5 \
 #-m black- -loc 2
@@ -334,7 +334,7 @@ python scratch/plot.py -e \
 #-r 0.1 0.2 0.3 0.4 0.5 0.6 0.7 \
 #-l r=0.1 r=0.2 r=0.3 r=0.4 r=0.5 r=0.6 r=0.7 \
 #-xl 'Degree of alternative $\langle alt \rangle$' \
-#-yl 'Number of cascaded fail nodes $n_c$ (in fraction)' \
+#-yl 'Cascade failed services $n_c$ (in fraction)' \
 #-t 'The effect of degree of alternative on cascading failure in scale-free service network' \
 #-x 0 0.5 1 1.5 2 2.5 3 3.5 4 4.5 \
 #-m black- -loc 1
@@ -367,8 +367,8 @@ python scratch/plot.py -fc \
     simdata/randsvcsim_10k_10k_d3_a4_i10_1d.json \
     simdata/svcsim_10k_10k_d3_a5_i10_avg1_4.json \
     simdata/randsvcsim_10k_10k_d3_a5_i10_1d.json \
--xl 'Number of nodes fail randomly $r$ (in fraction)' \
--yl 'Number of cascaded fail nodes $n_c$ (in fraction)' \
+-xl 'Random failed services $r$ (in fraction)' \
+-yl 'Cascade failed services $n_c$ (in fraction)' \
 -t 'Cascading failure with different degree of alternative $\langle alt \rangle$' \
 -m sym
 
@@ -381,8 +381,8 @@ python scratch/plot.py -fc \
     simdata/randsvcsim_10k_10k_d5_a3_i10_1d.json \
     simdata/svcsim_10k_10k_d6_a3_i10_avg1_4.json \
     simdata/randsvcsim_10k_10k_d6_a3_i10_1d.json \
--xl 'Number of nodes fail randomly $r$ (in fraction)' \
--yl 'Number of cascaded fail nodes $n_c$ (in fraction)' \
+-xl 'Random failed services $r$ (in fraction)' \
+-yl 'Cascade failed services $n_c$ (in fraction)' \
 -t 'Cascading failure with different degree of dependency $\langle dep \rangle$' \
 -m sym
 
@@ -398,8 +398,8 @@ python scratch/plot.py -fc \
     simdata/randsvcsim_10k_10k_d3_a4_i10_1d.json \
     simdata/rsvcsim_10k_10k_d3_a5_i10_avg1_4.json \
     simdata/randsvcsim_10k_10k_d3_a5_i10_1d.json \
--xl 'Number of nodes fail randomly $r$ (in fraction)' \
--yl 'Number of cascaded fail nodes $n_c$ (in fraction)' \
+-xl 'Random failed services $r$ (in fraction)' \
+-yl 'Cascade failed services $n_c$ (in fraction)' \
 -t 'Cascading failure with different degree of alternative $\langle alt \rangle$' \
 -m sym
 
@@ -412,8 +412,8 @@ python scratch/plot.py -fc \
     simdata/randsvcsim_10k_10k_d5_a3_i10_1d.json \
     simdata/rsvcsim_10k_10k_d6_a3_i10_avg1_4.json \
     simdata/randsvcsim_10k_10k_d6_a3_i10_1d.json \
--xl 'Number of nodes fail randomly $r$ (in fraction)' \
--yl 'Number of cascaded fail nodes $n_c$ (in fraction)' \
+-xl 'Random failed services $r$ (in fraction)' \
+-yl 'Cascade failed services $n_c$ (in fraction)' \
 -t 'Cascading failure with different degree of dependency $\langle dep \rangle$' \
 -m sym
 
@@ -422,8 +422,8 @@ python scratch/plot.py -fc \
     simdata/svcsim_10k_10k_d3_a1_i10_avg1_4.json \
     simdata/rsvcsim_10k_10k_d3_a1_i10_avg1_4.json \
     simdata/randsvcsim_10k_10k_d3_a1_i10_1d.json \
--xl 'Number of nodes fail randomly $r$ (in fraction)' \
--yl 'Number of cascaded fail nodes $n_c$ (in fraction)' \
+-xl 'Random failed services $r$ (in fraction)' \
+-yl 'Cascade failed services $n_c$ (in fraction)' \
 -t 'Cascading failure with different degree of alternative $\langle alt \rangle$' \
 -l scale-free exponential random \
 -m white -loc 4
@@ -432,8 +432,8 @@ python scratch/plot.py -fc \
     simdata/svcsim_10k_10k_d9_a3_i10_avg1_6.json \
     simdata/rsvcsim_10k_10k_d9_a3_i10_avg1_6.json \
     simdata/randsvcsim_10k_10k_d9_a3_i10_1d.json \
--xl 'Number of nodes fail randomly $r$ (in fraction)' \
--yl 'Number of cascaded fail nodes $n_c$ (in fraction)' \
+-xl 'Random failed services $r$ (in fraction)' \
+-yl 'Cascade failed services $n_c$ (in fraction)' \
 -t 'Cascading failure with different degree of alternative $\langle alt \rangle$' \
 -l scale-free exponential random \
 -m white -loc 4
@@ -454,8 +454,8 @@ python scratch/plot.py -fc \
 #    simdata/svcsim_10k_10k_d3_a5_i10_avg1_4.json \
 #    simdata/rsvcsim_10k_10k_d3_a5_i10_avg1_4.json \
 #    simdata/randsvcsim_10k_10k_d3_a5_i10_1d.json \
-#-xl 'Number of nodes fail randomly $r$ (in fraction)' \
-#-yl 'Number of cascaded fail nodes $n_c$ (in fraction)' \
+#-xl 'Random failed services $r$ (in fraction)' \
+#-yl 'Cascade failed services $n_c$ (in fraction)' \
 #-t 'Cascading failure with different degree of alternative $\langle alt \rangle$' \
 #-m trisym
 
@@ -472,8 +472,8 @@ python scratch/plot.py -fc \
     simdata/svcsim_10k_10k_d3_a4_i10_avg1_4.json \
     simdata/rsvcsim_10k_10k_d3_a4_i10_avg1_4.json \
     simdata/randsvcsim_10k_10k_d3_a4_i10_1d.json \
--xl 'Number of nodes fail randomly $r$ (in fraction)' \
--yl 'Number of cascaded fail nodes $n_c$ (in fraction)' \
+-xl 'Random failed services $r$ (in fraction)' \
+-yl 'Cascade failed services $n_c$ (in fraction)' \
 -t 'Cascading failure with different degree of alternative $\langle alt \rangle$' \
 -m trisym
 
@@ -490,8 +490,8 @@ python scratch/plot.py -fc \
     simdata/svcsim_10k_10k_d6_a3_i10_avg1_4.json \
     simdata/rsvcsim_10k_10k_d6_a3_i10_avg1_4.json \
     simdata/randsvcsim_10k_10k_d6_a3_i10_1d.json \
--xl 'Number of nodes fail randomly $r$ (in fraction)' \
--yl 'Number of cascaded fail nodes $n_c$ (in fraction)' \
+-xl 'Random failed services $r$ (in fraction)' \
+-yl 'Cascade failed services $n_c$ (in fraction)' \
 -t 'Cascading failure with different degree of dependency $\langle dep \rangle$' \
 -m trisym
 
@@ -508,8 +508,8 @@ python scratch/plot.py -fc \
     simdata/svcsim_10k_10k_d6_a1_i10_1d.json \
     simdata/rsvcsim_10k_10k_d6_a1_i10_1d.json \
     simdata/randsvcsim_10k_10k_d6_a1_i10_1d.json \
--xl 'Number of nodes fail randomly $r$ (in fraction)' \
--yl 'Number of cascaded fail nodes $n_c$ (in fraction)' \
+-xl 'Random failed services $r$ (in fraction)' \
+-yl 'Cascade failed services $n_c$ (in fraction)' \
 -t 'Cascading failure with different degree of dependency $\langle dep \rangle$' \
 -m trisym
 
@@ -588,5 +588,9 @@ python scratch/plot.py -pd \
     simdata/randsvcsim_10k_10k_d9_a3_i10_1d.json \
 -s simdata/depth_rand_depvar.csv
 
-python scratch/plot.py -pl simdata/plotfunceff.json -m black- -t 'The effect of degree of dependency on cascading failure in service networks' -xl 'Degree of dependency $\langle dep \rangle$' -yl 'Number of cascaded fail nodes $n_c$ (in fraction)' -l scale-free exponential random -loc 2
-python scratch/plot.py -pl simdata/plotfunceffalt.json -m black- -t 'The effect of degree of alternative on cascading failure in service networks' -xl 'Degree of alternative $\langle alt \rangle$' -yl 'Number of cascaded fail nodes $n_c$ (in fraction)' -l scale-free exponential random
+python scratch/plot.py -pl simdata/plotfunceff.json -m black- -t 'The effect of degree of dependency on cascading failure in service networks' -xl 'Degree of dependency $\langle dep \rangle$' -yl 'Cascade failed services $n_c$ (in fraction)' -l scale-free exponential random -loc 2
+python scratch/plot.py -pl simdata/plotfunceffalt.json -m black- -t 'The effect of degree of alternative on cascading failure in service networks' -xl 'Degree of alternative $\langle alt \rangle$' -yl 'Cascade failed services $n_c$ (in fraction)' -l scale-free exponential random
+python scratch/plot.py -di simdata/lg_comp.json -m black -logx 1 -logy 1 -t 'Degree distribution of the Language Grid service network' -xl 'In-degree $k_{in}$' -yl 'Probability distribution $P(k_{in})$'
+python scratch/plot.py -di simdata/rsvcsim_10k_10k_d3_a5_i10_1d.json -m black -logx 1 -logy 1 -xlim 1 500 -ylim 1e-6 1 -t "Exponential" -xl 'In-degree $k_{in}$' -yl 'Probability distribution $P(k_{in})$' -axisfsize large
+python scratch/plot.py -di simdata/randsvcsim_10k_10k_d3_a5_i10_1d.json -m black -logx 1 -logy 1 -xlim 1 500 -ylim 1e-6 1 -t "Random" -xl 'In-degree $k_{in}$' -yl 'Probability distribution $P(k_{in})$' -axisfsize large
+python scratch/plot.py -li simdata/svcsim_10k_10k_d3_a3_i10_5.json -m black- -logx 1 -logy 1 -xlim 1 500 -ylim 1e-6 1 -t "Scale-free" -xl 'In-degree $k_{in}$' -yl 'Probability distribution $P(k_{in})$' -axisfsize large
