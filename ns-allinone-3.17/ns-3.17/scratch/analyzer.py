@@ -27,6 +27,7 @@ class Analyzer:
         self.maxmeandepth = 0
         self.avgdepth = 0
         self.avgmeandepth = 0
+        self.snapshot = []
 
     def advancetime(self):
         # advance to the next timestep
@@ -132,6 +133,15 @@ class Analyzer:
         self.failmands(mands)
         self.failalts(alts)
 
+    def takesnapshot(self, vertices):
+        print "** takesnapshot **"
+        lsvertex = {}
+        for i in range(len(vertices._vertices)):
+            v = vertices._vertices[i]
+            lsvertex[i] = [v.isactive(), v._outlinks, v._inlinks, v._altlinks._ls, v._altlinks._ref]
+
+        self.snapshot.append(lsvertex)
+
     def loaddegreedist(self, vertices):
         sumdepth = 0; totmeandepth = 0
         nbofvertices = vertices.getnbofvertices()
@@ -179,7 +189,7 @@ class Analyzer:
 
         plt.show()
 
-    def savetofile(self, filename='svcsim.json', isall=False, isnodescreated=True, isnodesremoved=True, isnodesfail=True, islinkscreated=True, islinksfail=True, isaltcreated=True, isaltfail=True, ismandcreated=True, ismandfail=True, isindegree=True, isoutdegree=True, isdepth=True):
+    def savetofile(self, filename='svcsim.json', isall=False, isnodescreated=True, isnodesremoved=True, isnodesfail=True, islinkscreated=True, islinksfail=True, isaltcreated=True, isaltfail=True, ismandcreated=True, ismandfail=True, isindegree=True, isoutdegree=True, isdepth=True, issnapshot=True):
         obj = {}
         if isall or isnodescreated:
             obj['nodescreated'] = self.nodescreated
@@ -212,6 +222,8 @@ class Analyzer:
             obj['meandepth'] = self.meandepth
             obj['maxmeandepth'] = self.maxmeandepth
             obj['avgmeandepth'] = self.avgmeandepth
+        if isall or issnapshot:
+            obj['snapshot'] = self.snapshot
 
         f = open(filename, 'w')
         try:

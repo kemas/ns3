@@ -177,9 +177,11 @@ class Vertex:
     def itrinlinks(self):
         return self._inlinks.__iter__()
 
+    # this is redundant with self._data[2]
     def getnbofoutlinks(self):
         return len(self._outlinks)
 
+    # this is redundant with self._data[1]
     def getnbofinlinks(self):
         return len(self._inlinks)
 
@@ -639,13 +641,20 @@ class Vertices:
             self._totaltlinks += 1
         else:
             self._totmandlinks += 1
-        
+
+        ###!!!debug, why out/inlinks != out/indegree
+        # because the snapshot value is pass by reference (maybe)
+        print "**"
+        print vertexp._outlinks
+        print vertexp._data
+        print vertexq._inlinks
+        print vertexq._data
+
         ###!!!
         #self.countconnect += 1
 
     def disconnect(self, indexp, indexq, isupddepth=False):
         # diconnect the link from vertex p to vertex q
-
         vertexp = self.getvertex(indexp)
         vertexq = self.getvertex(indexq)
 

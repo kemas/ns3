@@ -193,13 +193,16 @@ def main(argv):
 #    ns.core.Simulator.Schedule(ns.core.Seconds(timegrow + 1), svc_routines.drawhistogram, vertices, 20, False)
 #    ns.core.Simulator.Schedule(ns.core.Seconds(timegrow + 2), svc_routines.drawloglogdist, vertices, lbinsbase, True)
     ns.core.Simulator.Schedule(ns.core.Seconds(timegrow), svcmodel.print_stats, vertices)
+    ns.core.Simulator.Schedule(ns.core.Seconds(timegrow), vertices.analyzer.takesnapshot, vertices)
     ns.core.Simulator.Schedule(ns.core.Seconds(timegrow), vertices.analyzer.loaddegreedist, vertices)
 
     # network failure
-    timelimit = timegrow + timefail
-    for i in range(timegrow, timelimit):
+    timelimit = timegrow + 1 + timefail
+    for i in range(timegrow + 1, timelimit):
         for j in range(freq):
             ns.core.Simulator.Schedule(ns.core.Seconds(i), svcmodel.randomfail, vertices)
+    ###!!!
+    ns.core.Simulator.Schedule(ns.core.Seconds(timelimit), vertices.analyzer.takesnapshot, vertices)
 
     ns.core.Simulator.Schedule(ns.core.Seconds(timelimit), svcmodel.print_aftermath, vertices)
     #ns.core.Simulator.Schedule(ns.core.Seconds(timelimit), vertices.analyzer.loaddegreedist, vertices)
