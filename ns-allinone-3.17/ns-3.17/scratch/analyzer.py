@@ -134,11 +134,27 @@ class Analyzer:
         self.failalts(alts)
 
     def takesnapshot(self, vertices):
-        print "** takesnapshot **"
         lsvertex = {}
         for i in range(len(vertices._vertices)):
             v = vertices._vertices[i]
-            lsvertex[i] = [v.isactive(), v._outlinks, v._inlinks, v._altlinks._ls, v._altlinks._ref]
+
+            # copy outlinks
+            outlinks = [outl for outl in v._outlinks]
+            # copy inlinks
+            inlinks = [inl for inl in v._inlinks]
+            # copy altlinks _ls
+            altls = []
+            for ls in v._altlinks._ls:
+                altls.append([])
+                for idx in ls:
+                    altls[-1].append(idx)
+
+            # copy altlinks _ref
+            altref = {}
+            for k in v._altlinks._ref.keys():
+                altref[k] = [v._altlinks._ref[k][0], v._altlinks._ref[k][1]]
+
+            lsvertex[i] = [v.isactive(), outlinks, inlinks, altls, altref]
 
         self.snapshot.append(lsvertex)
 

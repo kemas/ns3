@@ -643,12 +643,12 @@ class Vertices:
             self._totmandlinks += 1
 
         ###!!!debug, why out/inlinks != out/indegree
-        # because the snapshot value is pass by reference (maybe)
-        print "**"
-        print vertexp._outlinks
-        print vertexp._data
-        print vertexq._inlinks
-        print vertexq._data
+        # because the snapshot value is pass by reference 
+        #print "**"
+        #print vertexp._outlinks
+        #print vertexp._data
+        #print vertexq._inlinks
+        #print vertexq._data
 
         ###!!!
         #self.countconnect += 1

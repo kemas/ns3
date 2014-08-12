@@ -21,3 +21,5 @@
 #./waf --pyrun "scratch/svcsim.py --model=exp --timegrow=10000 --timefail=10000 --m_dep=9 --m_alt=3 --m_init=10 --filename='simdata/rsvcsim_10k_10k_d9_a3_i10_1d.json'"
 #./waf --pyrun "scratch/svcsim.py --model=exp --timegrow=10000 --timefail=10000 --m_dep=10 --m_alt=3 --m_init=10 --filename='simdata/rsvcsim_10k_10k_d10_a3_i10_1d.json'"
 #./waf --pyrun "scratch/svcsim.py --model=exp --timegrow=10000 --timefail=10000 --m_dep=11 --m_alt=3 --m_init=10 --filename='simdata/rsvcsim_10k_10k_d11_a3_i10_1d.json'"
+
+#./waf --pyrun "scratch/svcsim.py --model=exp --timegrow=10 --timefail=20 --m_dep=3 --m_alt=3 --m_init=10 --filename='simdata/small_rsvcsim_d3_a3_i10.json'"

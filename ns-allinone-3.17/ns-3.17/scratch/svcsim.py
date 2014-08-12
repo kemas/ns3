@@ -202,7 +202,7 @@ def main(argv):
         for j in range(freq):
             ns.core.Simulator.Schedule(ns.core.Seconds(i), svcmodel.randomfail, vertices)
     ###!!!
-    ns.core.Simulator.Schedule(ns.core.Seconds(timelimit), vertices.analyzer.takesnapshot, vertices)
+    #ns.core.Simulator.Schedule(ns.core.Seconds(timelimit), vertices.analyzer.takesnapshot, vertices)
 
     ns.core.Simulator.Schedule(ns.core.Seconds(timelimit), svcmodel.print_aftermath, vertices)
     #ns.core.Simulator.Schedule(ns.core.Seconds(timelimit), vertices.analyzer.loaddegreedist, vertices)
