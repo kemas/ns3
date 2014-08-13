@@ -2,7 +2,7 @@
 from __future__ import division
 #from __future__ import with_statement
 
-LAYOUT_ALGORITHM = 'cs' #'neato' # ['neato'|'dot'|'twopi'|'circo'|'fdp'|'nop']
+LAYOUT_ALGORITHM = 'neato' #'neato' # ['neato'|'dot'|'twopi'|'circo'|'fdp'|'nop']
     # added: 'ss', 'cs'
 REPRESENT_CHANNELS_AS_NODES = 1
 DEFAULT_NODE_SIZE = 3.0 #3.0 # default node size in meters
@@ -273,8 +273,6 @@ class Node(PyVizObject):
             self._update_position()
 
     def set_position(self, x, y):
-        pass
-###!!!
         self.canvas_item.set_property("center_x", x)
         self.canvas_item.set_property("center_y", y)
         fill_color_rgba = 0x808080ff + (0x01 * len(self.links) * 2 << 16)
@@ -283,9 +281,8 @@ class Node(PyVizObject):
         if self.svg_item is not None:
             self._update_svg_position(x, y)
 
-###!!!
-#        for link in self.links:
-#            link.update_points()
+        for link in self.links:
+            link.update_points()
 
         if self._label_canvas_item is not None:
             self._label_canvas_item.set_properties(x=x, y=(y+self._size*3))
@@ -948,27 +945,27 @@ class Visualizer(gobject.GObject):
         #print "update_view"
 
         self.time_label.set_text("Time: %f s" % ns.core.Simulator.Now().GetSeconds())
-###!!!
-#        if Visualizer.IS_NODES_MOBILE:
-#            self._update_node_positions()
-#
-#        if Visualizer.IS_ALLOW_MOD_EDGE:
-#            # render edges
-#            if self._nbofupdedge < Visualizer.UPDEDGES:
-#                self._nbofupdedge += 1
-#            else:
-#                self._render_edges()
-#                self._nbofupdedge = 0
-#
-#        # Update information 
-#        for info_win in self.information_windows:
-#            info_win.update()
-#
-#        if Visualizer.IS_DRAW_TRANS:
-#            self._update_transmissions_view()
-#        if Visualizer.IS_DRAW_DROPS:
-#            self._update_drops_view()
-#
+
+        if Visualizer.IS_NODES_MOBILE:
+            self._update_node_positions()
+
+        if Visualizer.IS_ALLOW_MOD_EDGE:
+            # render edges
+            if self._nbofupdedge < Visualizer.UPDEDGES:
+                self._nbofupdedge += 1
+            else:
+                self._render_edges()
+                self._nbofupdedge = 0
+
+        # Update information 
+        for info_win in self.information_windows:
+            info_win.update()
+
+        if Visualizer.IS_DRAW_TRANS:
+            self._update_transmissions_view()
+        if Visualizer.IS_DRAW_DROPS:
+            self._update_drops_view()
+
         is_rearranged = False
         if Visualizer.IS_ALLOW_ADD_NODE:
             # render new nodes only every n (Visualizer.UPDNODES) times update_view
@@ -984,8 +981,6 @@ class Visualizer(gobject.GObject):
             self._nbofupdlay += 1
         else:
             if not is_rearranged:
-###!!!
-                pass
                 self._rearrange_layout() 
             self._nbofupdlay = 0
 
@@ -1128,8 +1123,7 @@ class Visualizer(gobject.GObject):
             #pdb.set_trace()
             self._add_node(i)
             #print "** lastnodeid: %d ns.network.NodeList.GetNNodes(): %d" % (self._lastnodeid, ns.network.NodeList.GetNNodes())
-        #self._lastnodeid = lennodelist # not necessary because this is done in each layout algorithm
-###!!!
+        #self._lastnodeid = lennodelist 
         self._rearrange_layout()
 
     #def _add_node(self, nodeI, graph):
