@@ -284,8 +284,8 @@ class Node(PyVizObject):
             self._update_svg_position(x, y)
 
 ###!!!
-#        for link in self.links:
-#            link.update_points()
+        for link in self.links:
+            link.update_points()
 
         if self._label_canvas_item is not None:
             self._label_canvas_item.set_properties(x=x, y=(y+self._size*3))
