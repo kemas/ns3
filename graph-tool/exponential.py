@@ -10,6 +10,7 @@ import random
 INIT = 10
 WIDTH = 400
 HEIGHT = 300
+COUNTFIT = 100
 
 # initialize global parameters
 g = None
@@ -17,7 +18,10 @@ pos = None
 duration = 100
 freq = 1
 tredraw = 0
+toutcount = 0
+countfit = COUNTFIT
 delay = 0.0
+t1 = time.time()
 
 # system argument handler functions
 
@@ -69,8 +73,6 @@ def getargval(dictarg, key, ifnone=None):
 
 def printusage():
     pass
-    #print "Usage: python plot.py -<function option> <file-1> [file-n] [-l label-1 label-n] [-m markset] [-s filename] [-x x-1 x-m -r r-1 r-p]"
-    #print "Example: python plot.py -f data1.json data2.json -l \"data 1\" \"data 2\" -m var -s \"graph.png\""
 
 # exponential network generator functions
 
@@ -122,27 +124,50 @@ def update_state():
     global duration
     global freq
     global tredraw
+    global toutcount
+    global countfit
     global delay
+    global pos
 
     if duration > 0:
-        print "duration"
         for i in range(freq):
-            print "grow"
             grow_random(g, pos)
 
-        print "regenerate surface"
-        win.graph.regenerate_surface(lazy=True, timeout=tredraw)
-        print "draw"
-        win.graph.queue_draw()
-        print "delay"
         time.sleep(delay)
 
         duration -= 1
+
+        if toutcount:
+            toutcount -= 1
+        else:
+            toutcount = tredraw
+            win.graph.regenerate_surface(lazy=False)
+            win.graph.queue_draw()
+
+        if countfit:
+            countfit -= 1
+        else:
+            countfit = COUNTFIT
+            # Perform one iteration of the layout step, starting from the previous positions
+            #pos = sfdp_layout(g, pos=pos, max_iter=1)
+            #pos = radial_tree_layout(g, g.vertex(0))
+            #pos = fruchterman_reingold_layout(g, pos=pos)
+            # set to center
+            win.graph.fit_to_window(ink=True)
+
     else:
+        #win.graph.regenerate_surface(lazy=False)
+        #win.graph.queue_draw()
+        # set to center
+        win.graph.fit_to_window(ink=True)
+
+        print "Finish!"
+        print time.strftime("Time: %H:%M:%S", time.gmtime(time.time()-t1))
+
         return False
 
-    #if duration % 10 == 0:
-    print duration
+#    #if duration % 10 == 0:
+#    print duration
 
     return True
 
@@ -153,8 +178,11 @@ def main(argv):
     global duration
     global freq
     global tredraw
+    global toutcount
     global delay
 #    global defopts
+
+    print "Network generation started..."
 
     # get values from arguments
     dictarg = readargv(argv, defopts) if len(argv) > 1 else {}
@@ -166,6 +194,7 @@ def main(argv):
     duration = int(getargval(dictarg, KEY_DURATION, defopts[KEY_DURATION]))
     freq = int(getargval(dictarg, KEY_FREQ, defopts[KEY_FREQ]))
     tredraw = int(getargval(dictarg, KEY_TREDRAW, defopts[KEY_TREDRAW]))
+    toutcount = tredraw
     delay = int(getargval(dictarg, KEY_DELAY, defopts[KEY_DELAY]))
 
     g, pos = create_graph(init)
