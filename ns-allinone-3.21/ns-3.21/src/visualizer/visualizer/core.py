@@ -2,9 +2,10 @@
 from __future__ import division
 #from __future__ import with_statement
 
-LAYOUT_ALGORITHM = 'neato' # ['neato'|'dot'|'twopi'|'circo'|'fdp'|'nop']
+LAYOUT_ALGORITHM = 'cs' #'neato' # ['neato'|'dot'|'twopi'|'circo'|'fdp'|'nop']
+    # added: 'ss', 'cs'
 REPRESENT_CHANNELS_AS_NODES = 1
-DEFAULT_NODE_SIZE = 3.0 # default node size in meters
+DEFAULT_NODE_SIZE = 3.0 #3.0 # default node size in meters
 DEFAULT_TRANSMISSIONS_MEMORY = 5 # default number of of past intervals whose transmissions are remembered
 BITRATE_FONT_SIZE = 10
 
@@ -19,6 +20,7 @@ if platform.system() == "Windows":
 else:
     SHELL_FONT = "Luxi Mono 10"
 
+import pdb
 
 import ns.core
 import ns.network
@@ -67,13 +69,13 @@ PI_OVER_2 = math.pi/2
 PI_TIMES_2 = math.pi*2
 
 class Node(PyVizObject):
-    
+
     __gsignals__ = {
 
         # signal emitted whenever a tooltip is about to be shown for the node
         # the first signal parameter is a python list of strings, to which information can be appended
         'query-extra-tooltip-info': (gobject.SIGNAL_RUN_LAST, None, (object,)),
-        
+
         }
 
     def __init__(self, visualizer, node_index):
@@ -107,7 +109,7 @@ class Node(PyVizObject):
         @param file_base_name: base file name, including .svg
         extension, of the svg file.  Place the file in the folder
         src/contrib/visualizer/resource.
-        
+
         @param width: scale to the specified width, in meters
         @param width: scale to the specified height, in meters
 
@@ -269,13 +271,19 @@ class Node(PyVizObject):
             self._label_canvas_item.set_properties(visibility=goocanvas.ITEM_VISIBLE_ABOVE_THRESHOLD,
                                                    text=self._label)
             self._update_position()
-    
+
     def set_position(self, x, y):
+        pass
+###!!!
         self.canvas_item.set_property("center_x", x)
         self.canvas_item.set_property("center_y", y)
+        fill_color_rgba = 0x808080ff + (0x01 * len(self.links) * 2 << 16)
+        self.canvas_item.set_properties(fill_color_rgba=fill_color_rgba)
+
         if self.svg_item is not None:
             self._update_svg_position(x, y)
 
+###!!!
         for link in self.links:
             link.update_points()
 
@@ -300,9 +308,15 @@ class Node(PyVizObject):
         assert isinstance(link, Link)
         self.links.append(link)
 
+#+++++++++++++++++
+#    def remove_link(self, link):
+#        assert isinstance(link, Link)
+#        self.links.remove(link)
+
     def remove_link(self, link):
-        assert isinstance(link, Link)
-        self.links.remove(link)
+        if self.links.count(link):
+            self.links.remove(link)
+#+++++++++++++++++
 
     @property
     def has_mobility(self):
@@ -337,21 +351,58 @@ class Channel(PyVizObject):
 
 class WiredLink(Link):
     def __init__(self, node1, node2):
+        self._set_nodes(node1, node2)
+        # undirected
+        self.canvas_item = goocanvas.Path(stroke_color="black", line_width=1.0)
+        # directed
+#        self.canvas_item = goocanvas.Polyline(end_arrow=True)
+#        self.canvas_item.set_data("pyviz-object", self)
+
+    def _set_nodes(self, node1, node2):
         assert isinstance(node1, Node)
         assert isinstance(node2, (Node, Channel))
         self.node1 = node1
         self.node2 = node2
-        self.canvas_item = goocanvas.Path(line_width=1.0, stroke_color="black")
-        self.canvas_item.set_data("pyviz-object", self)
         self.node1.links.append(self)
         self.node2.links.append(self)
 
     def update_points(self):
         pos1_x, pos1_y = self.node1.get_position()
         pos2_x, pos2_y = self.node2.get_position()
+        # undirected
         self.canvas_item.set_property("data", "M %r %r L %r %r" % (pos1_x, pos1_y, pos2_x, pos2_y))
+        # directed
+#        self.canvas_item.set_property("points", goocanvas.Points([(pos1_x, pos1_y), (pos2_x, pos2_y)]))
 
+#+++++++++++++++++
+    def erase(self):
+        self.canvas_item.set_property("line_width", 0.0)
+#+++++++++++++++++
 
+##+++++++++++++++++
+#class DirectedLink(WiredLink):
+#    def __init__(self, node1, node2, stroke_color="black", line_width=1.0):
+#        self._set_nodes(node1, node2)
+#        self.canvas_item = goocanvas.Polyline(stroke_color=stroke_color, line_width=line_width, end_arrow=True)
+#        self.canvas_item.set_data("pyviz-object", self)
+#
+#    def _set_nodes(self, node1, node2):
+#        assert isinstance(node1, Node)
+#        assert isinstance(node2, (Node, Channel))
+#        self.node1 = node1
+#        self.node2 = node2
+#        self.node1.links.append(self)
+#
+#    def update_points():
+#        pos1_x, pos1_y = self.node1.get_position()
+#        pos2_x, pos2_y = self.node2.get_position()
+#        self.canvas_item.set_property("points", goocanvas.Points([(pos1_x, pos1_y), (pos2_x, pos2_y)]))
+#
+#class AlternateLink(DirectedLink):
+#    def __init__(self, node1, node2, stroke_color="blue"):
+#        super(AlternateLink, self).__init__(node1, node2, stroke_color=stroke_color)
+#
+##+++++++++++++++++
 
 class SimulationThread(threading.Thread):
     def __init__(self, viz):
@@ -409,6 +460,17 @@ ShowTransmissionsMode.SELECTED = ShowTransmissionsMode()
 
 class Visualizer(gobject.GObject):
     INSTANCE = None
+#+++++++++++++++++
+    IS_NODES_MOBILE = False
+    IS_ALLOW_ADD_NODE = True
+    IS_ALLOW_MOD_EDGE = True
+    IS_DRAW_TRANS = False
+    IS_DRAW_DROPS = False
+    UPDPERIOD = 0
+    UPDNODES = UPDPERIOD # new nodes are rendered every UPDNODES+1 times update_view
+    UPDEDGES = UPDPERIOD # new edges are rendered every UPDEDGES+1 times update_view
+    UPDLAYOUT = UPDPERIOD # layout is rearranged every UPDLAYOUT+1 times update_view
+#+++++++++++++++++
 
     if _import_error is None:
         __gsignals__ = {
@@ -463,6 +525,19 @@ class Visualizer(gobject.GObject):
         self.node_drag_state = None
         self.follow_node = None
         self.shell_window = None
+#+++++++++++++++++
+        self._graph = pygraphviz.AGraph()
+        self._channels = {} # channels in pairs of node name, e.g. channels = [0:['Node 0', 'Node 2'], 1:['Node 1', 'Node 3']]
+        self._lastnodeid = 0 # the first index of node in ns.network.NodeList that has not been rendered
+        self._lastedgeid = 0 # the first index of edge in ns.network.ChannelList that has not been rendered
+        self._nbofupdnode = 0 # the number of update node that has been done, reset to 0 every UPDNODES times
+        self._nbofupdedge = 0 # the number of update edge that has been done, reset to 0 every UPDEDGES times
+        self._nbofupdlay = 0 # the number of update layout that has been done, reset to 0 every UPDLAYOUT times
+        self._gridstep = 50 # distance between points (horizontally and vertically) in the grid
+        self._initpos = {'x':0, 'y':0} # initial position in the grid
+        self._lastpos = {'x':self._initpos['x'], 'y':self._initpos['y']} # last position in the grid
+        self._squaresize = 3 # square size for _center_square layout algorithm
+#+++++++++++++++++
 
         self.create_gui()
 
@@ -750,9 +825,11 @@ class Visualizer(gobject.GObject):
 
     def scan_topology(self):
         print "scanning topology: %i nodes..." % (ns.network.NodeList.GetNNodes(),)
-        graph = pygraphviz.AGraph()
+#+++++++++++++++++
         seen_nodes = 0
-        for nodeI in range(ns.network.NodeList.GetNNodes()):
+        lennodelist = ns.network.NodeList.GetNNodes()
+        for nodeI in range(lennodelist):
+#+++++++++++++++++
             seen_nodes += 1
             if seen_nodes == 100:
                 print "scan topology... %i nodes visited (%.1f%%)" % (nodeI, 100*nodeI/ns.network.NodeList.GetNNodes())
@@ -768,58 +845,59 @@ class Visualizer(gobject.GObject):
                 node_view.set_position(*transform_point_simulation_to_canvas(pos.x, pos.y))
                 #print "node has mobility position -> ", "%f,%f" % (pos.x, pos.y)
             else:
-                graph.add_node(node_name)
+                self._graph.add_node(node_name)
 
-            for devI in range(node.GetNDevices()):
-                device = node.GetDevice(devI)
-                device_traits = lookup_netdevice_traits(type(device))
-                if device_traits.is_wireless:
-                    continue
-                if device_traits.is_virtual:
-                    continue
-                channel = device.GetChannel()
-                if channel.GetNDevices() > 2:
-                    if REPRESENT_CHANNELS_AS_NODES:
-                        # represent channels as white nodes
-                        if mobility is None:
-                            channel_name = "Channel %s" % id(channel)
-                            graph.add_edge(node_name, channel_name)
-                        self.get_channel(channel)
-                        self.create_link(self.get_node(nodeI), self.get_channel(channel))
-                    else:
-                        # don't represent channels, just add links between nodes in the same channel
-                        for otherDevI in range(channel.GetNDevices()):
-                            otherDev = channel.GetDevice(otherDevI)
-                            otherNode = otherDev.GetNode()
-                            otherNodeView = self.get_node(otherNode.GetId())
-                            if otherNode is not node:
-                                if mobility is None and not otherNodeView.has_mobility:
-                                    other_node_name = "Node %i" % otherNode.GetId()
-                                    graph.add_edge(node_name, other_node_name)
-                                self.create_link(self.get_node(nodeI), otherNodeView)
-                else:
-                    for otherDevI in range(channel.GetNDevices()):
-                        otherDev = channel.GetDevice(otherDevI)
-                        otherNode = otherDev.GetNode()
-                        otherNodeView = self.get_node(otherNode.GetId())
-                        if otherNode is not node:
-                            if mobility is None and not otherNodeView.has_mobility:
-                                other_node_name = "Node %i" % otherNode.GetId()
-                                graph.add_edge(node_name, other_node_name)
-                            self.create_link(self.get_node(nodeI), otherNodeView)
+            self._render_edges()
+#            for devI in range(node.GetNDevices()):
+#                device = node.GetDevice(devI)
+#                device_traits = lookup_netdevice_traits(type(device))
+#                if device_traits.is_wireless:
+#                    continue
+#                if device_traits.is_virtual:
+#                    continue
+#                channel = device.GetChannel()
+#                if channel:
+#                    if channel.GetNDevices() > 2:
+#                        if REPRESENT_CHANNELS_AS_NODES:
+#                            # represent channels as white nodes
+#                            if mobility is None:
+#                                channel_name = "Channel %s" % id(channel)
+#                                self._graph.add_edge(node_name, channel_name)
+#                            self.get_channel(channel)
+#                            self.create_link(self.get_node(nodeI), self.get_channel(channel))
+#                        else:
+#                            # don't represent channels, just add links between nodes in the same channel
+#                            for otherDevI in range(channel.GetNDevices()):
+#                                otherDev = channel.GetDevice(otherDevI)
+#                                otherNode = otherDev.GetNode()
+#                                otherNodeView = self.get_node(otherNode.GetId())
+#                                if otherNode is not node:
+#                                    if mobility is None and not otherNodeView.has_mobility:
+#                                        other_node_name = "Node %i" % otherNode.GetId()
+#                                        self._graph.add_edge(node_name, other_node_name)
+#                                    self.create_link(self.get_node(nodeI), otherNodeView)
+#                    else:
+#                        for otherDevI in range(channel.GetNDevices()):
+#                            otherDev = channel.GetDevice(otherDevI)
+#                            otherNode = otherDev.GetNode()
+#                            otherNodeView = self.get_node(otherNode.GetId())
+#                            if otherNode is not node:
+#                                if mobility is None and not otherNodeView.has_mobility:
+#                                    other_node_name = "Node %i" % otherNode.GetId()
+#                                    self._graph.add_edge(node_name, other_node_name)
+#                                self.create_link(self.get_node(nodeI), otherNodeView)
 
         print "scanning topology: calling graphviz layout"
-        graph.layout(LAYOUT_ALGORITHM)
-        for node in graph.iternodes():
-            #print node, "=>", node.attr['pos']
-            node_type, node_id = node.split(' ')
-            pos_x, pos_y = [float(s) for s in node.attr['pos'].split(',')]
-            if node_type == 'Node':
-                obj = self.nodes[int(node_id)]
-            elif node_type == 'Channel':
-                obj = self.channels[int(node_id)]
-            obj.set_position(pos_x, pos_y)
+        #pdb.set_trace()
+#+++++++++++++++++
+        self._rearrange_layout()
+        nbofnodes = len(self.nodes)
+        if nbofnodes:
+            node = self.get_node(nbofnodes - 1)
+            self.center_on_node(node)
 
+        self._lastnodeid = lennodelist
+#+++++++++++++++++
         print "scanning topology: all done."
         self.emit("topology-scanned")
 
@@ -847,22 +925,372 @@ class Visualizer(gobject.GObject):
         link = WiredLink(node, node_or_channel)
         self.links_group.add_child(link.canvas_item)
         link.canvas_item.lower(None)
+#+++++++++++++++++
+        return link
+
+#    def update_view(self):
+#        #print "update_view"
+#
+#        self.time_label.set_text("Time: %f s" % ns.core.Simulator.Now().GetSeconds())
+#        
+#        self._update_node_positions()
+#
+#        # Update information 
+#        for info_win in self.information_windows:
+#            info_win.update()
+#
+#        self._update_transmissions_view()
+#        self._update_drops_view()
+#
+#        self.emit("update-view")
 
     def update_view(self):
         #print "update_view"
 
         self.time_label.set_text("Time: %f s" % ns.core.Simulator.Now().GetSeconds())
-        
-        self._update_node_positions()
+###!!!
+#        if Visualizer.IS_NODES_MOBILE:
+#            self._update_node_positions()
+#
+#        if Visualizer.IS_ALLOW_MOD_EDGE:
+#            # render edges
+#            if self._nbofupdedge < Visualizer.UPDEDGES:
+#                self._nbofupdedge += 1
+#            else:
+#                self._render_edges()
+#                self._nbofupdedge = 0
+#
+#        # Update information 
+#        for info_win in self.information_windows:
+#            info_win.update()
+#
+#        if Visualizer.IS_DRAW_TRANS:
+#            self._update_transmissions_view()
+#        if Visualizer.IS_DRAW_DROPS:
+#            self._update_drops_view()
+#
+        is_rearranged = False
+        if Visualizer.IS_ALLOW_ADD_NODE:
+            # render new nodes only every n (Visualizer.UPDNODES) times update_view
+            if self._nbofupdnode < Visualizer.UPDNODES:
+                self._nbofupdnode += 1
+            else:
+                self._render_new_nodes()
+                is_rearranged = True
+                self._nbofupdnode = 0
 
-        # Update information 
-        for info_win in self.information_windows:
-            info_win.update()
-
-        self._update_transmissions_view()
-        self._update_drops_view()
+        # update layout of the whole graph
+        if self._nbofupdlay < Visualizer.UPDLAYOUT:
+            self._nbofupdlay += 1
+        else:
+            if not is_rearranged:
+###!!!
+                pass
+                self._rearrange_layout() 
+            self._nbofupdlay = 0
 
         self.emit("update-view")
+
+    def _rearrange_layout(self):
+        #print "** Rearrange all nodes..."
+
+#        layout_start = time.time()
+#        layout_end = time.time()
+#        layout_time = layout_end - layout_start
+
+        algo = LAYOUT_ALGORITHM
+        if algo == 'ss':
+            self._simple_square()
+        elif algo == 'cs':
+            self._center_square()
+        else:
+            self._graph.layout(algo)
+            for node in self._graph.iternodes():
+    #        grnodes = list(self._graph.iternodes())
+    #        i = 1
+    #        while i <= len(grnodes) and i < 30:
+    #            node = grnodes[len(grnodes) - i]
+    #            i += 1
+                #print node, "=>", node.attr['pos']
+                node_type, node_id = node.split(' ')
+                pos_x, pos_y = [float(s) for s in node.attr['pos'].split(',')]
+                if node_type == 'Node':
+                    obj = self.nodes[int(node_id)]
+                elif node_type == 'Channel':
+                    obj = self.channels[int(node_id)]
+                obj.set_position(pos_x, pos_y)
+
+#        render_time = time.time() - layout_end
+#        print "** Layouting time: %f" % layout_time
+#        print "** Rendering time: %f" % render_time
+
+    def _simple_square(self, showmsg=False):
+        #print "** Rearrange all nodes..."
+
+        layout_start = time.time()
+
+        pos_x = self._lastpos['x']
+        pos_y = self._lastpos['y']
+
+        lennodelist = ns.network.NodeList.GetNNodes()
+        for i in range(self._lastnodeid, lennodelist):
+            obj = self.nodes[i]
+            obj.set_position(pos_x, pos_y)
+            if pos_y < pos_x:
+                pos_y += self._gridstep
+                if pos_x == pos_y:
+                    pos_x = self._initpos['x']
+            else:
+                pos_x += self._gridstep
+                if pos_x > pos_y:
+                    pos_y = self._initpos['y']
+
+        self._lastpos['x'] = pos_x
+        self._lastpos['y'] = pos_y
+        self._lastnodeid = lennodelist 
+
+        layout_end = time.time()
+        layout_time = layout_end - layout_start
+#        render_time = time.time() - layout_end
+
+        if showmsg:
+            print "** Layouting time: %f" % layout_time
+#            print "** Rendering time: %f" % render_time
+
+    def _center_square(self, showmsg=False):
+        #print "** Rearrange all nodes..."
+
+        layout_start = time.time()
+
+        pos_x = self._lastpos['x']
+        pos_y = self._lastpos['y']
+
+        lennodelist = ns.network.NodeList.GetNNodes()
+        printmsg = "nodes: %d" % (lennodelist - self._lastnodeid)
+        for i in range(self._lastnodeid, lennodelist):
+            obj = self.nodes[i]
+            obj.set_position(pos_x, pos_y)
+
+            if pos_x >= 0 and pos_y > 0:
+                # quadrant I
+                if pos_x < pos_y:
+                    pos_x += self._gridstep
+                else:
+                    pos_y -= self._gridstep
+                    if pos_y == 0:
+                        pos_x += self._gridstep
+
+            elif pos_x > 0 and pos_y <= 0:
+                # quadrant IV
+                if pos_y > -pos_x:
+                    pos_y -= self._gridstep
+                else:
+                    pos_x -= self._gridstep
+
+            elif pos_x <= 0 and pos_y < 0:
+                # quadrant III
+                if pos_x > pos_y:
+                    pos_x -= self._gridstep
+                else:
+                    pos_y += self._gridstep
+
+            else:
+                # quadrant II
+                if pos_y < -pos_x:
+                    pos_y += self._gridstep
+                else:
+                    pos_x += self._gridstep
+
+        self._lastpos['x'] = pos_x
+        self._lastpos['y'] = pos_y
+        self._lastnodeid = lennodelist 
+
+        layout_end = time.time()
+        layout_time = layout_end - layout_start
+#        render_time = time.time() - layout_end
+
+        if showmsg:
+            print "** %s, layouting time: %f" % (printmsg, layout_time)
+#            print "** Rendering time: %f" % render_time
+
+#    def _rearrange_layout(self, algo='ss', showmsg=False):
+##        if algo == 'ss':
+##            self._simple_square(showmsg)
+##        elif algo == 'cs':
+#            self._center_square(showmsg)
+#
+    def _render_new_nodes(self):
+        # render new nodes
+
+        #print "** Render New Nodes **"
+        lennodelist = ns.network.NodeList.GetNNodes()
+        for i in range(self._lastnodeid, lennodelist):
+            #pdb.set_trace()
+            self._add_node(i)
+            #print "** lastnodeid: %d ns.network.NodeList.GetNNodes(): %d" % (self._lastnodeid, ns.network.NodeList.GetNNodes())
+        #self._lastnodeid = lennodelist # not necessary because this is done in each layout algorithm
+###!!!
+        self._rearrange_layout()
+
+    #def _add_node(self, nodeI, graph):
+    def _add_node(self, nodeI):
+        # add node to the list and draw the node and its links
+
+        node = ns.network.NodeList.GetNode(nodeI)
+        node_name = "Node %i" % nodeI
+        # add node to the Visualizer list of nodes
+        node_view = self.get_node(nodeI)
+
+#        if Visualizer.IS_NODES_MOBILE:
+        mobility = node.GetObject(ns.mobility.MobilityModel.GetTypeId())
+        if mobility is not None:
+            node_view.set_color("red")
+            pos = mobility.GetPosition()
+            node_view.set_position(*transform_point_simulation_to_canvas(pos.x, pos.y))
+            #print "node has mobility position -> ", "%f,%f" % (pos.x, pos.y)
+        else:
+            #graph.add_node(node_name)
+            self._graph.add_node(node_name)
+#        else:
+#            graph.add_node(node_name)
+#            self._graph.add_node(node_name)
+
+        self._render_edges()
+#        for devI in range(node.GetNDevices()):
+#            device = node.GetDevice(devI)
+#            device_traits = lookup_netdevice_traits(type(device))
+#            if device_traits.is_wireless:
+#                continue
+#            if device_traits.is_virtual:
+#                continue
+#            channel = device.GetChannel()
+#            if channel:
+#                if channel.GetNDevices() > 2:
+#                    if REPRESENT_CHANNELS_AS_NODES:
+#                        # represent channels as white nodes
+#                        if mobility is None:
+#                            channel_name = "Channel %s" % id(channel)
+#                            #graph.add_edge(node_name, channel_name)
+#                            self._graph.add_edge(node_name, channel_name)
+#                        self.get_channel(channel)
+#                        self.create_link(self.get_node(nodeI), self.get_channel(channel))
+#                    else:
+#                        # don't represent channels, just add links between nodes in the same channel
+#                        for otherDevI in range(channel.GetNDevices()):
+#                            otherDev = channel.GetDevice(otherDevI)
+#                            otherNode = otherDev.GetNode()
+#                            otherNodeView = self.get_node(otherNode.GetId())
+#                            if otherNode is not node:
+#                                if mobility is None and not otherNodeView.has_mobility:
+#                                    other_node_name = "Node %i" % otherNode.GetId()
+#                                    #graph.add_edge(node_name, other_node_name)
+#                                    self._graph.add_edge(node_name, other_node_name)
+#                                self.create_link(self.get_node(nodeI), otherNodeView)
+#                else:
+#                    for otherDevI in range(channel.GetNDevices()):
+#                        otherDev = channel.GetDevice(otherDevI)
+#                        otherNode = otherDev.GetNode()
+#                        otherNodeView = self.get_node(otherNode.GetId())
+#                        if otherNode is not node:
+#                            if mobility is None and not otherNodeView.has_mobility:
+#                                other_node_name = "Node %i" % otherNode.GetId()
+#                                #graph.add_edge(node_name, other_node_name)
+#                                self._graph.add_edge(node_name, other_node_name)
+#                            self.create_link(self.get_node(nodeI), otherNodeView)
+
+    def _render_edges(self):
+        channels = ns.network.ChannelList
+        #pdb.set_trace()
+
+        lenedgelist = channels.GetNChannels()
+        # add new edges
+        for i in range(self._lastedgeid, lenedgelist):
+            channel = channels.GetChannel(i)
+            nodep = channel.GetDevice(0).GetNode()
+            if nodep is None:
+                # never been drawn before
+                # node information is not necessary (and cannot be found)
+                self._channels[i] = None
+            else:
+                # nodep is not None, channel has not been deleted
+                nodeidp = nodep.GetId() 
+                nodeidq = channel.GetDevice(1).GetNode().GetId()
+                nodep_name = "Node %i" % nodeidp 
+                nodeq_name = "Node %i" % nodeidq
+                self._channels[i] = [nodep_name, nodeq_name]
+                self._graph.add_edge(nodep_name, nodeq_name)
+                #self.get_channel(channel)
+                link = self.create_link(self.get_node(nodeidp), self.get_node(nodeidq))
+                self._channels[i].append(link)
+
+        # remove "deleted" edges
+        for i in range(0, self._lastedgeid):
+            channel = channels.GetChannel(i)
+            nodep = channel.GetDevice(0).GetNode()
+            if nodep is None:
+                # nodep is None
+
+                chn = self._channels[i]
+                if chn:
+                    # chn not None, the edge has been drawn
+                    nodep_name, nodeq_name = chn[:2]
+                    if self._graph.has_edge(nodep_name, nodeq_name):
+                        self._graph.remove_edge(nodep_name, nodeq_name)
+                        chn[2].erase()
+                        #print "** Edge %s-%s deleted"% (nodep_name, nodeq_name)
+
+#                    pdb.set_trace()
+#                    for node_name in [nodep_name, nodeq_name]:
+#                        node_id = int(node_name.split()[1])
+#                        #if nodep_id < len(self.nodes):
+#                            # nodep is in nodes list
+#                        self.nodes[node_id].remove_link(chn[2])
+ 
+        self._lastedgeid = lenedgelist
+ 
+#        for devI in range(node.GetNDevices()):
+#            device = node.GetDevice(devI)
+#            device_traits = lookup_netdevice_traits(type(device))
+#            if device_traits.is_wireless:
+#                continue
+#            if device_traits.is_virtual:
+#                continue
+#            channel = device.GetChannel()
+#            if channel:
+#                if channel.GetNDevices() > 2:
+#                    if REPRESENT_CHANNELS_AS_NODES:
+#                        # represent channels as white nodes
+#                        if mobility is None:
+#                            channel_name = "Channel %s" % id(channel)
+#                            #graph.add_edge(node_name, channel_name)
+#                            self._graph.add_edge(node_name, channel_name)
+#                        self.get_channel(channel)
+#                        self.create_link(self.get_node(nodeI), self.get_channel(channel))
+#                    else:
+#                        # don't represent channels, just add links between nodes in the same channel
+#                        for otherDevI in range(channel.GetNDevices()):
+#                            otherDev = channel.GetDevice(otherDevI)
+#                            otherNode = otherDev.GetNode()
+#                            otherNodeView = self.get_node(otherNode.GetId())
+#                            if otherNode is not node:
+#                                if mobility is None and not otherNodeView.has_mobility:
+#                                    other_node_name = "Node %i" % otherNode.GetId()
+#                                    #graph.add_edge(node_name, other_node_name)
+#                                    self._graph.add_edge(node_name, other_node_name)
+#                                self.create_link(self.get_node(nodeI), otherNodeView)
+#                else:
+#                    for otherDevI in range(channel.GetNDevices()):
+#                        otherDev = channel.GetDevice(otherDevI)
+#                        otherNode = otherDev.GetNode()
+#                        otherNodeView = self.get_node(otherNode.GetId())
+#                        if otherNode is not node:
+#                            if mobility is None and not otherNodeView.has_mobility:
+#                                other_node_name = "Node %i" % otherNode.GetId()
+#                                #graph.add_edge(node_name, other_node_name)
+#                                self._graph.add_edge(node_name, other_node_name)
+#                            self.create_link(self.get_node(nodeI), otherNodeView)
+
+#++++++++++++++++
 
     def _update_node_positions(self):
         for node in self.nodes.itervalues():
@@ -1124,7 +1552,7 @@ class Visualizer(gobject.GObject):
         # acquire and release the simulation lock around each code
         # that is executed.
 
-        original_runcode = self.ipython.runcode
+        original_runcode = __IPYTHON__.runcode
         def runcode(ip, *args):
             #print "lock"
             self.simulation.lock.acquire()
@@ -1134,7 +1562,7 @@ class Visualizer(gobject.GObject):
                 #print "unlock"
                 self.simulation.lock.release()
         import types
-        self.ipython.runcode = types.MethodType(runcode, self.ipython)                
+        __IPYTHON__.runcode = types.MethodType(runcode, __IPYTHON__)                
 
     def autoscale_view(self):
         if not self.nodes:
@@ -1285,7 +1713,7 @@ class Visualizer(gobject.GObject):
                     ns3_node = ns.network.NodeList.GetNode(self.selected_node.node_index)
                 finally:
                     self.simulation.lock.release()
-            self.ipython.updateNamespace({'selected_node': ns3_node})
+            __IPYTHON__.user_ns['selected_node'] = ns3_node
 
 
     def select_node(self, node):
@@ -1439,23 +1867,22 @@ class Visualizer(gobject.GObject):
         self.shell_window.set_resizable(True)
         scrolled_window = gtk.ScrolledWindow()
         scrolled_window.set_policy(gtk.POLICY_AUTOMATIC,gtk.POLICY_AUTOMATIC)
-        self.ipython = ipython_view.IPythonView()
-        self.ipython.modify_font(pango.FontDescription(SHELL_FONT))
-        self.ipython.set_wrap_mode(gtk.WRAP_CHAR)
-        self.ipython.show()
-        scrolled_window.add(self.ipython)
+        ipython = ipython_view.IPythonView()
+        ipython.modify_font(pango.FontDescription(SHELL_FONT))
+        ipython.set_wrap_mode(gtk.WRAP_CHAR)
+        ipython.show()
+        scrolled_window.add(ipython)
         scrolled_window.show()
         self.shell_window.add(scrolled_window)
         self.shell_window.show()
         self.shell_window.connect('destroy', self._on_shell_window_destroy)
 
         self._update_ipython_selected_node()
-        self.ipython.updateNamespace({'viz': self})
+        __IPYTHON__.user_ns['viz'] = self
 
 
     def _on_shell_window_destroy(self, window):
         self.shell_window = None
-
 
 initialization_hooks = []
 
