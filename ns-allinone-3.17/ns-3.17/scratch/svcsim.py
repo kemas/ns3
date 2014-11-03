@@ -38,7 +38,7 @@ import svc_nodes
 import svcmodel
 import svc_routines
 
-MAX_MINIT = 10000
+MAX_MINIT = 10010
 MAX_MADD = 10
 MAX_MDEP = 21
 MAX_MALT = 21
@@ -54,6 +54,9 @@ MODEL_SF = 'sf' # scale-free
 
 def main(argv):
     cmd = ns.core.CommandLine()
+
+    cmd.comp = None
+    cmd.AddValue("comp", "The probability to find a composite service in the network")
 
     cmd.m_init = None
     cmd.AddValue("m_init", "Initial (small) number of nodes")
@@ -86,6 +89,14 @@ def main(argv):
     cmd.AddValue("model", "The network model to generate (scale-free: sf, exponential: exp, random: rand)")
 
     cmd.Parse(argv)
+
+    if cmd.comp is None:
+        comp = svcmodel.COMP
+    else:
+        comp = int(cmd.comp)
+        if comp < 0.0 or comp > 1.0:
+            print "Invalid argument: comp should be between 0.0 to 1.0"
+            sys.exit()
 
     if cmd.m_init is None:
         m_init = svcmodel.M_INIT
@@ -183,12 +194,12 @@ def main(argv):
 #    else:
 #        lbinsbase = 1.01
 
-    ns.core.Simulator.Schedule(ns.core.Seconds(0), svcmodel.print_params, vertices, m_init, m_add, m_dep, m_alt, alpha, timegrow, timefail, freq)
+    ns.core.Simulator.Schedule(ns.core.Seconds(0), svcmodel.print_params, vertices, m_init, comp, m_add, m_dep, m_alt, alpha, timegrow, timefail, freq)
 
     # network growth
     for i in range(timegrow):
         for j in range(freq):
-            ns.core.Simulator.Schedule(ns.core.Seconds(i), svcmodel.grow, vertices, m_add, m_dep, m_alt, alpha, model)
+            ns.core.Simulator.Schedule(ns.core.Seconds(i), svcmodel.grow, vertices, comp, m_add, m_dep, m_alt, alpha, model)
 
 #    ns.core.Simulator.Schedule(ns.core.Seconds(timegrow + 1), svc_routines.drawhistogram, vertices, 20, False)
 #    ns.core.Simulator.Schedule(ns.core.Seconds(timegrow + 2), svc_routines.drawloglogdist, vertices, lbinsbase, True)
