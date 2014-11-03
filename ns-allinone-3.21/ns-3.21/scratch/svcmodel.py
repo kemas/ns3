@@ -16,6 +16,7 @@ import ns.network
 import ns.point_to_point
 
 ALPHA   = 1 # default number of alpha >= 0, initial attractiveness for young nodes
+COMP    = 0.4 # the probability/proportion of the number of composite services
 M_INIT  = 3 # default initial number of nodes
 M_ADD   = 1 # default number of nodes to be added in every timestep
 M_DEP   = 3 # default upper limit number of links to be created from each added node
@@ -132,12 +133,20 @@ def addcompsvc(vertices, m_dep, m_alt, alpha, model, indexp=None):
     nverless = nver - 1
 
     # generate m_dep_i, the number of links to be created
-    m_dep_i = random.randrange(1, m_dep)
+    if model == MODEL_RAND:
+        # atomic services are determined when m_dep_i is 0
+        # therefore, randrange starts from 0
+        m_dep_i = random.randrange(m_dep)
+    else:
+        # atomic services are created outside this function
+        # randrange starts from 1
+        m_dep_i = random.randrange(1, m_dep)
+
     if m_dep_i > nver:
         m_dep_i = nver
 
     if model == MODEL_SF:
-        # choose existing nodes to be connected to using preferential attachment
+        # choose existing nodes to be connected using preferential attachment
         lsnodeidx = choosepref(vertices, alpha, m_dep_i)
     else:
         # model == MODEL_EXP or MODEL_RAND
@@ -189,32 +198,29 @@ def addcompsvc(vertices, m_dep, m_alt, alpha, model, indexp=None):
 #                        connect(vertices, indexp, indexr, indexq)
 
 def grow(vertices, comp, m_add, m_dep, m_alt, alpha, model=MODEL_SF):
-    # add m_add nodes to the network
+    # add m_add nodes to the network if model is not MODEL_RAND
+    # if model is MODEL_RAND, connect existing nodes randomly to each other. in this case m_add is not used 
 
     if model == MODEL_RAND:
         # for each isolated vertex
         # create links (dependency and alternate links) to existing nodes randomly
+        # random network has been initialized with large number N nodes, where N is the size of the network
 
         for indexp in range(vertices.getnbofvertices()):
-            #addcompsvc(vertices, m_dep, m_alt, alpha, model, indexp)
-            if random.random() < comp:
-                # add a composite service node
-                for i in range(m_add):
-                    addcompsvc(vertices, m_dep, m_alt, alpha, model, indexp)
-            else:
-                # add an atomic service node
-                addnode(vertices)
+            # connect indexp node to an existing node randomly
+            addcompsvc(vertices, m_dep, m_alt, alpha, model, indexp)
 
     else:
         # exponential or scale-free
+        # add m_add nodes and connect them to existing nodes
 
-        if random.random() < comp:
-            # add a composite service node
-            for i in range(m_add):
+        for i in range(m_add):
+            if random.random() < comp:
+                # add a composite service node
                 addcompsvc(vertices, m_dep, m_alt, alpha, model)
-        else:
-            # add an atomic service node
-            addnode(vertices)
+            else:
+                # add an atomic service node
+                addnode(vertices)
 
     vertices.analyzer.grow(
         vertices.getnbofvertices()
@@ -247,7 +253,7 @@ def print_stats(vertices):
     print '========================='
     print '%s : %5d' % ('Nodes created'.ljust(leftwidth), vertices.getnbofvertices())
     print '%s : %5d' % ('Total indegree (outdegree)'.ljust(leftwidth), vertices.gettotdegree())
-    print '%s : %5d (#%d)' % ('Max indegree'.ljust(leftwidth), vertices.getmaxindegree(), vertices.getmaxindegreeidx())
+    print '%s : %5s (#%s)' % ('Max indegree'.ljust(leftwidth), str(vertices.getmaxindegree()), str(vertices.getmaxindegreeidx()))
     #vertices.getvertex(vertices.getmaxindegreeidx()).printinfo()
     print '%s : %5d (#%d)' % ('Max outdegree'.ljust(leftwidth), vertices.getmaxoutdegree(), vertices.getmaxoutdegreeidx())
     #vertices.getvertex(vertices.getmaxoutdegreeidx()).printinfo()
