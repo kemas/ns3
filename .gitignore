@@ -1,3 +1,7 @@
+ns-allinone-3.17/*
+!ns-allinone-3.17/ns-3.17
+ns-allinone-3.17/ns-3.17/*
+!ns-allinone-3.17/ns-3.17/src
 ns-allinone-3.17/ns-3.17/src/*
 !ns-allinone-3.17/ns-3.17/src/visualizer
 ns-allinone-3.17/ns-3.17/src/visualizer/*
