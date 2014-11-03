@@ -133,14 +133,8 @@ def addcompsvc(vertices, m_dep, m_alt, alpha, model, indexp=None):
     nverless = nver - 1
 
     # generate m_dep_i, the number of links to be created
-    if model == MODEL_RAND:
-        # atomic services are determined when m_dep_i is 0
-        # therefore, randrange starts from 0
-        m_dep_i = random.randrange(m_dep)
-    else:
-        # atomic services are created outside this function
-        # randrange starts from 1
-        m_dep_i = random.randrange(1, m_dep)
+    # atomic services are created outside this function, randrange starts from 1
+    m_dep_i = random.randrange(1, m_dep)
 
     if m_dep_i > nver:
         m_dep_i = nver
@@ -207,8 +201,9 @@ def grow(vertices, comp, m_add, m_dep, m_alt, alpha, model=MODEL_SF):
         # random network has been initialized with large number N nodes, where N is the size of the network
 
         for indexp in range(vertices.getnbofvertices()):
-            # connect indexp node to an existing node randomly
-            addcompsvc(vertices, m_dep, m_alt, alpha, model, indexp)
+            if random.random() < comp:
+                # connect indexp node to an existing node randomly
+                addcompsvc(vertices, m_dep, m_alt, alpha, model, indexp)
 
     else:
         # exponential or scale-free
@@ -234,12 +229,13 @@ def grow(vertices, comp, m_add, m_dep, m_alt, alpha, model=MODEL_SF):
     # verbose
     #vertices.printinfo()
 
-def print_params(vertices, m_init, m_add, m_dep, m_alt, alpha, timegrow, timefail, freq):
+def print_params(vertices, m_init, comp, m_add, m_dep, m_alt, alpha, timegrow, timefail, freq):
     # print statistic
     leftwidth = 10
     print '========================='
     print 'Parameters'
     print '%s : %6d' % ('alpha'.ljust(leftwidth), alpha)
+    print '%s : %6d' % ('comp'.ljust(leftwidth), comp)
     print '%s : %6d' % ('m_init'.ljust(leftwidth), m_init)
     print '%s : %6d' % ('m_add'.ljust(leftwidth), m_add)
     print '%s : %6d' % ('m_dep'.ljust(leftwidth), m_dep)
@@ -253,7 +249,7 @@ def print_stats(vertices):
     print '========================='
     print '%s : %5d' % ('Nodes created'.ljust(leftwidth), vertices.getnbofvertices())
     print '%s : %5d' % ('Total indegree (outdegree)'.ljust(leftwidth), vertices.gettotdegree())
-    print '%s : %5s (#%s)' % ('Max indegree'.ljust(leftwidth), str(vertices.getmaxindegree()), str(vertices.getmaxindegreeidx()))
+    print '%s : %5d (#%d)' % ('Max indegree'.ljust(leftwidth), vertices.getmaxindegree(), vertices.getmaxindegreeidx())
     #vertices.getvertex(vertices.getmaxindegreeidx()).printinfo()
     print '%s : %5d (#%d)' % ('Max outdegree'.ljust(leftwidth), vertices.getmaxoutdegree(), vertices.getmaxoutdegreeidx())
     #vertices.getvertex(vertices.getmaxoutdegreeidx()).printinfo()

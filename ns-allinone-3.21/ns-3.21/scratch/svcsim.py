@@ -38,7 +38,7 @@ import svc_nodes
 import svcmodel
 import svc_routines
 
-MAX_MINIT = 10000
+MAX_MINIT = 10010
 MAX_MADD = 10
 MAX_MDEP = 21
 MAX_MALT = 21
@@ -194,7 +194,7 @@ def main(argv):
 #    else:
 #        lbinsbase = 1.01
 
-    ns.core.Simulator.Schedule(ns.core.Seconds(0), svcmodel.print_params, vertices, m_init, m_add, m_dep, m_alt, alpha, timegrow, timefail, freq)
+    ns.core.Simulator.Schedule(ns.core.Seconds(0), svcmodel.print_params, vertices, m_init, comp, m_add, m_dep, m_alt, alpha, timegrow, timefail, freq)
 
     # network growth
     for i in range(timegrow):
