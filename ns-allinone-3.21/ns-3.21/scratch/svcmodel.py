@@ -235,7 +235,7 @@ def print_params(vertices, m_init, comp, m_add, m_dep, m_alt, alpha, timegrow, t
     print '========================='
     print 'Parameters'
     print '%s : %6d' % ('alpha'.ljust(leftwidth), alpha)
-    print '%s : %6d' % ('comp'.ljust(leftwidth), comp)
+    print '%s : %8.1f' % ('comp'.ljust(leftwidth), comp)
     print '%s : %6d' % ('m_init'.ljust(leftwidth), m_init)
     print '%s : %6d' % ('m_add'.ljust(leftwidth), m_add)
     print '%s : %6d' % ('m_dep'.ljust(leftwidth), m_dep)
