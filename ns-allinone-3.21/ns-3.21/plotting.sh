@@ -636,3 +636,13 @@ python scratch/plot.py -fc \
 -yl 'Cascade failed services $n_c$ (in fraction)' \
 -t 'Cascading failure with different degree of alternative $\langle alt \rangle$' \
 -m tricol
+
+### check degree distribution
+python scratch/plot.py -li \
+    simdata/svcsimn_10k_10k_d2_a1_i10_1.json \
+    simdata/svcsimn_10k_10k_d2_a1_i10_2.json \
+    simdata/svcsimn_10k_10k_d2_a1_i10_3.json \
+    simdata/svcsimn_10k_10k_d2_a1_i10_4.json \
+    simdata/svcsimn_10k_10k_d2_a1_i10_5.json \
+    simdata/svcsimn_10k_10k_d2_a1_i10_6.json \
+-m black-
