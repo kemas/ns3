@@ -1,6 +1,7 @@
 ns-allinone-3.17/*
 !ns-allinone-3.17/ns-3.17
 ns-allinone-3.17/ns-3.17/*
+!ns-allinone-3.17/ns-3.17/*.sh
 !ns-allinone-3.17/ns-3.17/src
 ns-allinone-3.17/ns-3.17/src/*
 !ns-allinone-3.17/ns-3.17/src/visualizer
@@ -9,6 +10,7 @@ ns-allinone-3.17/ns-3.17/src/visualizer/*
 ns-allinone-3.21/*
 !ns-allinone-3.21/ns-3.21
 ns-allinone-3.21/ns-3.21/*
+!ns-allinone-3.21/ns-3.21/*.sh
 !ns-allinone-3.21/ns-3.21/scratch
 !ns-allinone-3.21/ns-3.21/simdata
 !ns-allinone-3.21/ns-3.21/src
