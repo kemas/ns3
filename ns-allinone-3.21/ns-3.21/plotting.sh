@@ -645,4 +645,6 @@ python scratch/plot.py -li \
     simdata/svcsimn_10k_10k_d2_a1_i10_4.json \
     simdata/svcsimn_10k_10k_d2_a1_i10_5.json \
     simdata/svcsimn_10k_10k_d2_a1_i10_6.json \
+    simdata/svcsimn_10k_10k_d2_a1_i10_7.json \
+    simdata/svcsimn_10k_10k_d2_a1_i10_8.json \
 -m black-
