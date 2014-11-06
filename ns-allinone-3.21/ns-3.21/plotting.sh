@@ -638,13 +638,27 @@ python scratch/plot.py -fc \
 -m tricol
 
 ### check degree distribution
-python scratch/plot.py -li \
-    simdata/svcsimn_10k_10k_d2_a1_i10_1.json \
-    simdata/svcsimn_10k_10k_d2_a1_i10_2.json \
-    simdata/svcsimn_10k_10k_d2_a1_i10_3.json \
-    simdata/svcsimn_10k_10k_d2_a1_i10_4.json \
-    simdata/svcsimn_10k_10k_d2_a1_i10_5.json \
-    simdata/svcsimn_10k_10k_d2_a1_i10_6.json \
-    simdata/svcsimn_10k_10k_d2_a1_i10_7.json \
-    simdata/svcsimn_10k_10k_d2_a1_i10_8.json \
--m black-
+python scratch/plot.py -fc \
+    simdata/svcsimn_10k_10k_d8_a1_i10_1.json \
+    simdata/svcsimn_10k_10k_d8_a1_i10_2.json \
+    simdata/svcsimn_10k_10k_d8_a1_i10_3.json \
+    simdata/svcsimn_10k_10k_d8_a1_i10_4.json \
+    simdata/svcsimn_10k_10k_d8_a1_i10_5.json \
+    simdata/svcsimn_10k_10k_d8_a1_i10_6.json \
+    simdata/svcsimn_10k_10k_d8_a1_i10_7.json \
+    simdata/svcsimn_10k_10k_d8_a1_i10_8.json \
+    simdata/svcsimn_10k_10k_d8_a1_i10_avg1_8.json \
+-m tricol -l 1 2 3 4 5 6 7 8 avg
+
+### check degree distribution
+python scratch/plot.py -fc \
+    simdata/svcsimn_10k_10k_d9_a1_i10_1.json \
+    simdata/svcsimn_10k_10k_d9_a1_i10_2.json \
+    simdata/svcsimn_10k_10k_d9_a1_i10_3.json \
+    simdata/svcsimn_10k_10k_d9_a1_i10_4.json \
+    simdata/svcsimn_10k_10k_d9_a1_i10_5.json \
+    simdata/svcsimn_10k_10k_d9_a1_i10_6.json \
+    simdata/svcsimn_10k_10k_d9_a1_i10_7.json \
+    simdata/svcsimn_10k_10k_d9_a1_i10_8.json \
+    simdata/svcsimn_10k_10k_d9_a1_i10_avg1_8.json \
+-m tricol -l 1 2 3 4 5 6 7 8 avg

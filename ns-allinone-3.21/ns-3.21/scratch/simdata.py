@@ -6,8 +6,11 @@ OPT_AVGFILE = '-a'
 OPT_FILES = '-f'
 OPT_FIELDS = '-c'
 OPTS = (OPT_AVGFILE, OPT_FILES, OPT_FIELDS)
+EXCLS = ['snapshot']
 
 def rounddiv(n, d):
+    if types.FloatType == type(n):
+        n = int(n) 
     return (((n << 1) // d) + 1) >> 1
 
 def average(avgfile, **kwargs):
@@ -27,6 +30,10 @@ def average(avgfile, **kwargs):
     if kwargs['fields'][0] == '*':
         # all fields based on the first file
         fields = fileset[0].keys()
+        # remove excluded fields
+        for excl in EXCLS:
+            if excl in fields:
+                fields.pop(fields.index(excl))
     else:
         fields = kwargs['fields'] 
 
