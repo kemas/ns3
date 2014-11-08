@@ -265,6 +265,11 @@ def buildfromjson(vertices, filename):
     for vid in pwapis.keys():
         addpwvertex(vertices, dictvid, vid, pwapis)
 
+    vertices.analyzer.grow(
+        vertices.getnbofvertices()
+        , vertices.gettotmandlinks()
+        , vertices.gettotaltlinks())
+
 def print_params(vertices, m_init, comp, m_add, m_dep, m_alt, alpha, timegrow, timefail, freq):
     # print statistic
     leftwidth = 10

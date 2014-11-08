@@ -195,30 +195,31 @@ def main(argv):
         # initialize the network with some number of nodes
         svcmodel.initnetwork(vertices, m_init)
 
-    #    # set lbinsbase value for loglog plotting
-    #    step = timegrow * freq
-    #    if step >= 10000:
-    #        lbinsbase = 1.2
-    #    elif step >= 1000:
-    #        lbinsbase = 1.1
-    #    elif step >= 100:
-    #        lbinsbase = 1.05
-    #    else:
-    #        lbinsbase = 1.01
+#        # set lbinsbase value for loglog plotting
+#        step = timegrow * freq
+#        if step >= 10000:
+#            lbinsbase = 1.2
+#        elif step >= 1000:
+#            lbinsbase = 1.1
+#        elif step >= 100:
+#            lbinsbase = 1.05
+#        else:
+#            lbinsbase = 1.01
 
         # generate a network
         ns.core.Simulator.Schedule(ns.core.Seconds(0), svcmodel.print_params, vertices, m_init, comp, m_add, m_dep, m_alt, alpha, timegrow, timefail, freq)
 
         # network growth
         for i in range(timegrow):
-            for j in range(freq):
-                ns.core.Simulator.Schedule(ns.core.Seconds(i), svcmodel.grow, vertices, comp, m_add, m_dep, m_alt, alpha, model)
+           for j in range(freq):
+               ns.core.Simulator.Schedule(ns.core.Seconds(i), svcmodel.grow, vertices, comp, m_add, m_dep, m_alt, alpha, model)
 
-    #    ns.core.Simulator.Schedule(ns.core.Seconds(timegrow + 1), svc_routines.drawhistogram, vertices, 20, False)
-    #    ns.core.Simulator.Schedule(ns.core.Seconds(timegrow + 2), svc_routines.drawloglogdist, vertices, lbinsbase, True)
-        ns.core.Simulator.Schedule(ns.core.Seconds(timegrow), svcmodel.print_stats, vertices)
-        ns.core.Simulator.Schedule(ns.core.Seconds(timegrow), vertices.analyzer.takesnapshot, vertices)
-        ns.core.Simulator.Schedule(ns.core.Seconds(timegrow), vertices.analyzer.loaddegreedist, vertices)
+#        ns.core.Simulator.Schedule(ns.core.Seconds(timegrow + 1), svc_routines.drawhistogram, vertices, 20, False)
+#        ns.core.Simulator.Schedule(ns.core.Seconds(timegrow + 2), svc_routines.drawloglogdist, vertices, lbinsbase, True)
+
+    ns.core.Simulator.Schedule(ns.core.Seconds(timegrow), svcmodel.print_stats, vertices)
+    ns.core.Simulator.Schedule(ns.core.Seconds(timegrow), vertices.analyzer.takesnapshot, vertices)
+    ns.core.Simulator.Schedule(ns.core.Seconds(timegrow), vertices.analyzer.loaddegreedist, vertices)
 
     # network failure
     timelimit = timegrow + 1 + timefail
