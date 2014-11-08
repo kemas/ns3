@@ -27,7 +27,7 @@ class Analyzer:
         self.maxmeandepth = 0
         self.avgdepth = 0
         self.avgmeandepth = 0
-        self.snapshot = []
+        self.snapshot = {}
 
     def advancetime(self):
         # advance to the next timestep
@@ -134,7 +134,6 @@ class Analyzer:
         self.failalts(alts)
 
     def takesnapshot(self, vertices):
-        lsvertex = {}
         for i in range(len(vertices._vertices)):
             v = vertices._vertices[i]
 
@@ -154,9 +153,7 @@ class Analyzer:
             for k in v._altlinks._ref.keys():
                 altref[k] = [v._altlinks._ref[k][0], v._altlinks._ref[k][1]]
 
-            lsvertex[i] = [v.isactive(), outlinks, inlinks, altls, altref]
-
-        self.snapshot.append(lsvertex)
+            self.snapshot[i] = [v.isactive(), outlinks, inlinks, altls, altref]
 
     def loaddegreedist(self, vertices):
         sumdepth = 0; totmeandepth = 0

@@ -12,6 +12,7 @@
 import sys
 import random
 import svc_nodes
+import pwjsonloader as pwj
 import ns.network
 import ns.point_to_point
 
@@ -123,7 +124,7 @@ def choosepref(vertices, alpha=0, nbofnodes=1):
     return nodes
 
 def addcompsvc(vertices, m_dep, m_alt, alpha, model, indexp=None):
-    # add one node (except in MODEL_RAND model) and connect it to m_dep_i links
+    # add one node (except in MODEL_RAND mode) and connect it to m_dep_i links
     # for each link, add m_alt_j alternate links
     # model = 'sf', 'exp', 'rand'
     # prec:
@@ -228,6 +229,41 @@ def grow(vertices, comp, m_add, m_dep, m_alt, alpha, model=MODEL_SF):
 
     # verbose
     #vertices.printinfo()
+
+def addpwvertex(vertices, dictvid, vid, pwapis):
+    # add a pw api to vertices as a new vertex if not exist in dictvid
+    # process recursively to its component if it is a mashup
+
+    if dictvid.has_key(vid):
+        # vid has been added into the network
+        indexp = dictvid[vid]
+
+    else:
+        # vid not in dictvid; add to the network
+        indexp = addnode(vertices)
+        dictvid[vid] = indexp
+
+    api = pwapis[vid]
+    if api[pwj.IDX_MASHUPTYPE]:
+        # a mashup, connect vid node to its components
+
+        lscompvid = api[pwj.IDX_CHILDREN]
+        for compvid in lscompvid:
+            indexq = addpwvertex(vertices, dictvid, compvid, pwapis)
+            # connect
+            connect(vertices, indexp, indexq)
+
+    return indexp
+
+def buildfromjson(vertices, filename):
+    # build network from programmable web apis
+
+    # pwapis {vid:[indegree, outdegree, name, mashuptype, [compvid, ...]], ...}
+    pwapis = pwj.load(filename)
+
+    dictvid = {}
+    for vid in pwapis.keys():
+        addpwvertex(vertices, dictvid, vid, pwapis)
 
 def print_params(vertices, m_init, comp, m_add, m_dep, m_alt, alpha, timegrow, timefail, freq):
     # print statistic
