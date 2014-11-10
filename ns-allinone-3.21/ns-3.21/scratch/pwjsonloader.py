@@ -103,17 +103,21 @@ def calcdepth(dictdepth, vid, apis):
     if len(children):
         # vid has child
         maxdepth = 0; totmeandepth = 0.0
-        for compvid in children:
-            # calculate reccursively
-            d, m =  calcdepth(dictdepth, compvid, apis)
+        nbofchild = 0
 
-            if d > maxdepth:
-                maxdepth = d
+        for childgrp in children:
+            for compvid in childgrp:
+                # calculate reccursively
+                d, m =  calcdepth(dictdepth, compvid, apis)
 
-            totmeandepth += m 
+                if d > maxdepth:
+                    maxdepth = d
+
+                totmeandepth += m
+                nbofchild += 1
 
         viddepth = maxdepth
-        vidmeandepth = totmeandepth / len(children)
+        vidmeandepth = totmeandepth / nbofchild
 
     # add to depth
     dictdepth[vid] = [viddepth + 1, vidmeandepth + 1]
@@ -122,7 +126,7 @@ def calcdepth(dictdepth, vid, apis):
 
 def converttodictapis(obj):
     # remove redundant in mashups obj and convert into apis format
-    apis = {} # api and mashups {vid:[indegree, outdegree, name, mashuptype, [compvid, ...]], ...}
+    apis = {} # api and mashups {vid:[indegree, outdegree, name, mashuptype, [[compvid, ...], [..]]], ...}
 
     mashups = MashupsJSON(obj)
     # clean from redundant apis
@@ -161,7 +165,7 @@ def converttodictapis(obj):
                 apis[compvid][IDX_IND] += 1
 
                 # add vid's child
-                apis[vid][IDX_CHILDREN].append(compvid)
+                apis[vid][IDX_CHILDREN].append([compvid])
 
     return apis
 
@@ -277,8 +281,7 @@ def main(argv):
         dstocsv(ds, fout)
 
     elif option == '-a':
-        # write json of following format for further processing
-        # {id:[indegree, outdegree, name, mashuptype, [child, ...]], ...}
+        # write json for further processing
         ds = converttodictapis(obj)
         savetofile(ds, fout)
 

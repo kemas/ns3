@@ -56,7 +56,7 @@ def main(argv):
     cmd = ns.core.CommandLine()
 
     cmd.fjson = None
-    cmd.AddValue("fjson", "A json file to load a network")
+    cmd.AddValue("fjson", "The json file to load a network")
 
     cmd.comp = None
     cmd.AddValue("comp", "The probability to find a composite service in the network")

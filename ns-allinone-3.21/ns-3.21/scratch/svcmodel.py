@@ -152,7 +152,6 @@ def addcompsvc(vertices, m_dep, m_alt, alpha, model, indexp=None):
         # add one node
         indexp = addnode(vertices)
 
-    sumalt = 0
     # create m_dep_i links
     for indexq in lsnodeidx:
 
@@ -164,7 +163,6 @@ def addcompsvc(vertices, m_dep, m_alt, alpha, model, indexp=None):
             m_alt_j = random.randrange(m_alt)
             if m_alt_j > nverless:
                 m_alt_j = nverless
-            sumalt += m_alt_j
 
             # create m_alt_j links
             if model == MODEL_SF:
@@ -230,32 +228,98 @@ def grow(vertices, comp, m_add, m_dep, m_alt, alpha, model=MODEL_SF):
     # verbose
     #vertices.printinfo()
 
-def addpwvertex(vertices, dictvid, vid, pwapis):
+def addpwvertex(vertices, dictvid, vid, pwapis, m_dep, m_alt, alpha, model):
     # add a pw api to vertices as a new vertex if not exist in dictvid
-    # process recursively to its component if it is a mashup
+    # process recursively to its component/children
 
     if dictvid.has_key(vid):
-        # vid has been added into the network
+        # vid has been added into the network; get the index
         indexp = dictvid[vid]
 
     else:
         # vid not in dictvid; add to the network
         indexp = addnode(vertices)
+        # add to the directory of added vids
         dictvid[vid] = indexp
 
-    api = pwapis[vid]
-    if api[pwj.IDX_MASHUPTYPE]:
-        # a mashup, connect vid node to its components
+    lscompvid = pwapis[vid][pwj.IDX_CHILDREN] # list of list of vid
+    lsoutlink = [] # list of list of index
 
-        lscompvid = api[pwj.IDX_CHILDREN]
-        for compvid in lscompvid:
-            indexq = addpwvertex(vertices, dictvid, compvid, pwapis)
-            # connect
-            connect(vertices, indexp, indexq)
+    # process the children/component if any
+    # convert list of list of vid (lscompvid) into list of list of index (lsoutlink)
+    for altgrp in lscompvid:
+        lsalt = []
+
+        for compvid in altgrp:
+            # recursively add compvid node to vertices and create connection
+            lsalt.append(addpwvertex(vertices, dictvid, compvid, pwapis, m_dep, m_alt, alpha, model))
+
+        if lsalt:
+            # len(lsalt) > 0
+            lsoutlink.append(lsalt)
+
+    nver = vertices.getnbofvertices()
+    nverless = nver - 1
+
+    # choose more vertices according to m_dep_i (defined below)
+    if m_dep > 1:
+        m_dep_i = random.randrange(1, m_dep)
+
+        if m_dep_i > nver:
+            m_dep_i = nver
+
+        if model == MODEL_SF:
+            # choose existing nodes to be connected using preferential attachment
+            lsdepadd = choosepref(vertices, alpha, m_dep_i)
+        else:
+            # model == MODEL_EXP or MODEL_RAND
+            # choose existing nodes randomly
+            lsdepadd = chooserandom(vertices, m_dep_i)
+
+        # add indexes in lsdepadd to lsoutlink as strong dependency links
+        for indexdepadd in lsdepadd:
+            if [indexdepadd] not in lsoutlink:
+                lsoutlink.append([indexdepadd])
+
+    # for each lsalt in lsoutlink,
+    # choose existing nodes to be connected as alternative
+    if m_alt > 0:
+        for lsalt in lsoutlink:
+            # generate m_alt_j, the number of alternate links
+            m_alt_j = random.randrange(m_alt)
+            if m_alt_j > nverless:
+                m_alt_j = nverless
+
+            # create m_alt_j links
+            if model == MODEL_SF:
+                # choose alternatives using preferential attachment
+                lsaltidx = choosepref(vertices, alpha, m_alt_j)
+            else:
+                # model == MODEL_EXP or MODEL_RAND
+                # choose alternatives randomly
+                lsaltidx = chooserandom(vertices, m_alt_j)
+
+            # add indexes in lsaltidx to lsoutlink as alternate links
+            for indexalt in lsaltidx:
+                if indexalt not in lsalt:
+                    lsalt.append(indexalt)
+
+    # create connection based on lsoutlink
+    for lsalt in lsoutlink:
+        # connect indexp to indexdep, the first elmt of lsalt
+        indexdep = lsalt[0]
+        if indexp != indexdep and not vertices.isconnected(indexp, indexdep):
+            connect(vertices, indexp, indexdep)
+
+        # connect indexp to the other elmts as alternate of indexdep
+        for indexalt in lsalt[1:]:
+            # connect indexp to compvid node as alternative of indexdep
+            if indexp != indexalt and not vertices.isconnected(indexp, indexalt):
+                connect(vertices, indexp, indexalt, indexdep)
 
     return indexp
 
-def buildfromjson(vertices, filename):
+def buildfromjson(vertices, filename, m_dep=0, m_alt=0, alpha=1, model=MODEL_SF):
     # build network from programmable web apis
 
     # pwapis {vid:[indegree, outdegree, name, mashuptype, [compvid, ...]], ...}
@@ -263,7 +327,7 @@ def buildfromjson(vertices, filename):
 
     dictvid = {}
     for vid in pwapis.keys():
-        addpwvertex(vertices, dictvid, vid, pwapis)
+        addpwvertex(vertices, dictvid, vid, pwapis, m_dep, m_alt, alpha, model)
 
     vertices.analyzer.grow(
         vertices.getnbofvertices()
