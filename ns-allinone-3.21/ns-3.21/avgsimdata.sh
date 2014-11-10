@@ -762,3 +762,27 @@
 #    simdata/expsvcsimn_10k_10k_d11_a1_i10_8.json \
 #-c "*"
 #
+#python scratch/simdata.py -a \
+#    simdata/pwsvcsim_avg1_8.json -f \
+#    simdata/pwsvcsim_1.json \
+#    simdata/pwsvcsim_2.json \
+#    simdata/pwsvcsim_3.json \
+#    simdata/pwsvcsim_4.json \
+#    simdata/pwsvcsim_5.json \
+#    simdata/pwsvcsim_6.json \
+#    simdata/pwsvcsim_7.json \
+#    simdata/pwsvcsim_8.json \
+#-c "*"
+#
+#python scratch/simdata.py -a \
+#    simdata/pwsvcsim_a1_avg1_8.json -f \
+#    simdata/pwsvcsim_a1_1.json \
+#    simdata/pwsvcsim_a1_2.json \
+#    simdata/pwsvcsim_a1_3.json \
+#    simdata/pwsvcsim_a1_4.json \
+#    simdata/pwsvcsim_a1_5.json \
+#    simdata/pwsvcsim_a1_6.json \
+#    simdata/pwsvcsim_a1_7.json \
+#    simdata/pwsvcsim_a1_8.json \
+#-c "*"
+#

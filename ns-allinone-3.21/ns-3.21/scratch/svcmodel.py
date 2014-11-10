@@ -283,6 +283,7 @@ def addpwvertex(vertices, dictvid, vid, pwapis, m_dep, m_alt, alpha, model):
 
     # for each lsalt in lsoutlink,
     # choose existing nodes to be connected as alternative
+#    print "m_alt "+ str(m_alt)
     if m_alt > 0:
         for lsalt in lsoutlink:
             # generate m_alt_j, the number of alternate links
@@ -299,6 +300,7 @@ def addpwvertex(vertices, dictvid, vid, pwapis, m_dep, m_alt, alpha, model):
                 # choose alternatives randomly
                 lsaltidx = chooserandom(vertices, m_alt_j)
 
+#            print "len lsaltidx "+ str(len(lsaltidx))
             # add indexes in lsaltidx to lsoutlink as alternate links
             for indexalt in lsaltidx:
                 if indexalt not in lsalt:
@@ -311,6 +313,9 @@ def addpwvertex(vertices, dictvid, vid, pwapis, m_dep, m_alt, alpha, model):
         if indexp != indexdep and not vertices.isconnected(indexp, indexdep):
             connect(vertices, indexp, indexdep)
 
+#        print lsalt
+#        if len(lsalt) > 1:
+#            print lsalt
         # connect indexp to the other elmts as alternate of indexdep
         for indexalt in lsalt[1:]:
             # connect indexp to compvid node as alternative of indexdep
@@ -319,10 +324,10 @@ def addpwvertex(vertices, dictvid, vid, pwapis, m_dep, m_alt, alpha, model):
 
     return indexp
 
-def buildfromjson(vertices, filename, m_dep=0, m_alt=0, alpha=1, model=MODEL_SF):
+def buildfromjson(vertices, filename, m_dep, m_alt, alpha, model):
     # build network from programmable web apis
 
-    # pwapis {vid:[indegree, outdegree, name, mashuptype, [compvid, ...]], ...}
+    # pwapis {vid:[indegree, outdegree, name, mashuptype, [[compvid, ...], ...]], ...}
     pwapis = pwj.load(filename)
 
     dictvid = {}

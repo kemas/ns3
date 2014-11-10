@@ -32,8 +32,8 @@
 #./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=3 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d3_a1_i10_4.json'"
 #./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=3 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d3_a1_i10_5.json'"
 #./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=3 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d3_a1_i10_6.json'"
-./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=3 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d3_a1_i10_7.json'"
-./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=3 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d3_a1_i10_8.json'"
+#./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=3 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d3_a1_i10_7.json'"
+#./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=3 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d3_a1_i10_8.json'"
 #
 #./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=4 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d4_a1_i10_1.json'"
 #./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=4 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d4_a1_i10_2.json'"
@@ -41,8 +41,8 @@
 #./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=4 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d4_a1_i10_4.json'"
 #./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=4 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d4_a1_i10_5.json'"
 #./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=4 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d4_a1_i10_6.json'"
-./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=4 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d4_a1_i10_7.json'"
-./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=4 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d4_a1_i10_8.json'"
+#./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=4 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d4_a1_i10_7.json'"
+#./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=4 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d4_a1_i10_8.json'"
 #
 #./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=5 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d5_a1_i10_1.json'"
 #./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=5 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d5_a1_i10_2.json'"
@@ -50,8 +50,8 @@
 #./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=5 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d5_a1_i10_4.json'"
 #./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=5 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d5_a1_i10_5.json'"
 #./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=5 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d5_a1_i10_6.json'"
-./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=5 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d5_a1_i10_7.json'"
-./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=5 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d5_a1_i10_8.json'"
+#./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=5 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d5_a1_i10_7.json'"
+#./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=5 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d5_a1_i10_8.json'"
 #
 #./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=6 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d6_a1_i10_1.json'"
 #./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=6 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d6_a1_i10_2.json'"
@@ -59,8 +59,8 @@
 #./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=6 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d6_a1_i10_4.json'"
 #./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=6 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d6_a1_i10_5.json'"
 #./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=6 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d6_a1_i10_6.json'"
-./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=6 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d6_a1_i10_7.json'"
-./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=6 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d6_a1_i10_8.json'"
+#./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=6 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d6_a1_i10_7.json'"
+#./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=6 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d6_a1_i10_8.json'"
 #
 #./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=7 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d7_a1_i10_1.json'"
 #./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=7 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d7_a1_i10_2.json'"
@@ -68,8 +68,8 @@
 #./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=7 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d7_a1_i10_4.json'"
 #./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=7 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d7_a1_i10_5.json'"
 #./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=7 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d7_a1_i10_6.json'"
-./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=7 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d7_a1_i10_7.json'"
-./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=7 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d7_a1_i10_8.json'"
+#./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=7 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d7_a1_i10_7.json'"
+#./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=7 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d7_a1_i10_8.json'"
 #
 #./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=8 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d8_a1_i10_1.json'"
 #./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=8 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d8_a1_i10_2.json'"
@@ -77,8 +77,8 @@
 #./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=8 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d8_a1_i10_4.json'"
 #./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=8 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d8_a1_i10_5.json'"
 #./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=8 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d8_a1_i10_6.json'"
-./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=8 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d8_a1_i10_7.json'"
-./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=8 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d8_a1_i10_8.json'"
+#./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=8 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d8_a1_i10_7.json'"
+#./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=8 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d8_a1_i10_8.json'"
 #
 #./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=9 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d9_a1_i10_1.json'"
 #./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=9 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d9_a1_i10_2.json'"
@@ -86,8 +86,8 @@
 #./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=9 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d9_a1_i10_4.json'"
 #./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=9 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d9_a1_i10_5.json'"
 #./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=9 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d9_a1_i10_6.json'"
-./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=9 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d9_a1_i10_7.json'"
-./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=9 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d9_a1_i10_8.json'"
+#./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=9 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d9_a1_i10_7.json'"
+#./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=9 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d9_a1_i10_8.json'"
 #
 #./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=10 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d10_a1_i10_1.json'"
 #./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=10 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d10_a1_i10_2.json'"
@@ -95,8 +95,8 @@
 #./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=10 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d10_a1_i10_4.json'"
 #./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=10 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d10_a1_i10_5.json'"
 #./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=10 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d10_a1_i10_6.json'"
-./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=10 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d10_a1_i10_7.json'"
-./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=10 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d10_a1_i10_8.json'"
+#./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=10 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d10_a1_i10_7.json'"
+#./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=10 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d10_a1_i10_8.json'"
 #
 #./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=11 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d11_a1_i10_1.json'"
 #./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=11 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d11_a1_i10_2.json'"
@@ -104,8 +104,8 @@
 #./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=11 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d11_a1_i10_4.json'"
 #./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=11 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d11_a1_i10_5.json'"
 #./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=11 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d11_a1_i10_6.json'"
-./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=11 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d11_a1_i10_7.json'"
-./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=11 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d11_a1_i10_8.json'"
+#./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=11 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d11_a1_i10_7.json'"
+#./waf --pyrun "scratch/svcsim.py --timegrow=10000 --timefail=10000 --m_dep=11 --m_alt=1 --m_init=10 --filename='simdata/svcsimn_10k_10k_d11_a1_i10_8.json'"
 #
 ###
 

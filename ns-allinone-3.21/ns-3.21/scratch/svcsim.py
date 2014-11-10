@@ -190,7 +190,7 @@ def main(argv):
 
     if fjson:
         # create a network from a json file
-        svcmodel.buildfromjson(vertices, fjson)
+        svcmodel.buildfromjson(vertices, fjson, m_dep, m_alt, alpha, model)
     else:
         # initialize the network with some number of nodes
         svcmodel.initnetwork(vertices, m_init)
