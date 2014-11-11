@@ -769,3 +769,12 @@ python scratch/plot.py -fc \
     simdata/expsvcsimn_10k_10k_d2_a11_i10_avg1_8.json \
 -m tricol -l 1 2 3 4 5 6 7 8 9 10 11 -loc 2
 
+python scratch/plot.py -fc \
+    simdata/pwsvcsim_avg1_8.json \
+    simdata/pwsvcsim_avg9_16.json \
+    simdata/pwsvcsim_a2_avg1_8.json \
+    simdata/pwsvcsim_a3_avg1_8.json \
+    simdata/pwsvcsim_a3_avg9_16.json \
+    simdata/pwsvcsim_a4_avg1_8.json \
+    simdata/pwsvcsim_a4_avg9_16.json \
+-m tricol -l 1 1 2 3 3 4 4 -loc 2

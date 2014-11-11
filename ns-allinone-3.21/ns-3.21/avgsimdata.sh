@@ -775,14 +775,26 @@
 #-c "*"
 #
 #python scratch/simdata.py -a \
-#    simdata/pwsvcsim_a4_avg1_8.json -f \
-#    simdata/pwsvcsim_a4_1.json \
-#    simdata/pwsvcsim_a4_2.json \
-#    simdata/pwsvcsim_a4_3.json \
-#    simdata/pwsvcsim_a4_4.json \
-#    simdata/pwsvcsim_a4_5.json \
-#    simdata/pwsvcsim_a4_6.json \
-#    simdata/pwsvcsim_a4_7.json \
-#    simdata/pwsvcsim_a4_8.json \
+#    simdata/pwsvcsim_a3_avg1_8.json -f \
+#    simdata/pwsvcsim_a3_1.json \
+#    simdata/pwsvcsim_a3_2.json \
+#    simdata/pwsvcsim_a3_3.json \
+#    simdata/pwsvcsim_a3_4.json \
+#    simdata/pwsvcsim_a3_5.json \
+#    simdata/pwsvcsim_a3_6.json \
+#    simdata/pwsvcsim_a3_7.json \
+#    simdata/pwsvcsim_a3_8.json \
+#-c "*"
+
+#python scratch/simdata.py -a \
+#    simdata/pwsvcsim_a3_avg9_16.json -f \
+#    simdata/pwsvcsim_a3_9.json \
+#    simdata/pwsvcsim_a3_10.json \
+#    simdata/pwsvcsim_a3_11.json \
+#    simdata/pwsvcsim_a3_12.json \
+#    simdata/pwsvcsim_a3_13.json \
+#    simdata/pwsvcsim_a3_14.json \
+#    simdata/pwsvcsim_a3_15.json \
+#    simdata/pwsvcsim_a3_16.json \
 #-c "*"
 
