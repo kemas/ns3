@@ -775,14 +775,14 @@
 #-c "*"
 #
 #python scratch/simdata.py -a \
-#    simdata/pwsvcsim_a1_avg1_8.json -f \
-#    simdata/pwsvcsim_a1_1.json \
-#    simdata/pwsvcsim_a1_2.json \
-#    simdata/pwsvcsim_a1_3.json \
-#    simdata/pwsvcsim_a1_4.json \
-#    simdata/pwsvcsim_a1_5.json \
-#    simdata/pwsvcsim_a1_6.json \
-#    simdata/pwsvcsim_a1_7.json \
-#    simdata/pwsvcsim_a1_8.json \
+#    simdata/pwsvcsim_a4_avg1_8.json -f \
+#    simdata/pwsvcsim_a4_1.json \
+#    simdata/pwsvcsim_a4_2.json \
+#    simdata/pwsvcsim_a4_3.json \
+#    simdata/pwsvcsim_a4_4.json \
+#    simdata/pwsvcsim_a4_5.json \
+#    simdata/pwsvcsim_a4_6.json \
+#    simdata/pwsvcsim_a4_7.json \
+#    simdata/pwsvcsim_a4_8.json \
 #-c "*"
-#
+
