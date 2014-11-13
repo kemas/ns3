@@ -434,6 +434,11 @@ def loaddata(ds, func, data, filename, step=STEP, norm=True):
                     yval = data['nodesfail'][j] / nbofnodes - xval
                     x.append(xval)
                     y.append(yval)
+#                    ###
+                    print nodesremoved[j]
+                    print data['nodesfail'][j]
+                print x
+                print y
 
             else:
                 # FUNC_FAIL, FUNC_EFF
@@ -485,7 +490,7 @@ def readargv(argv, pos=1, opt='', dictarg={}):
             dictarg['func'] = currarg
             currarg = 'files'
 
-        elif currarg not in ['-l', '-m', '-s', '-x', '-r', '-xl', '-yl', '-t', '-logx', '-logy', '-loc', '-b', '-xlim', '-ylim', '-v', '-axisfsize']:
+        elif currarg not in ['-l', '-m', '-s', '-x', '-r', '-xl', '-yl', '-t', '-logx', '-logy', '-loc', '-b', '-xlim', '-ylim', '-v', '-axisfsize', '-j']:
             printusage()
             return
 
@@ -510,6 +515,11 @@ def printusage():
 def main(argv):
     dictarg = readargv(argv)
 
+    step = STEP
+    argstep = getargval(dictarg, '-j')
+    if argstep:
+        step = int(argstep[0])
+
     func = dictarg['func']
     ds = []
     for i in range(len(dictarg['files'])):
@@ -520,7 +530,7 @@ def main(argv):
             #if func == FUNC_EFF:
             #    data['xval'] = dictarg['xval'][i]
 
-            loaddata(ds, func, data, dictarg['files'][i])
+            loaddata(ds, func, data, dictarg['files'][i], step)
         finally:
             f.close()
 

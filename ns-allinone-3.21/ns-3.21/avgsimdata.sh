@@ -798,3 +798,27 @@
 #    simdata/pwsvcsim_a3_16.json \
 #-c "*"
 
+python scratch/simdata.py -a \
+    simdata/lgsvcsim_avg1_8.json -f \
+    simdata/lgsvcsim_1.json \
+    simdata/lgsvcsim_2.json \
+    simdata/lgsvcsim_3.json \
+    simdata/lgsvcsim_4.json \
+    simdata/lgsvcsim_5.json \
+    simdata/lgsvcsim_6.json \
+    simdata/lgsvcsim_7.json \
+    simdata/lgsvcsim_8.json \
+-c "*"
+
+python scratch/simdata.py -a \
+    simdata/lgsvcsim_avg9_16.json -f \
+    simdata/lgsvcsim_9.json \
+    simdata/lgsvcsim_10.json \
+    simdata/lgsvcsim_11.json \
+    simdata/lgsvcsim_12.json \
+    simdata/lgsvcsim_13.json \
+    simdata/lgsvcsim_14.json \
+    simdata/lgsvcsim_15.json \
+    simdata/lgsvcsim_16.json \
+-c "*"
+
