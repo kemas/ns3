@@ -410,10 +410,17 @@ def setaxislim(xlim, ylim, plt=None, ax=None):
 def loaddata(ds, func, data, filename, step=STEP, norm=True):
     if func in [FUNC_FAIL, FUNC_FAILCASC, FUNC_EFF]:
         nbofnodes = 1
+#        nbofcomps = 1
         if norm:
-            # get the number of nodes
+            # number of all nodes
             nbofnodes = float(data['nodescreated'][-1])
-
+#            # number of composite nodes, i.e. those having outdegree
+#            nbofcomps = 0.0
+#            for deg in data['outdegree']:
+#                if deg > 0:
+#                    nbofcomps += 1 
+#        ###
+#        print 'nbofcomps: '+ str(nbofcomps)
         nodesremoved = data['nodesremoved']
         found = False; i = 0
         while not found and i < len(nodesremoved):
@@ -432,13 +439,16 @@ def loaddata(ds, func, data, filename, step=STEP, norm=True):
                 for j in range(i, len(nodesremoved), step):
                     xval = nodesremoved[j] / nbofnodes
                     yval = data['nodesfail'][j] / nbofnodes - xval
+#                    yval = (data['nodesfail'][j] - nodesremoved[j]) / nbofcomps
                     x.append(xval)
                     y.append(yval)
 #                    ###
-                    print nodesremoved[j]
-                    print data['nodesfail'][j]
-                print x
-                print y
+#                    print nodesremoved[j]
+#                    print data['nodesfail'][j]
+#                    print nodesremoved[j]
+#                    print "------"
+#                print x
+#                print y
 
             else:
                 # FUNC_FAIL, FUNC_EFF
