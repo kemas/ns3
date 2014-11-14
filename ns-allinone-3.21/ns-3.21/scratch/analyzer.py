@@ -129,6 +129,7 @@ class Analyzer:
     def fail(self, removed, fail, mands, alts):
         self.advancetime()
         self.removenodes(removed)
+        print 'an.fail: '+ str(fail)
         self.failnodes(fail)
         self.failmands(mands)
         self.failalts(alts)

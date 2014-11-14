@@ -32,15 +32,19 @@ def addnode(vertices):
 
 def randomfail(vertices):
     # choose a node randomly and make it fails
-    totmandlinks = vertices.gettotmandlinks()
-    totaltlinks = vertices.gettotaltlinks()
 
     nact = vertices.getnbofactive()
     if not nact:
         # no vertices in the network
         return
 
+    totmandlinks = vertices.gettotmandlinks()
+    totaltlinks = vertices.gettotaltlinks()
+
     index = random.randrange(nact)
+    idx = vertices.getindexbyact(index)
+    print 'index: '+ str(idx)
+    print 'indegree: '+ str(vertices.getvertex(idx).getindegree())
     vertices.dofail(vertices.getindexbyact(index))
 
     vertices.analyzer.fail(
