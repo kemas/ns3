@@ -43,8 +43,9 @@ def randomfail(vertices):
 
     index = random.randrange(nact)
     idx = vertices.getindexbyact(index)
-    print 'index: '+ str(idx)
-    print 'indegree: '+ str(vertices.getvertex(idx).getindegree())
+    ###
+    #print 'index: '+ str(idx)
+    #print 'indegree: '+ str(vertices.getvertex(idx).getindegree())
     vertices.dofail(vertices.getindexbyact(index))
 
     vertices.analyzer.fail(
