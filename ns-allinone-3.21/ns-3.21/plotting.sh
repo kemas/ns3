@@ -779,4 +779,11 @@ python scratch/plot.py -fc \
     simdata/pwsvcsim_a4_avg9_16.json \
 -m tricol -l 1 1 2 3 3 4 4 -loc 2
 
+python scratch/plot.py -fc \
+    simdata/pwsvcsim_avg1_16.json \
+    simdata/pwsvcsim_d2_avg1_8.json \
+    simdata/pwsvcsim_d3_avg1_8.json \
+    simdata/pwsvcsim_d4_avg1_8.json \
+-m tricol -l 1 2 3 4 -loc 2
+
 python scratch/plot.py -fc simdata/lgsvcsim_avg1_16.json simdata/lgsvcsim_a1_avg1_16.json simdata/lgsvcsim_a2_avg1_16.json simdata/lgsvcsim_a3_avg1_16.json simdata/lgsvcsim_a4_avg1_16.json -j 10 -m tricol- -l a0 a1 a2 a3 a4 -loc 4
