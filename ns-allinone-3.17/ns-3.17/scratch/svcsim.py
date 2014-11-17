@@ -55,6 +55,9 @@ MODEL_SF = 'sf' # scale-free
 def main(argv):
     cmd = ns.core.CommandLine()
 
+    cmd.fjson = None
+    cmd.AddValue("fjson", "The json file to load a network")
+
     cmd.comp = None
     cmd.AddValue("comp", "The probability to find a composite service in the network")
 
@@ -89,6 +92,10 @@ def main(argv):
     cmd.AddValue("model", "The network model to generate (scale-free: sf, exponential: exp, random: rand)")
 
     cmd.Parse(argv)
+
+    fjson = None
+    if cmd.fjson is not None:
+        fjson = cmd.fjson
 
     if cmd.comp is None:
         comp = svcmodel.COMP
@@ -180,29 +187,36 @@ def main(argv):
 
     # prepare the network
     vertices = svc_nodes.Vertices()
-    # initialize the network with some number of nodes
-    svcmodel.initnetwork(vertices, m_init)
 
-#    # set lbinsbase value for loglog plotting
-#    step = timegrow * freq
-#    if step >= 10000:
-#        lbinsbase = 1.2
-#    elif step >= 1000:
-#        lbinsbase = 1.1
-#    elif step >= 100:
-#        lbinsbase = 1.05
-#    else:
-#        lbinsbase = 1.01
+    if fjson:
+        # create a network from a json file
+        svcmodel.buildfromjson(vertices, fjson, m_dep, m_alt, alpha, model)
+    else:
+        # initialize the network with some number of nodes
+        svcmodel.initnetwork(vertices, m_init)
 
-    ns.core.Simulator.Schedule(ns.core.Seconds(0), svcmodel.print_params, vertices, m_init, comp, m_add, m_dep, m_alt, alpha, timegrow, timefail, freq)
+#        # set lbinsbase value for loglog plotting
+#        step = timegrow * freq
+#        if step >= 10000:
+#            lbinsbase = 1.2
+#        elif step >= 1000:
+#            lbinsbase = 1.1
+#        elif step >= 100:
+#            lbinsbase = 1.05
+#        else:
+#            lbinsbase = 1.01
 
-    # network growth
-    for i in range(timegrow):
-        for j in range(freq):
-            ns.core.Simulator.Schedule(ns.core.Seconds(i), svcmodel.grow, vertices, comp, m_add, m_dep, m_alt, alpha, model)
+        # generate a network
+        ns.core.Simulator.Schedule(ns.core.Seconds(0), svcmodel.print_params, vertices, m_init, comp, m_add, m_dep, m_alt, alpha, timegrow, timefail, freq)
 
-#    ns.core.Simulator.Schedule(ns.core.Seconds(timegrow + 1), svc_routines.drawhistogram, vertices, 20, False)
-#    ns.core.Simulator.Schedule(ns.core.Seconds(timegrow + 2), svc_routines.drawloglogdist, vertices, lbinsbase, True)
+        # network growth
+        for i in range(timegrow):
+           for j in range(freq):
+               ns.core.Simulator.Schedule(ns.core.Seconds(i), svcmodel.grow, vertices, comp, m_add, m_dep, m_alt, alpha, model)
+
+#        ns.core.Simulator.Schedule(ns.core.Seconds(timegrow + 1), svc_routines.drawhistogram, vertices, 20, False)
+#        ns.core.Simulator.Schedule(ns.core.Seconds(timegrow + 2), svc_routines.drawloglogdist, vertices, lbinsbase, True)
+
     ns.core.Simulator.Schedule(ns.core.Seconds(timegrow), svcmodel.print_stats, vertices)
     ns.core.Simulator.Schedule(ns.core.Seconds(timegrow), vertices.analyzer.takesnapshot, vertices)
     ns.core.Simulator.Schedule(ns.core.Seconds(timegrow), vertices.analyzer.loaddegreedist, vertices)

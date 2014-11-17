@@ -618,7 +618,7 @@ class Vertices:
 
         if not vertexp.isconnectedto(indexq):
             poutlinks = vertexp.getnbofoutlinks()
-        
+
             vertexp.connectto(indexq, channel, indexexst)
             vertexq.connectfrom(indexp)
             self._totdegree += 1
