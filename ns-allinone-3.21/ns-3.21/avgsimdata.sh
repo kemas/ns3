@@ -967,7 +967,7 @@ python scratch/simdata.py -a \
 #-c "*"
 #
 #python scratch/simdata.py -a \
-#    simdata/pwsvcsim_d2_avg1_8.json -f \
+#    simdata/pwsvcsim_d2_avg1_16.json -f \
 #    simdata/pwsvcsim_d2_1.json \
 #    simdata/pwsvcsim_d2_2.json \
 #    simdata/pwsvcsim_d2_3.json \
@@ -976,10 +976,18 @@ python scratch/simdata.py -a \
 #    simdata/pwsvcsim_d2_6.json \
 #    simdata/pwsvcsim_d2_7.json \
 #    simdata/pwsvcsim_d2_8.json \
+#    simdata/pwsvcsim_d2_9.json \
+#    simdata/pwsvcsim_d2_10.json \
+#    simdata/pwsvcsim_d2_11.json \
+#    simdata/pwsvcsim_d2_12.json \
+#    simdata/pwsvcsim_d2_13.json \
+#    simdata/pwsvcsim_d2_14.json \
+#    simdata/pwsvcsim_d2_15.json \
+#    simdata/pwsvcsim_d2_16.json \
 #-c "*"
 #
 #python scratch/simdata.py -a \
-#    simdata/pwsvcsim_d3_avg1_8.json -f \
+#    simdata/pwsvcsim_d3_avg1_16.json -f \
 #    simdata/pwsvcsim_d3_1.json \
 #    simdata/pwsvcsim_d3_2.json \
 #    simdata/pwsvcsim_d3_3.json \
@@ -988,10 +996,18 @@ python scratch/simdata.py -a \
 #    simdata/pwsvcsim_d3_6.json \
 #    simdata/pwsvcsim_d3_7.json \
 #    simdata/pwsvcsim_d3_8.json \
+#    simdata/pwsvcsim_d3_9.json \
+#    simdata/pwsvcsim_d3_10.json \
+#    simdata/pwsvcsim_d3_11.json \
+#    simdata/pwsvcsim_d3_12.json \
+#    simdata/pwsvcsim_d3_13.json \
+#    simdata/pwsvcsim_d3_14.json \
+#    simdata/pwsvcsim_d2_15.json \
+#    simdata/pwsvcsim_d2_16.json \
 #-c "*"
 #
 #python scratch/simdata.py -a \
-#    simdata/pwsvcsim_d4_avg1_8.json -f \
+#    simdata/pwsvcsim_d4_avg1_16.json -f \
 #    simdata/pwsvcsim_d4_1.json \
 #    simdata/pwsvcsim_d4_2.json \
 #    simdata/pwsvcsim_d4_3.json \
@@ -1000,5 +1016,13 @@ python scratch/simdata.py -a \
 #    simdata/pwsvcsim_d4_6.json \
 #    simdata/pwsvcsim_d4_7.json \
 #    simdata/pwsvcsim_d4_8.json \
+#    simdata/pwsvcsim_d4_9.json \
+#    simdata/pwsvcsim_d4_10.json \
+#    simdata/pwsvcsim_d4_11.json \
+#    simdata/pwsvcsim_d4_12.json \
+#    simdata/pwsvcsim_d4_13.json \
+#    simdata/pwsvcsim_d4_14.json \
+#    simdata/pwsvcsim_d4_15.json \
+#    simdata/pwsvcsim_d4_16.json \
 #-c "*"
 #
