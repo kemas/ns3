@@ -14,9 +14,11 @@ def getargval(dictarg, key, ifnone=p.IFNONE):
 
 def main(argv):
     lsarg = []
-    lsarg.append({'func':['-di'], 'files':['simdata/rsvcsim_10k_10k_d3_a5_i10_1d.json'], '-m':['green'], '-logx':[1], '-logy':[1], '-xlim':[1, 500], '-ylim':[1e-6, 1], '-t':['Exponential'], '-xl':['In-degree $k_{in}$'], '-yl':['Probability distribution $P(k_{in})$'], '-axisfsize':['large']})
-    lsarg.append({'func':['-di'], 'files':['simdata/randsvcsim_10k_10k_d3_a5_i10_1d.json'], '-m':['blue'], '-logx':[1], '-logy':[1], '-xlim':[1, 500], '-ylim':[1e-6, 1], '-t':['Random'], '-xl':['In-degree $k_{in}$'], '-yl':['Probability distribution $P(k_{in})$'], '-axisfsize':['large']})
-    lsarg.append({'func':['-li'], 'files':['simdata/svcsim_10k_10k_d3_a3_i10_5.json'], '-m':['red-'], '-logx':[1], '-logy':[1], '-xlim':[1, 500], '-ylim':[1e-6, 1], '-t':['Scale-free'], '-xl':['In-degree $k_{in}$'], '-yl':['Probability distribution $P(k_{in})$'], '-axisfsize':['large'], '-lb':['1.21']})
+    #lsarg.append({'func':['-di'], 'files':['simdata/rsvcsim_10k_10k_d3_a5_i10_1d.json'], '-m':['triblue'], '-logx':[1], '-logy':[1], '-xlim':[1, 500], '-ylim':[1e-6, 1], '-t':['Exponential'], '-xl':['In-degree $k_{in}$'], '-yl':['Probability distribution $P(k_{in})$'], '-axisfsize':['large'], '-b':['100']})
+    lsarg.append({'func':['-di'], 'files':['simdata/rsvcsim_10k_10k_d3_a5_i10_1d.json'], '-m':['triblue'], '-b':['100']})
+    #lsarg.append({'func':['-di'], 'files':['simdata/randsvcsim_10k_10k_d3_a5_i10_1d.json'], '-m':['triorange'], '-logx':[1], '-logy':[1], '-xlim':[1, 500], '-ylim':[1e-6, 1], '-t':['Random'], '-xl':['In-degree $k_{in}$'], '-yl':['Probability distribution $P(k_{in})$'], '-axisfsize':['large'], '-b':['100']})
+    lsarg.append({'func':['-di'], 'files':['simdata/randsvcsim_10k_10k_d3_a5_i10_1d.json'], '-m':['triorange'], '-b':['100']})
+    lsarg.append({'func':['-li'], 'files':['simdata/svcsim_10k_10k_d3_a3_i10_5.json'], '-m':['trired'], '-logx':[1], '-logy':[1], '-xlim':[1, 500], '-ylim':[1e-6, 1], '-t':['Scale-free, exponential, and random network degree distribution'], '-xl':['In-degree $k_{in}$'], '-yl':['Probability distribution $P(k_{in})$'], '-axisfsize':['large'], '-lb':['1.21'], '-g':[0]})
 
     fig = p.plt.figure()
 
@@ -79,7 +81,8 @@ def main(argv):
                 , xlim=xlim
                 , ylim=ylim
                 , axisfsize=axisfsize
-                , logbinbase=lb)
+                , logbinbase=lb
+                , showexp=int(getargval(lsarg[i], '-g', [1])[0]))
 
         elif func in [p.FUNC_DISTINDEG, p.FUNC_DISTOUTDEG]:
             # degree distribution plot

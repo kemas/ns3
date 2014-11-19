@@ -38,6 +38,14 @@ MARKERS = {'var-':['wo-', 'ks-', 'wv-', 'kD-', 'w+-', 'kx-', 'w*-', 'k|-', 'wp-'
         , 'trisym':{'linestyle':'', 'markers':['o', 's', '^', 'v', 'D', 'p', '+', 'x', '*', '|', '.', ',', '1', '2', '3', '4'],  'markerfacecolors':['0.3', 'white', 'black']}
         , 'tricol-':{'linestyle':'-', 'markers':['o', 's', '^', 'v', 'D', 'p', '+', 'x', '*', '|', '.', ',', '1', '2', '3', '4'],  'markerfacecolors':['red', 'blue', 'orange']}
         , 'tricol':{'linestyle':'', 'markers':['o', 's', '^', 'v', 'D', 'p', '+', 'x', '*', '|', '.', ',', '1', '2', '3', '4'],  'markerfacecolors':['red', 'blue', 'orange']}
+        , 'trired-':{'linestyle':'-', 'markers':['o', 's', '^', 'v', 'D', 'p', '+', 'x', '*', '|', '.', ',', '1', '2', '3', '4'],  'markerfacecolors':['red']}
+        , 'trired':{'linestyle':'', 'markers':['o', 's', '^', 'v', 'D', 'p', '+', 'x', '*', '|', '.', ',', '1', '2', '3', '4'],  'markerfacecolors':['red']}
+        , 'triblue-':{'linestyle':'-', 'markers':['o', 's', '^', 'v', 'D', 'p', '+', 'x', '*', '|', '.', ',', '1', '2', '3', '4'],  'markerfacecolors':['blue']}
+        , 'triblue:':{'linestyle':':', 'markers':['o', 's', '^', 'v', 'D', 'p', '+', 'x', '*', '|', '.', ',', '1', '2', '3', '4'],  'markerfacecolors':['blue']}
+        , 'triblue':{'linestyle':'', 'markers':['o', 's', '^', 'v', 'D', 'p', '+', 'x', '*', '|', '.', ',', '1', '2', '3', '4'],  'markerfacecolors':['blue']}
+        , 'triorange-':{'linestyle':'-', 'markers':['o', 's', '^', 'v', 'D', 'p', '+', 'x', '*', '|', '.', ',', '1', '2', '3', '4'],  'markerfacecolors':['orange']}
+        , 'triorange:':{'linestyle':':', 'markers':['o', 's', '^', 'v', 'D', 'p', '+', 'x', '*', '|', '.', ',', '1', '2', '3', '4'],  'markerfacecolors':['orange']}
+        , 'triorange':{'linestyle':'', 'markers':['o', 's', '^', 'v', 'D', 'p', '+', 'x', '*', '|', '.', ',', '1', '2', '3', '4'],  'markerfacecolors':['orange']}
         , 'black-':['ko-', 'ks-', 'kv-', 'kD-', 'k+-', 'kx-', 'k*-', 'k|-', 'kp-', 'k.-', 'k,-', 'k1-', 'k2-', 'k3-', 'k4-']
         , 'black':['ko', 'ks', 'kv', 'kD', 'k+', 'kx', 'k*', 'k|', 'kp', 'k.', 'k,', 'k1', 'k2', 'k3', 'k4']
         , 'white-':['wo-', 'ws-', 'wv-', 'wD-', 'w+-', 'wx-', 'w*-', 'w|-', 'wp-', 'w.-', 'w,-', 'w1-', 'w2-', 'w3-', 'w4-']
@@ -47,6 +55,58 @@ MARKERS = {'var-':['wo-', 'ks-', 'wv-', 'kD-', 'w+-', 'kx-', 'w*-', 'k|-', 'wp-'
         , 'green':['go', 'gs', 'gv', 'gD', 'g+', 'gx', 'g*', 'g|', 'gp', 'g.', 'g,', 'g1', 'g2', 'g3', 'g4']
         , 'blue':['bo', 'bs', 'bv', 'bD', 'b+', 'bx', 'b*', 'b|', 'bp', 'b.', 'b,', 'b1', 'b2', 'b3', 'b4']
 }
+
+def preparetrimarker(markset):
+    tri = MARKERS[markset]
+    markers = iter(tri['markers'])
+    markerfacecolors = iter(tri['markerfacecolors'])
+    linestyle = ''
+    if markset[-1] in LINESTYLES:
+        linestyle = markset[-1]
+    
+    return markers, markerfacecolors, linestyle
+
+def prepareunimarker(markset):
+    return iter(MARKERS[markset])
+
+def gettrimarker(markset, markers, markerfacecolors, counter):
+    if counter % 3 == 0:
+        try:
+            marker = markers.next()
+        except StopIteration:
+            tri = MARKERS[markset]
+            markers = iter(tri['markers'])
+            marker = markers.next()
+    else:
+        marker = None
+
+    counter += 1
+
+    try:
+        markerfacecolor = markerfacecolors.next()
+    except StopIteration:
+        tri = MARKERS[markset]
+        markerfacecolors = iter(tri['markerfacecolors'])
+        markerfacecolor = markerfacecolors.next()
+
+    return markers, marker, markerfacecolors, markerfacecolor, counter
+
+def getunimarker(markset, itm, isline):
+    try:
+        mark = itm.next()
+        if not isline and markset[:-1] == '-':
+            mark = mark[:-1]
+    except StopIteration:
+        itm = iter(MARKERS[markset])
+        mark = itm.next()
+
+    markerfacecolor = mark[0]
+    marker = mark[1]
+    linestyle = ''
+    if len(mark) > 2:
+        linestyle = mark[2]
+
+    return itm, marker, markerfacecolor, linestyle
 
 def drawhistogram(ds, xlabel, labels, nbins=50, normed=False, facecolor='green', alpha=0.5, histtype='step', log=False):
     # the histogram of the degree distribution
@@ -84,11 +144,17 @@ def logbins(amax, amin=0, base=LOGBINBASE):
  
     return bins
 
-def drawloglogdist(ds, xlabel, ylabel, title, labels, markset='var', density=True, xlim=None, ylim=None, axisfsize=None, logbinbase=LOGBINBASE):
+def drawloglogdist(ds, xlabel, ylabel, title, labels, markset='var', density=True, xlim=None, ylim=None, axisfsize=None, logbinbase=LOGBINBASE, showexp=True):
     # degree distribution in loglog scale
 
     lblgamma = u'%s = %%#.2f' % (GAMMA)
-    itm = iter(MARKERS[markset])
+
+    if markset[:3] == 'tri':
+        markers, markerfacecolors, linestyle = preparetrimarker(markset)
+        counter = 0
+    else:
+        itm = prepareunimarker(markset)
+
     j = 0
     for degrees, maxdegree in ds:
         lbins = logbins(maxdegree, amin=0, base=logbinbase)
@@ -104,20 +170,32 @@ def drawloglogdist(ds, xlabel, ylabel, title, labels, markset='var', density=Tru
                 logx.append(np.log10(x[i]))
                 logy.append(np.log10(y[i]))
 
-        try:
-            mark = itm.next()
-        except StopIteration:
-            itm = iter(MARKERS[markset])
-            mark = itm.next()
+        if markset[:3] == 'tri':
+            markers, marker, markerfacecolors, markerfacecolor, counter = gettrimarker(markset, markers, markerfacecolors, counter)
+            if newmarker:
+                marker = newmarker
+        else:
+            itm, marker, markerfacecolor, linestyle = getunimarker(markset, itm, isline)
 
         gamma, logA = np.polyfit(logx, logy, 1)
         p = np.poly1d([gamma, logA])
         if j < len(labels):
-            plt.plot(x, y, mark[:-1], label = '%s, %s' % (labels[j], lblgamma % (-1 * gamma)))
+            if showexp:
+                label = '%s, %s' % (labels[j], lblgamma % (-1 * gamma))
+            else:
+                label = labels[j]
+            #plt.plot(x, y, mark[:-1], label = '%s, %s' % (labels[j], lblgamma % (-1 * gamma)))
+            plt.plot(x, y, marker=marker, markerfacecolor=markerfacecolor, linestyle=linestyle, label=label)
             j += 1
         else:
-            plt.plot(x, y, mark[:-1], label = lblgamma % (-1 * gamma))
-        plt.plot(xforlog, 10**p(logx), mark[0] + ':')
+            if showexp:
+                label = lblgamma % (-1 * gamma)
+            else:
+                label = ''
+            #plt.plot(x, y, mark[:-1], label = lblgamma % (-1 * gamma))
+            plt.plot(x, y, marker=marker, markerfacecolor=markerfacecolor, linestyle=linestyle, label=label)
+        #plt.plot(xforlog, 10**p(logx), mark[0] + ':')
+        plt.plot(xforlog, 10**p(logx), markerfacecolor=markerfacecolor, linestyle=':')
 
     setaxislim(xlim, ylim, plt=plt)
 
@@ -160,58 +238,33 @@ def plotdata(ds, labels, title
     , isline=True
     , legloc=2
     , axisfsize=None
-    , fig=None):
+    , fig=None
+    , polyfit=False):
     # plot degree distribution from data set
     # data set is a list of x and y data to plot
 
-#    fig = plt.figure()
+    if not fig:
+        # fig not defined, create figure
+        fig = plt.figure()
+
     ax = fig.add_axes([0.1, 0.1, 0.6, 0.8])
 
     if markset[:3] == 'tri':
-        tri = MARKERS[markset]
-        markers = iter(tri['markers'])
-        markerfacecolors = iter(tri['markerfacecolors'])
-        linestyle = ''
-        if markset[-1] in LINESTYLES:
-            linestyle = markset[-1]
-
+        markers, markerfacecolors, linestyle = preparetrimarker(markset)
         counter = 0
     else:
-        itm = iter(MARKERS[markset])
+        itm = prepareunimarker(markset)
 
     maxxy = 0
     i = 0
     for xy in ds:
         # markers related
         if markset[:3] == 'tri':
-            if counter % 3 == 0:
-                try:
-                    marker = markers.next()
-                except StopIteration:
-                    markers = iter(tri['markers'])
-                    marker = markers.next()
-            counter += 1
-
-            try:
-                markerfacecolor = markerfacecolors.next()
-            except StopIteration:
-                markerfacecolors = iter(tri['markerfacecolors'])
-                markerfacecolor = markerfacecolors.next()
-
+            markers, newmarker, markerfacecolors, markerfacecolor, counter = gettrimarker(markset, markers, markerfacecolors, counter)
+            if newmarker:
+                marker = newmarker
         else:
-            try:
-                mark = itm.next()
-                if not isline and markset[:-1] == '-':
-                    mark = mark[:-1]
-            except StopIteration:
-                itm = iter(MARKERS[markset])
-                mark = itm.next()
-
-            markerfacecolor = mark[0]
-            marker = mark[1]
-            linestyle = ''
-            if len(mark) > 2:
-                linestyle = mark[2]
+            itm, marker, markerfacecolor, linestyle = getunimarker(markset, itm, isline)
 
         if i < len(labels):
             #ax.plot(xy[0], xy[1], mark, label=labels[i])
@@ -225,6 +278,13 @@ def plotdata(ds, labels, title
             currmaxxy = max(max(xy[0]), max(xy[1]))
             if maxxy < currmaxxy:
                 maxxy = currmaxxy
+
+        if polyfit:
+            z = np.polyfit(xy[0], xy[1], 3)
+            f = np.poly1d(z)
+            xfit = np.linspace(xy[0][0], xy[0][-1], 100)
+            yfit = f(xfit)
+            ax.plot(xfit, yfit, markerfacecolor=markerfacecolor, linestyle=':')
 
     if isbase:
         # create baseline x=y
@@ -267,9 +327,12 @@ def plotdegdist(ds, labels, markset='var'
     , xlim=None
     , ylim=None
     , axisfsize=None
-    , fig=None):
+    , fig=None
+    , polyfit=False):
     # plot degree distribution from data set
     # data set is a list of x and y data to plot
+
+    print nbins
 
     lsdeg = []
     for degrees in ds:
@@ -293,7 +356,7 @@ def plotdegdist(ds, labels, markset='var'
 #        lsdeg.append([x, y])
 
     plotdata(lsdeg, labels, title, xylabels
-        , markset, isbase=False, logx=logx, logy=logy, xlim=xlim, ylim=ylim, isline=False, axisfsize=axisfsize, fig=fig)
+        , markset, isbase=False, logx=logx, logy=logy, xlim=xlim, ylim=ylim, isline=False, axisfsize=axisfsize, fig=fig, polyfit=polyfit)
 
     #print lsdeg
 
@@ -505,7 +568,7 @@ def readargv(argv, pos=1, opt='', dictarg={}):
             dictarg['func'] = currarg
             currarg = 'files'
 
-        elif currarg not in ['-l', '-m', '-s', '-x', '-r', '-xl', '-yl', '-t', '-logx', '-logy', '-loc', '-b', '-xlim', '-ylim', '-v', '-axisfsize', '-j', '-lb']:
+        elif currarg not in ['-l', '-m', '-s', '-x', '-r', '-xl', '-yl', '-t', '-logx', '-logy', '-loc', '-b', '-xlim', '-ylim', '-v', '-axisfsize', '-j', '-lb', '-g']:
             printusage()
             return
 
@@ -630,7 +693,8 @@ def main(argv):
             , xlim=xlim
             , ylim=ylim
             , axisfsize=axisfsize
-            , logbinbase=lb)
+            , logbinbase=lb
+            , showexp=int(getargval(dictarg, '-g', [1])[0]))
 
         processplot(plt, getargval(dictarg, '-s', [None])[0])
 
