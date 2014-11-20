@@ -618,6 +618,29 @@ python scratch/plot.py -fc \
 -t 'Cascading failure with different $\langle{dep}\rangle$ on generated networks' \
 -m tricol
 
+# the effect of degree of dependency <dep> on cascading failure in color
+python scratch/plot.py -fc \
+    simdata/svcsimn_10k_10k_d2_a1_i10_avg1_8.json \
+    simdata/expsvcsimn_10k_10k_d2_a1_i10_avg1_8.json \
+    simdata/randsvcsimn_10k_10k_d2_a1_i10_avg1_8.json \
+    simdata/svcsimn_10k_10k_d3_a1_i10_avg1_8.json \
+    simdata/expsvcsimn_10k_10k_d3_a1_i10_avg1_8.json \
+    simdata/randsvcsimn_10k_10k_d3_a1_i10_avg1_8.json \
+    simdata/svcsimn_10k_10k_d4_a1_i10_avg1_8.json \
+    simdata/expsvcsimn_10k_10k_d4_a1_i10_avg1_8.json \
+    simdata/randsvcsimn_10k_10k_d4_a1_i10_avg1_8.json \
+-xl 'Random failed services $r$ (in fraction)' \
+-yl 'Cascade failed services $n_c$ (in fraction)' \
+-t 'Cascading failure with different $\langle{dep}\rangle$ on generated networks' \
+-m tricol
+
+#    simdata/svcsimn_10k_10k_d5_a1_i10_avg1_8.json \
+#    simdata/expsvcsimn_10k_10k_d5_a1_i10_avg1_8.json \
+#    simdata/randsvcsimn_10k_10k_d5_a1_i10_avg1_8.json \
+#    simdata/svcsimn_10k_10k_d6_a1_i10_avg1_8.json \
+#    simdata/expsvcsimn_10k_10k_d6_a1_i10_avg1_8.json \
+#    simdata/randsvcsimn_10k_10k_d6_a1_i10_avg1_8.json \
+
 # the effect of degree of alternative <alt> on cascading failure in color
 python scratch/plot.py -fc \
     simdata/svcsim_10k_10k_d3_a1_i10_avg1_4.json \
@@ -638,9 +661,6 @@ python scratch/plot.py -fc \
 -m tricol
 
 python scratch/plot.py -fc \
-    simdata/svcsimn_10k_10k_d2_a1_i10_avg1_8.json \
-    simdata/expsvcsimn_10k_10k_d2_a1_i10_avg1_8.json \
-    simdata/randsvcsimn_10k_10k_d2_a1_i10_avg1_8.json \
     simdata/svcsimn_10k_10k_d2_a2_i10_avg1_8.json \
     simdata/expsvcsimn_10k_10k_d2_a2_i10_avg1_8.json \
     simdata/randsvcsimn_10k_10k_d2_a2_i10_avg1_8.json \
@@ -652,8 +672,12 @@ python scratch/plot.py -fc \
     simdata/randsvcsimn_10k_10k_d2_a4_i10_avg1_8.json \
 -xl 'Random failed services $r$ (in fraction)' \
 -yl 'Cascade failed services $n_c$ (in fraction)' \
--t 'Cascading failure with different degree of alternative $\langle alt \rangle$' \
+-t 'Cascading failure with different $\langle{alt}\rangle$ on generated networks' \
 -m tricol
+
+#    simdata/svcsimn_10k_10k_d2_a1_i10_avg1_8.json \
+#    simdata/expsvcsimn_10k_10k_d2_a1_i10_avg1_8.json \
+#    simdata/randsvcsimn_10k_10k_d2_a1_i10_avg1_8.json \
 
 python scratch/plot.py -fc \
     simdata/svcsimn_10k_10k_d7_a1_i10_1.json \
@@ -788,10 +812,28 @@ python scratch/plot.py -fc \
 
 python scratch/plot.py -fc \
     simdata/pwsvcsim_avg1_16.json \
+    simdata/pwsvcsim_a2_avg1_16.json \
+    simdata/pwsvcsim_a3_avg1_16.json \
+-xl 'Random failed services $r$ (in fraction)' \
+-yl 'Cascade failed services $n_c$ (in fraction)' \
+-t 'Cascading failure with different $\langle{alt}\rangle$ on real networks' \
+-m green -j 500
+
+python scratch/plot.py -fc \
+    simdata/pwsvcsim_avg1_16.json \
     simdata/pwsvcsim_d2_avg1_16.json \
     simdata/pwsvcsim_d3_avg1_16.json \
     simdata/pwsvcsim_d4_avg1_16.json \
 -m tricol -l 1 2 3 4 -loc 2 -j 500
+
+python scratch/plot.py -fc \
+    simdata/pwsvcsim_avg1_16.json \
+    simdata/pwsvcsim_d2_avg1_16.json \
+    simdata/pwsvcsim_d3_avg1_16.json \
+-xl 'Random failed services $r$ (in fraction)' \
+-yl 'Cascade failed services $n_c$ (in fraction)' \
+-t 'Cascading failure with different $\langle{dep}\rangle$ on real networks' \
+-m white -j 500
 
 python scratch/plot.py -fc \
     simdata/lgsvcsim_avg1_16.json \
@@ -800,3 +842,10 @@ python scratch/plot.py -fc \
     simdata/lgsvcsim_a3_avg1_16.json \
     simdata/lgsvcsim_a4_avg1_16.json -j 10 \
 -m tricol- -l a0 a1 a2 a3 a4 -loc 4
+
+python scratch/plot.py -fc \
+    simdata/lgsvcsim_avg1_16.json \
+    simdata/lgsvcsim_a2_avg1_16.json \
+    simdata/lgsvcsim_a3_avg1_16.json \
+-m magenta -j 10
+

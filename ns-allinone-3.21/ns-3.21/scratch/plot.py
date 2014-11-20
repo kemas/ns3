@@ -30,9 +30,9 @@ MARKERS = {'var-':['wo-', 'ks-', 'wv-', 'kD-', 'w+-', 'kx-', 'w*-', 'k|-', 'wp-'
                  'ko-', 'ws-', 'kv-', 'wD-', 'k+-', 'wx-', 'k*-', 'w|-', 'kp-', 'w.-', 'k,-', 'w1-', 'k2-', 'w3-', 'k4-']
         , 'var':['wo', 'ks', 'wv', 'kD', 'w+', 'kx', 'w*', 'k|', 'wp', 'k.', 'w,', 'k1', 'w2', 'k3', 'w4',\
                  'ko', 'ws', 'kv', 'wD', 'k+', 'wx', 'k*', 'w|', 'kp', 'w.', 'k,', 'w1', 'k2', 'w3', 'k4']
-        , 'sym-':['wo-', 'ko-', 'ws-', 'ks-', 'wv-', 'kv-', 'wD-', 'kD-', 'w+-', 'k+-', 'wx-', 'kx-', 'w*-', 'k*-', 'w|-', 'k|-',\
+        , 'sym-':['wo-', 'ko-', 'ws-', 'ks-', 'w^-', 'k^-', 'wv-', 'kv-', 'wD-', 'kD-', 'w+-', 'k+-', 'wx-', 'kx-', 'w*-', 'k*-', 'w|-', 'k|-',\
                  'wp-', 'kp-', 'w.-', 'k.-', 'w,-', 'k,-', 'w1-', 'k1-', 'w2-', 'k2-', 'w3-', 'k3-', 'w4-', 'k4-']
-        , 'sym':['wo', 'ko', 'ws', 'ks', 'wv', 'kv', 'wD', 'kD', 'w^', 'k^', 'wx', 'kx', 'w*', 'k*', 'w|', 'k|',\
+        , 'sym':['wo', 'ko', 'ws', 'ks', 'w^', 'k^', 'wv', 'kv', 'wD', 'kD', 'w^', 'k^', 'wx', 'kx', 'w*', 'k*', 'w|', 'k|',\
                  'wp', 'kp', 'w.', 'k.', 'w,', 'k,', 'w1', 'k1', 'w2', 'k2', 'w3', 'k3', 'w4', 'k4']
         , 'trisym-':{'linestyle':'-', 'markers':['o', 's', '^', 'v', 'D', 'p', '+', 'x', '*', '|', '.', ',', '1', '2', '3', '4'],  'markerfacecolors':['0.3', 'white', 'black']}
         , 'trisym':{'linestyle':'', 'markers':['o', 's', '^', 'v', 'D', 'p', '+', 'x', '*', '|', '.', ',', '1', '2', '3', '4'],  'markerfacecolors':['0.3', 'white', 'black']}
@@ -46,14 +46,16 @@ MARKERS = {'var-':['wo-', 'ks-', 'wv-', 'kD-', 'w+-', 'kx-', 'w*-', 'k|-', 'wp-'
         , 'triorange-':{'linestyle':'-', 'markers':['o', 's', '^', 'v', 'D', 'p', '+', 'x', '*', '|', '.', ',', '1', '2', '3', '4'],  'markerfacecolors':['orange']}
         , 'triorange:':{'linestyle':':', 'markers':['o', 's', '^', 'v', 'D', 'p', '+', 'x', '*', '|', '.', ',', '1', '2', '3', '4'],  'markerfacecolors':['orange']}
         , 'triorange':{'linestyle':'', 'markers':['o', 's', '^', 'v', 'D', 'p', '+', 'x', '*', '|', '.', ',', '1', '2', '3', '4'],  'markerfacecolors':['orange']}
-        , 'black-':['ko-', 'ks-', 'kv-', 'kD-', 'k+-', 'kx-', 'k*-', 'k|-', 'kp-', 'k.-', 'k,-', 'k1-', 'k2-', 'k3-', 'k4-']
-        , 'black':['ko', 'ks', 'kv', 'kD', 'k+', 'kx', 'k*', 'k|', 'kp', 'k.', 'k,', 'k1', 'k2', 'k3', 'k4']
-        , 'white-':['wo-', 'ws-', 'wv-', 'wD-', 'w+-', 'wx-', 'w*-', 'w|-', 'wp-', 'w.-', 'w,-', 'w1-', 'w2-', 'w3-', 'w4-']
-        , 'white':['wo', 'ws', 'wv', 'wD', 'w+', 'wx', 'w*', 'w|', 'wp', 'w.', 'w,', 'w1', 'w2', 'w3', 'w4']
-        , 'red-':['ro-', 'rs-', 'rv-', 'rD-', 'r+-', 'rx-', 'r*-', 'r|-', 'rp-', 'r.-', 'r,-', 'r1-', 'r2-', 'r3-', 'r4-']
-        , 'red':['ro', 'rs', 'rv', 'rD', 'r+', 'rx', 'r*', 'r|', 'rp', 'r.', 'r,', 'r1', 'r2', 'r3', 'r4']
-        , 'green':['go', 'gs', 'gv', 'gD', 'g+', 'gx', 'g*', 'g|', 'gp', 'g.', 'g,', 'g1', 'g2', 'g3', 'g4']
-        , 'blue':['bo', 'bs', 'bv', 'bD', 'b+', 'bx', 'b*', 'b|', 'bp', 'b.', 'b,', 'b1', 'b2', 'b3', 'b4']
+        , 'black-':['ko-', 'ks-', 'k^-', 'kv-', 'kD-', 'k+-', 'kx-', 'k*-', 'k|-', 'kp-', 'k.-', 'k,-', 'k1-', 'k2-', 'k3-', 'k4-']
+        , 'black':['ko', 'ks', 'k^', 'kv', 'kD', 'k+', 'kx', 'k*', 'k|', 'kp', 'k.', 'k,', 'k1', 'k2', 'k3', 'k4']
+        , 'white-':['wo-', 'ws-', 'w^-', 'wv-', 'wD-', 'w+-', 'wx-', 'w*-', 'w|-', 'wp-', 'w.-', 'w,-', 'w1-', 'w2-', 'w3-', 'w4-']
+        , 'white':['wo', 'ws', 'w^', 'wv', 'wD', 'w+', 'wx', 'w*', 'w|', 'wp', 'w.', 'w,', 'w1', 'w2', 'w3', 'w4']
+        , 'red-':['ro-', 'rs-', 'r^-', 'rv-', 'rD-', 'r+-', 'rx-', 'r*-', 'r|-', 'rp-', 'r.-', 'r,-', 'r1-', 'r2-', 'r3-', 'r4-']
+        , 'red':['ro', 'rs', 'r^', 'rv', 'rD', 'r+', 'rx', 'r*', 'r|', 'rp', 'r.', 'r,', 'r1', 'r2', 'r3', 'r4']
+        , 'green':['go', 'gs', 'g^', 'gv', 'gD', 'g+', 'gx', 'g*', 'g|', 'gp', 'g.', 'g,', 'g1', 'g2', 'g3', 'g4']
+        , 'blue':['bo', 'bs', 'b^', 'bv', 'bD', 'b+', 'bx', 'b*', 'b|', 'bp', 'b.', 'b,', 'b1', 'b2', 'b3', 'b4']
+        , 'magenta':['mo', 'ms', 'm^', 'mv', 'mD', 'm+', 'mx', 'm*', 'm|', 'mp', 'm.', 'm,', 'm1', 'm2', 'm3', 'm4']
+        , 'cyan':['co', 'cs', 'c^', 'cv', 'cD', 'c+', 'cx', 'c*', 'c|', 'cp', 'c.', 'c,', 'c1', 'c2', 'c3', 'c4']
 }
 
 def preparetrimarker(markset):
@@ -367,13 +369,14 @@ def plotfailnodes(ds, labels, markset='var'
     , legloc=2
     , xlim=None
     , ylim=None
-    , axisfsize=None):
+    , axisfsize=None
+    , fig=None):
 
     # plot fail nodes from data set
     # data set is a list of x and y data to plot
 
     plotdata(ds, labels, title, xylabels
-        , markset, isbase, legloc=legloc, xlim=xlim, ylim=ylim, axisfsize=axisfsize)
+        , markset, isbase, legloc=legloc, xlim=xlim, ylim=ylim, axisfsize=axisfsize, fig=fig)
 
 def plotcasceff(ds, labels, randomfails, xylabels, xaxis
     , markset='var'

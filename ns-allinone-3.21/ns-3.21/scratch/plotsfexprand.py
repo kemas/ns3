@@ -1,7 +1,3 @@
-#python scratch/plot.py -di simdata/rsvcsim_10k_10k_d3_a5_i10_1d.json -m black -logx 1 -logy 1 -xlim 1 500 -ylim 1e-6 1 -t "Exponential" -xl 'In-degree $k_{in}$' -yl 'Probability distribution $P(k_{in})$' -axisfsize large
-#python scratch/plot.py -di simdata/randsvcsim_10k_10k_d3_a5_i10_1d.json -m black -logx 1 -logy 1 -xlim 1 500 -ylim 1e-6 1 -t "Random" -xl 'In-degree $k_{in}$' -yl 'Probability distribution $P(k_{in})$' -axisfsize large
-#python scratch/plot.py -li simdata/svcsim_10k_10k_d3_a3_i10_5.json -m black- -logx 1 -logy 1 -xlim 1 500 -ylim 1e-6 1 -t "Scale-free" -xl 'In-degree $k_{in}$' -yl 'Probability distribution $P(k_{in})$' -axisfsize large
-
 import sys
 import json
 import plot as p
@@ -14,6 +10,8 @@ def getargval(dictarg, key, ifnone=p.IFNONE):
 
 def main(argv):
     lsarg = []
+
+
     #lsarg.append({'func':['-di'], 'files':['simdata/rsvcsim_10k_10k_d3_a5_i10_1d.json'], '-m':['triblue'], '-logx':[1], '-logy':[1], '-xlim':[1, 500], '-ylim':[1e-6, 1], '-t':['Exponential'], '-xl':['In-degree $k_{in}$'], '-yl':['Probability distribution $P(k_{in})$'], '-axisfsize':['large'], '-b':['100']})
     lsarg.append({'func':['-di'], 'files':['simdata/rsvcsim_10k_10k_d3_a5_i10_1d.json'], '-m':['triblue'], '-b':['100']})
     #lsarg.append({'func':['-di'], 'files':['simdata/randsvcsim_10k_10k_d3_a5_i10_1d.json'], '-m':['triorange'], '-logx':[1], '-logy':[1], '-xlim':[1, 500], '-ylim':[1e-6, 1], '-t':['Random'], '-xl':['In-degree $k_{in}$'], '-yl':['Probability distribution $P(k_{in})$'], '-axisfsize':['large'], '-b':['100']})
