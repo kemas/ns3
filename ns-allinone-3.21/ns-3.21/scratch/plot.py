@@ -173,7 +173,7 @@ def drawloglogdist(ds, xlabel, ylabel, title, labels, markset='var', density=Tru
                 logy.append(np.log10(y[i]))
 
         if markset[:3] == 'tri':
-            markers, marker, markerfacecolors, markerfacecolor, counter = gettrimarker(markset, markers, markerfacecolors, counter)
+            markers, newmarker, markerfacecolors, markerfacecolor, counter = gettrimarker(markset, markers, markerfacecolors, counter)
             if newmarker:
                 marker = newmarker
         else:

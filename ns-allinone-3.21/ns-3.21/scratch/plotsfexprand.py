@@ -13,10 +13,11 @@ def main(argv):
 
 
     #lsarg.append({'func':['-di'], 'files':['simdata/rsvcsim_10k_10k_d3_a5_i10_1d.json'], '-m':['triblue'], '-logx':[1], '-logy':[1], '-xlim':[1, 500], '-ylim':[1e-6, 1], '-t':['Exponential'], '-xl':['In-degree $k_{in}$'], '-yl':['Probability distribution $P(k_{in})$'], '-axisfsize':['large'], '-b':['100']})
-    lsarg.append({'func':['-di'], 'files':['simdata/rsvcsim_10k_10k_d3_a5_i10_1d.json'], '-m':['triblue'], '-b':['100']})
+    lsarg.append({'func':['-di'], 'files':['simdata/expsvcsimn_10k_10k_d2_a7_i10_avg1_8.json'], '-m':['triblue'], '-b':['100']})
     #lsarg.append({'func':['-di'], 'files':['simdata/randsvcsim_10k_10k_d3_a5_i10_1d.json'], '-m':['triorange'], '-logx':[1], '-logy':[1], '-xlim':[1, 500], '-ylim':[1e-6, 1], '-t':['Random'], '-xl':['In-degree $k_{in}$'], '-yl':['Probability distribution $P(k_{in})$'], '-axisfsize':['large'], '-b':['100']})
-    lsarg.append({'func':['-di'], 'files':['simdata/randsvcsim_10k_10k_d3_a5_i10_1d.json'], '-m':['triorange'], '-b':['100']})
-    lsarg.append({'func':['-li'], 'files':['simdata/svcsim_10k_10k_d3_a3_i10_5.json'], '-m':['trired'], '-logx':[1], '-logy':[1], '-xlim':[1, 500], '-ylim':[1e-6, 1], '-t':['Scale-free, exponential, and random network degree distribution'], '-xl':['In-degree $k_{in}$'], '-yl':['Probability distribution $P(k_{in})$'], '-axisfsize':['large'], '-lb':['1.21'], '-g':[0]})
+    lsarg.append({'func':['-di'], 'files':['simdata/randsvcsimn_10k_10k_d2_a11_i10_avg1_8.json'], '-m':['triorange'], '-b':['100']})
+    #lsarg.append({'func':['-li'], 'files':['simdata/svcsim_10k_10k_d3_a3_i10_5.json'], '-m':['trired'], '-logx':[1], '-logy':[1], '-xlim':[1, 500], '-ylim':[1e-6, 1], '-t':['Scale-free, exponential, and random network degree distribution'], '-xl':['In-degree $k_{in}$'], '-yl':['Probability distribution $P(k_{in})$'], '-axisfsize':['large'], '-lb':['1.21'], '-g':[0]})
+    lsarg.append({'func':['-li'], 'files':['simdata/svcsimn_10k_10k_d2_a7_i10_avg1_8.json'], '-m':['trired'], '-logx':[1], '-logy':[1], '-xlim':[1, 500], '-ylim':[1e-6, 1], '-t':['Scale-free, exponential, and random network degree distribution'], '-xl':['In-degree $k_{in}$'], '-yl':['Probability distribution $P(k_{in})$'], '-axisfsize':['large'], '-lb':['1.21'], '-g':[0]}) # gamma 2.22
 
     fig = p.plt.figure()
 

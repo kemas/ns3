@@ -116,6 +116,34 @@ def getargval(dictarg, key, ifnone=[]):
     except:
         printusage()
 
+# some maybe-useful functions
+
+class PlotJson:
+    def __init__(self, ojs):
+        self.ojs = ojs
+
+    def getfield(self, key):
+        return self.ojs[key]
+
+    def getoutdegree(self):
+        return self.getfield('outdegree')
+
+    def countcomposite(self):
+        count = 0
+        for mand in self.getoutdegree():
+            if mand > 0:
+                count += 1
+
+        return count
+
+    def countatomic(self):
+        count = 0
+        for mand in self.getoutdegree():
+            if mand == 0:
+                count += 1
+
+        return count
+
 def main(argv):
     dictarg = readargv(argv)
     average(getargval(dictarg, '-a')[0], files=getargval(dictarg, '-f'), fields=getargval(dictarg, '-c'))
