@@ -144,6 +144,12 @@ class PlotJson:
 
         return count
 
+    def getcascfbyrandfacc():
+        # get cumulative number of cascading failure by
+        # cumulative number of random failure
+
+        pass
+
 def main(argv):
     dictarg = readargv(argv)
     average(getargval(dictarg, '-a')[0], files=getargval(dictarg, '-f'), fields=getargval(dictarg, '-c'))

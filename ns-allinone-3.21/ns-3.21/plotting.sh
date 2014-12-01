@@ -197,6 +197,71 @@ python scratch/plot.py -fc \
 -m sym
 
 python scratch/plot.py -e \
+    simdata/svcsimn_10k_10k_d2_a1_i10_avg1_8.json \
+    simdata/svcsimn_10k_10k_d2_a2_i10_avg1_8.json \
+    simdata/svcsimn_10k_10k_d2_a3_i10_avg1_8.json \
+    simdata/svcsimn_10k_10k_d2_a4_i10_avg1_8.json \
+-r 0.1 0.2 0.3 0.4 0.5 0.6 0.7 \
+-l r=0.1 r=0.2 r=0.3 r=0.4 r=0.5 r=0.6 r=0.7 \
+-xl 'Degree of alternative $\langle alt \rangle$' \
+-yl 'Cascade failed services $n_c$ (in fraction)' \
+-t 'The effect of degree of alternative on cascading failure in scale-free service network' \
+-x 0 0.5 1 1.5 \
+-m black- -loc 2 -v simdata/plotfunceff_sf_a1_a4.json
+
+python scratch/plot.py -e \
+    simdata/expsvcsimn_10k_10k_d2_a1_i10_avg1_8.json \
+    simdata/expsvcsimn_10k_10k_d2_a2_i10_avg1_8.json \
+    simdata/expsvcsimn_10k_10k_d2_a3_i10_avg1_8.json \
+    simdata/expsvcsimn_10k_10k_d2_a4_i10_avg1_8.json \
+-r 0.1 0.2 0.3 0.4 0.5 0.6 0.7 \
+-l r=0.1 r=0.2 r=0.3 r=0.4 r=0.5 r=0.6 r=0.7 \
+-xl 'Degree of alternative $\langle alt \rangle$' \
+-yl 'Cascade failed services $n_c$ (in fraction)' \
+-t 'The effect of degree of alternative on cascading failure in scale-free service network' \
+-x 0 0.5 1 1.5 \
+-m black- -loc 2 -v simdata/plotfunceff_exp_a1_a4.json
+
+python scratch/plot.py -e \
+    simdata/randsvcsimn_10k_10k_d2_a1_i10_avg1_8.json \
+    simdata/randsvcsimn_10k_10k_d2_a2_i10_avg1_8.json \
+    simdata/randsvcsimn_10k_10k_d2_a3_i10_avg1_8.json \
+    simdata/randsvcsimn_10k_10k_d2_a4_i10_avg1_8.json \
+-r 0.1 0.2 0.3 0.4 0.5 0.6 0.7 \
+-l r=0.1 r=0.2 r=0.3 r=0.4 r=0.5 r=0.6 r=0.7 \
+-xl 'Degree of alternative $\langle alt \rangle$' \
+-yl 'Cascade failed services $n_c$ (in fraction)' \
+-t 'The effect of degree of alternative on cascading failure in scale-free service network' \
+-x 0 0.5 1 1.5 \
+-m black- -loc 2 -v simdata/plotfunceff_rand_a1_a4.json
+
+python scratch/plot.py -e \
+    simdata/pwsvcsim_avg1_16.json \
+    simdata/pwsvcsim_a2_avg1_16.json \
+    simdata/pwsvcsim_a3_avg1_16.json \
+    simdata/pwsvcsim_a4_avg1_16.json \
+-r 0.1 0.2 0.3 0.4 0.5 0.6 0.7 \
+-l r=0.1 r=0.2 r=0.3 r=0.4 r=0.5 r=0.6 r=0.7 \
+-xl 'Degree of alternative $\langle alt \rangle$' \
+-yl 'Cascade failed services $n_c$ (in fraction)' \
+-t 'The effect of degree of alternative on cascading failure in scale-free service network' \
+-x 0 0.5 1 1.5 \
+-m black- -loc 2 -v simdata/plotfunceff_pw_a1_a4.json
+
+python scratch/plot.py -e \
+    simdata/lgsvcsim_a1_avg1_16.json \
+    simdata/lgsvcsim_a2_avg1_16.json \
+    simdata/lgsvcsim_a3_avg1_16.json \
+    simdata/lgsvcsim_a4_avg1_16.json \
+-r 0.1 0.2 0.3 0.4 0.5 0.6 0.7 \
+-l r=0.1 r=0.2 r=0.3 r=0.4 r=0.5 r=0.6 r=0.7 \
+-xl 'Degree of alternative $\langle alt \rangle$' \
+-yl 'Cascade failed services $n_c$ (in fraction)' \
+-t 'The effect of degree of alternative on cascading failure in scale-free service network' \
+-x 0 0.5 1 1.5 \
+-m black- -loc 2 -v simdata/plotfunceff_lg_a1_a4.json
+
+python scratch/plot.py -e \
     simdata/svcsim_10k_10k_d3_a1_i10_avg1_4.json \
     simdata/svcsim_10k_10k_d3_a2_i10_avg1_4.json \
     simdata/svcsim_10k_10k_d3_a3_i10_avg1_6.json \
@@ -629,7 +694,7 @@ python scratch/plot.py -fc \
     simdata/svcsimn_10k_10k_d4_a1_i10_avg1_8.json \
     simdata/expsvcsimn_10k_10k_d4_a1_i10_avg1_8.json \
     simdata/randsvcsimn_10k_10k_d4_a1_i10_avg1_8.json \
--xl 'Random failed services $r$ (in fraction)' \
+-xl 'Random failed services $n_r$ (in fraction)' \
 -yl 'Cascade failed services $n_c$ (in fraction)' \
 -t 'Cascading failure with different $\langle{dep}\rangle$ on generated networks' \
 -m tricol
@@ -670,7 +735,7 @@ python scratch/plot.py -fc \
     simdata/svcsimn_10k_10k_d2_a4_i10_avg1_8.json \
     simdata/expsvcsimn_10k_10k_d2_a4_i10_avg1_8.json \
     simdata/randsvcsimn_10k_10k_d2_a4_i10_avg1_8.json \
--xl 'Random failed services $r$ (in fraction)' \
+-xl 'Random failed services $n_r$ (in fraction)' \
 -yl 'Cascade failed services $n_c$ (in fraction)' \
 -t 'Cascading failure with different $\langle{alt}\rangle$ on generated networks' \
 -m tricol

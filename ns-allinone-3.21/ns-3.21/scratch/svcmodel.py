@@ -46,6 +46,7 @@ def randomfail(vertices):
     ###
     #print 'index: '+ str(idx)
     #print 'indegree: '+ str(vertices.getvertex(idx).getindegree())
+    #print '========'
     vertices.dofail(vertices.getindexbyact(index))
 
     vertices.analyzer.fail(

@@ -46,6 +46,8 @@ MARKERS = {'var-':['wo-', 'ks-', 'wv-', 'kD-', 'w+-', 'kx-', 'w*-', 'k|-', 'wp-'
         , 'triorange-':{'linestyle':'-', 'markers':['o', 's', '^', 'v', 'D', 'p', '+', 'x', '*', '|', '.', ',', '1', '2', '3', '4'],  'markerfacecolors':['orange']}
         , 'triorange:':{'linestyle':':', 'markers':['o', 's', '^', 'v', 'D', 'p', '+', 'x', '*', '|', '.', ',', '1', '2', '3', '4'],  'markerfacecolors':['orange']}
         , 'triorange':{'linestyle':'', 'markers':['o', 's', '^', 'v', 'D', 'p', '+', 'x', '*', '|', '.', ',', '1', '2', '3', '4'],  'markerfacecolors':['orange']}
+        , 'tribrown':{'linestyle':'', 'markers':['o', 's', '^', 'v', 'D', 'p', '+', 'x', '*', '|', '.', ',', '1', '2', '3', '4'],  'markerfacecolors':['sienna']}
+        , 'trifive-':{'linestyle':'-', 'markers':['o', 's', '^', 'v', 'D', 'p', '+', 'x', '*', '|', '.', ',', '1', '2', '3', '4'],  'markerfacecolors':['red', 'blue', 'orange', 'green', 'cyan']}
         , 'black-':['ko-', 'ks-', 'k^-', 'kv-', 'kD-', 'k+-', 'kx-', 'k*-', 'k|-', 'kp-', 'k.-', 'k,-', 'k1-', 'k2-', 'k3-', 'k4-']
         , 'black':['ko', 'ks', 'k^', 'kv', 'kD', 'k+', 'kx', 'k*', 'k|', 'kp', 'k.', 'k,', 'k1', 'k2', 'k3', 'k4']
         , 'white-':['wo-', 'ws-', 'w^-', 'wv-', 'wD-', 'w+-', 'wx-', 'w*-', 'w|-', 'wp-', 'w.-', 'w,-', 'w1-', 'w2-', 'w3-', 'w4-']
@@ -334,7 +336,7 @@ def plotdegdist(ds, labels, markset='var'
     # plot degree distribution from data set
     # data set is a list of x and y data to plot
 
-    print nbins
+#    print nbins
 
     lsdeg = []
     for degrees in ds:
@@ -500,6 +502,8 @@ def loaddata(ds, func, data, filename, step=STEP, norm=True):
             else:
                 i += 1
 
+#        print 'i: %d' % i
+#        print 'nbofnodes: %d' % nbofnodes
         x = []
         y = []
         if found:
@@ -514,9 +518,10 @@ def loaddata(ds, func, data, filename, step=STEP, norm=True):
                     x.append(xval)
                     y.append(yval)
 #                    ###
-#                    print nodesremoved[j]
-#                    print data['nodesfail'][j]
-#                    print nodesremoved[j]
+#                    print 'nodesremoved[i] %d' % nodesremoved[j]
+#                    print "data['nodesfail'][j] %d" % data['nodesfail'][j]
+#                    print "xval %.2f" % xval
+#                    print "yval %.2f" % yval
 #                    print "------"
 #                print x
 #                print y

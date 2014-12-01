@@ -26,7 +26,7 @@ def getargval(dictarg, key, ifnone=p.IFNONE):
 def main(argv):
     lsarg = []
     lsarg.append({'func':['-fc'], 'files':['simdata/pwsvcsim_avg1_16.json', 'simdata/pwsvcsim_a2_avg1_16.json', 'simdata/pwsvcsim_a3_avg1_16.json'], '-m':['green'], '-j':[500]})
-    lsarg.append({'func':['-fc'], 'files':['simdata/lgsvcsim_avg1_16.json', 'simdata/lgsvcsim_a2_avg1_16.json', 'simdata/lgsvcsim_a3_avg1_16.json'], '-m':['magenta'], '-j':[10], '-t':['Cascading failure with different $\langle{alt}\\rangle$ on real networks'], '-xl':['Random failed services $r$ (in fraction)'], '-yl':['Cascade failed services $n_c$ (in fraction)']})
+    lsarg.append({'func':['-fc'], 'files':['simdata/lgsvcsim_avg1_16.json', 'simdata/lgsvcsim_a2_avg1_16.json', 'simdata/lgsvcsim_a3_avg1_16.json'], '-m':['cyan'], '-j':[10], '-t':['Cascading failure with different $\langle{alt}\\rangle$ on real networks'], '-xl':['Random failed services $n_r$ (in fraction)'], '-yl':['Cascade failed services $n_c$ (in fraction)']})
 
     fig = p.plt.figure()
 
