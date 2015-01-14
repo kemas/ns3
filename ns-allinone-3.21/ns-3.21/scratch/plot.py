@@ -25,6 +25,7 @@ FUNC_PRINTDEPTH = '-pd'
 FUNCOPTS = (FUNC_FAIL, FUNC_FAILCASC, FUNC_EFF, FUNC_LOGINDEG, FUNC_LOGOUTDEG, FUNC_HISTINDEG, FUNC_HISTOUTDEG, FUNC_DISTINDEG, FUNC_DISTOUTDEG, FUNC_PRINTDEPTH, FUNC_PLOTFROMFILE)
 LINESTYLES = ('-', '--', '-.', ':')
 FILENAME = 'depthstat.csv'
+LOCBUILTIN = 10 # largest number of legal legend location code
 
 MARKERS = {'var-':['wo-', 'ks-', 'wv-', 'kD-', 'w+-', 'kx-', 'w*-', 'k|-', 'wp-', 'k.-', 'w,-', 'k1-', 'w2-', 'k3-', 'w4-',\
                  'ko-', 'ws-', 'kv-', 'wD-', 'k+-', 'wx-', 'k*-', 'w|-', 'kp-', 'w.-', 'k,-', 'w1-', 'k2-', 'w3-', 'k4-']
@@ -273,7 +274,13 @@ def plotdata(ds, labels, title
         if i < len(labels):
             #ax.plot(xy[0], xy[1], mark, label=labels[i])
             ax.plot(xy[0], xy[1], label=labels[i], color='black', linestyle=linestyle, marker=marker, markerfacecolor=markerfacecolor)
+
+            if legloc > LOCBUILTIN:
+                # legend is written at the end of each series
+                ax.annotate(labels[i], xy=(xy[0][-1],xy[1][-1]), xytext=(10, 0), textcoords='offset points')
+
             i += 1
+
         else:
             #ax.plot(xy[0], xy[1], mark)
             ax.plot(xy[0], xy[1], color='black', linestyle=linestyle, marker=marker, markerfacecolor=markerfacecolor)
@@ -303,7 +310,8 @@ def plotdata(ds, labels, title
     ax.set_xlabel(xylabels['x'], fontsize=axisfsize)
     #ax.set_ylabel('$P(k_{in})$')
     ax.set_ylabel(xylabels['y'], fontsize=axisfsize)
-    if len(labels) > 0:
+    if len(labels) > 0 and legloc <= LOCBUILTIN:
+        # legend is localted according to legloc position
         #ax.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
         #ax.legend(bbox_to_anchor=(0, 1), ncol=2, loc=2, borderaxespad=0.)
         ax.legend(ncol=2, loc=legloc, borderaxespad=0.)
@@ -577,6 +585,7 @@ def readargv(argv, pos=1, opt='', dictarg={}):
             currarg = 'files'
 
         elif currarg not in ['-l', '-m', '-s', '-x', '-r', '-xl', '-yl', '-t', '-logx', '-logy', '-loc', '-b', '-xlim', '-ylim', '-v', '-axisfsize', '-j', '-lb', '-g']:
+            print "*** %s" % currarg
             printusage()
             return
 
