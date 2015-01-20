@@ -25,7 +25,9 @@ FUNC_PRINTDEPTH = '-pd'
 FUNCOPTS = (FUNC_FAIL, FUNC_FAILCASC, FUNC_EFF, FUNC_LOGINDEG, FUNC_LOGOUTDEG, FUNC_HISTINDEG, FUNC_HISTOUTDEG, FUNC_DISTINDEG, FUNC_DISTOUTDEG, FUNC_PRINTDEPTH, FUNC_PLOTFROMFILE)
 LINESTYLES = ('-', '--', '-.', ':')
 FILENAME = 'depthstat.csv'
-LOCBUILTIN = 10 # largest number of legal legend location code
+LOCONPLOT = 11 # legend is written at the end of each series
+LOCOUTRIGHT = 22 # legend is located outside the graph on the right
+LOCOUTBELOW = 29 # below the graph
 
 MARKERS = {'var-':['wo-', 'ks-', 'wv-', 'kD-', 'w+-', 'kx-', 'w*-', 'k|-', 'wp-', 'k.-', 'w,-', 'k1-', 'w2-', 'k3-', 'w4-',\
                  'ko-', 'ws-', 'kv-', 'wD-', 'k+-', 'wx-', 'k*-', 'w|-', 'kp-', 'w.-', 'k,-', 'w1-', 'k2-', 'w3-', 'k4-']
@@ -59,6 +61,8 @@ MARKERS = {'var-':['wo-', 'ks-', 'wv-', 'kD-', 'w+-', 'kx-', 'w*-', 'k|-', 'wp-'
         , 'blue':['bo', 'bs', 'b^', 'bv', 'bD', 'b+', 'bx', 'b*', 'b|', 'bp', 'b.', 'b,', 'b1', 'b2', 'b3', 'b4']
         , 'magenta':['mo', 'ms', 'm^', 'mv', 'mD', 'm+', 'mx', 'm*', 'm|', 'mp', 'm.', 'm,', 'm1', 'm2', 'm3', 'm4']
         , 'cyan':['co', 'cs', 'c^', 'cv', 'cD', 'c+', 'cx', 'c*', 'c|', 'cp', 'c.', 'c,', 'c1', 'c2', 'c3', 'c4']
+        , 'plus':['w+', 'k+']
+        , 'star':['w*', 'k*']
 }
 
 def preparetrimarker(markset):
@@ -149,7 +153,7 @@ def logbins(amax, amin=0, base=LOGBINBASE):
  
     return bins
 
-def drawloglogdist(ds, xlabel, ylabel, title, labels, markset='var', density=True, xlim=None, ylim=None, axisfsize=None, logbinbase=LOGBINBASE, showexp=True):
+def drawloglogdist(ds, xlabel, ylabel, title, labels, markset='var', density=True, xlim=None, ylim=None, axisfsize=None, logbinbase=LOGBINBASE, showexp=True, isline=False):
     # degree distribution in loglog scale
 
     lblgamma = u'%s = %%#.2f' % (GAMMA)
@@ -199,6 +203,7 @@ def drawloglogdist(ds, xlabel, ylabel, title, labels, markset='var', density=Tru
                 label = ''
             #plt.plot(x, y, mark[:-1], label = lblgamma % (-1 * gamma))
             plt.plot(x, y, marker=marker, markerfacecolor=markerfacecolor, linestyle=linestyle, label=label)
+
         #plt.plot(xforlog, 10**p(logx), mark[0] + ':')
         plt.plot(xforlog, 10**p(logx), markerfacecolor=markerfacecolor, linestyle=':')
 
@@ -209,7 +214,7 @@ def drawloglogdist(ds, xlabel, ylabel, title, labels, markset='var', density=Tru
     plt.xlabel(xlabel, fontsize=axisfsize)
     plt.ylabel(ylabel, fontsize=axisfsize)
 
-    plt.legend()
+    plt.legend(numpoints=1, loc=4)
 
 #    # inset
 #    from mpl_toolkits.axes_grid1.inset_locator import zoomed_inset_axes
@@ -243,16 +248,14 @@ def plotdata(ds, labels, title
     , isline=True
     , legloc=2
     , axisfsize=None
-    , fig=None
+    , ax=None
     , polyfit=False):
     # plot degree distribution from data set
     # data set is a list of x and y data to plot
 
-    if not fig:
-        # fig not defined, create figure
-        fig = plt.figure()
-
-    ax = fig.add_axes([0.1, 0.1, 0.6, 0.8])
+    if not ax:
+        # ax not defined, add axes
+        ax = plt.axes([0.1, 0.1, 0.6, 0.78])
 
     if markset[:3] == 'tri':
         markers, markerfacecolors, linestyle = preparetrimarker(markset)
@@ -275,7 +278,7 @@ def plotdata(ds, labels, title
             #ax.plot(xy[0], xy[1], mark, label=labels[i])
             ax.plot(xy[0], xy[1], label=labels[i], color='black', linestyle=linestyle, marker=marker, markerfacecolor=markerfacecolor)
 
-            if legloc > LOCBUILTIN:
+            if legloc == LOCONPLOT:
                 # legend is written at the end of each series
                 ax.annotate(labels[i], xy=(xy[0][-1],xy[1][-1]), xytext=(10, 0), textcoords='offset points')
 
@@ -310,11 +313,27 @@ def plotdata(ds, labels, title
     ax.set_xlabel(xylabels['x'], fontsize=axisfsize)
     #ax.set_ylabel('$P(k_{in})$')
     ax.set_ylabel(xylabels['y'], fontsize=axisfsize)
-    if len(labels) > 0 and legloc <= LOCBUILTIN:
-        # legend is localted according to legloc position
-        #ax.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
-        #ax.legend(bbox_to_anchor=(0, 1), ncol=2, loc=2, borderaxespad=0.)
-        ax.legend(ncol=2, loc=legloc, borderaxespad=0.)
+    if len(labels) > 0: 
+        if legloc < LOCONPLOT:
+            # legend is located according to legloc position
+            #ax.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+            #ax.legend(bbox_to_anchor=(0, 1), ncol=2, loc=2, borderaxespad=0.)
+            #ax.legend(ncol=2, loc=legloc, borderaxespad=0.)
+            axpos = ax.get_position()
+            ax.set_position([axpos.x0, axpos.y0, 0.76, axpos.height])
+            #ax.legend(ncol=3, loc=legloc, borderaxespad=0., prop={'size':14})
+            ax.legend(ncol=1, loc=legloc, borderaxespad=0., prop={'size':14}, numpoints=1)
+
+        elif legloc == LOCOUTRIGHT:
+            # legend is located on the right of the graph
+            ax.legend(bbox_to_anchor=(1.02, 1.), loc=2, borderaxespad=0., numpoints=1)
+
+        elif legloc == LOCOUTBELOW:
+            # legend is located below the graph 
+            # shrink the axis
+            axpos = ax.get_position()
+            ax.set_position([axpos.x0, axpos.y0 + axpos.height * 0.2, 0.78, axpos.height * 0.8])
+            ax.legend(bbox_to_anchor=(0.5, -0.15), loc=9, borderaxespad=0., numpoints=1, ncol=3, prop={'size':13})
 
     if logx and logy:
         ax.loglog()
@@ -322,6 +341,8 @@ def plotdata(ds, labels, title
         ax.semilogx()
     elif logy:
         ax.semilogy()
+
+    return ax
 
 #    if filename:
 #        plt.savefig(filename)
@@ -339,7 +360,7 @@ def plotdegdist(ds, labels, markset='var'
     , xlim=None
     , ylim=None
     , axisfsize=None
-    , fig=None
+    , ax=None
     , polyfit=False):
     # plot degree distribution from data set
     # data set is a list of x and y data to plot
@@ -349,7 +370,6 @@ def plotdegdist(ds, labels, markset='var'
     lsdeg = []
     for degrees in ds:
         y, bins = np.histogram(degrees, bins=nbins, density=density, normed=False)
-        #print bins
         x = bins[:-1]
 
         if norm:
@@ -368,7 +388,7 @@ def plotdegdist(ds, labels, markset='var'
 #        lsdeg.append([x, y])
 
     plotdata(lsdeg, labels, title, xylabels
-        , markset, isbase=False, logx=logx, logy=logy, xlim=xlim, ylim=ylim, isline=False, axisfsize=axisfsize, fig=fig, polyfit=polyfit)
+        , markset, isbase=False, logx=logx, logy=logy, xlim=xlim, ylim=ylim, isline=False, axisfsize=axisfsize, ax=ax, polyfit=polyfit)
 
     #print lsdeg
 
@@ -380,13 +400,13 @@ def plotfailnodes(ds, labels, markset='var'
     , xlim=None
     , ylim=None
     , axisfsize=None
-    , fig=None):
+    , ax=None):
 
     # plot fail nodes from data set
     # data set is a list of x and y data to plot
 
-    plotdata(ds, labels, title, xylabels
-        , markset, isbase, legloc=legloc, xlim=xlim, ylim=ylim, axisfsize=axisfsize, fig=fig)
+    return plotdata(ds, labels, title, xylabels
+        , markset, isbase, legloc=legloc, xlim=xlim, ylim=ylim, axisfsize=axisfsize, ax=ax)
 
 def plotcasceff(ds, labels, randomfails, xylabels, xaxis
     , markset='var'
@@ -724,7 +744,7 @@ def main(argv):
     elif func in [FUNC_DISTINDEG, FUNC_DISTOUTDEG]:
         # degree distribution plot
 
-        if FUNC_DISTINDEG:
+        if func == FUNC_DISTINDEG:
             title = getargval(dictarg, '-t', ['Degree distribution of exponential network'])[0]
             xylabels = {'x':getargval(dictarg, '-xl', ['k (degree)'])[0], 'y':getargval(dictarg, '-yl', ['P(k)'])[0]}
         else:

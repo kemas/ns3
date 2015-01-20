@@ -764,7 +764,8 @@ python scratch/plot.py -pl simdata/plotfunceff.json -m tricol- -t 'The effect of
 python scratch/plot.py -pl simdata/plotfunceffalt.json -m black- -t 'The effect of degree of alternative on cascading failure in service networks' -xl 'Degree of alternative $\langle alt \rangle$' -yl 'Cascade failed services $n_c$ (in fraction)' -l scale-free exponential random
 # color
 python scratch/plot.py -pl simdata/plotfunceffalt.json -m tricol- -t 'The effect of degree of alternative on cascading failure in service networks' -xl 'Degree of alternative $\langle alt \rangle$' -yl 'Cascade failed services $n_c$ (in fraction)' -l scale-free exponential random
-python scratch/plot.py -di simdata/lg_comp.json -m black -logx 1 -logy 1 -t 'Degree distribution of the Language Grid service network' -xl 'In-degree $k_{in}$' -yl 'Probability distribution $P(k_{in})$'
+python scratch/plot.py -di simdata/lg_comp.json -m black -logx 1 -logy 1 -t 'In-degree distribution of the Language Grid service network' -xl 'In-degree $k_{in}$' -yl 'Probability distribution $P(k_{in})$'
+python scratch/plot.py -li simdata/pwsvcsim_1.json -m black -logx 1 -logy 1 -t 'In-degree distribution of ProgrammableWeb APIs' -xl 'In-degree $k_{in}$' -yl 'Probability distribution $P(k_{in})$' -lb 1.21
 python scratch/plot.py -di simdata/rsvcsim_10k_10k_d3_a5_i10_1d.json -m black -logx 1 -logy 1 -xlim 1 500 -ylim 1e-6 1 -t "Exponential" -xl 'In-degree $k_{in}$' -yl 'Probability distribution $P(k_{in})$' -axisfsize large
 python scratch/plot.py -di simdata/randsvcsim_10k_10k_d3_a5_i10_1d.json -m black -logx 1 -logy 1 -xlim 1 500 -ylim 1e-6 1 -t "Random" -xl 'In-degree $k_{in}$' -yl 'Probability distribution $P(k_{in})$' -axisfsize large
 python scratch/plot.py -li simdata/svcsim_10k_10k_d3_a3_i10_5.json -m black- -logx 1 -logy 1 -xlim 1 500 -ylim 1e-6 1 -t "Scale-free" -xl 'In-degree $k_{in}$' -yl 'Probability distribution $P(k_{in})$' -axisfsize large
@@ -805,7 +806,10 @@ python scratch/plot.py -fc \
 -xl 'Random failed services $n_r$ (in fraction)' \
 -yl 'Cascade failed services $n_c$ (in fraction)' \
 -t 'Cascading failure with different $\langle{dep}\rangle$ on generated networks' \
--m tricol
+-m tricol \
+-l 'sf, $\langle{dep}\rangle=1$' 'exp, $\langle{dep}\rangle=1$' 'rand, $\langle{dep}\rangle=1$' 'sf, $\langle{dep}\rangle=1.5$' 'exp, $\langle{dep}\rangle=1.5$' 'rand, $\langle{dep}\rangle=1.5$' 'sf, $\langle{dep}\rangle=2$' 'exp, $\langle{dep}\rangle=2$' 'rand, $\langle{dep}\rangle=2$' \
+-loc 2 -axisfsize large -ylim 0.36 -loc 2
+# set ncol = 3, prop size = 14, numpoints = 1
 
 #    simdata/svcsimn_10k_10k_d5_a1_i10_avg1_8.json \
 #    simdata/expsvcsimn_10k_10k_d5_a1_i10_avg1_8.json \
@@ -846,7 +850,10 @@ python scratch/plot.py -fc \
 -xl 'Random failed services $n_r$ (in fraction)' \
 -yl 'Cascade failed services $n_c$ (in fraction)' \
 -t 'Cascading failure with different $\langle{alt}\rangle$ on generated networks' \
--m tricol
+-m tricol \
+-l 'sf, $\langle{alt}\rangle=0$' 'exp, $\langle{alt}\rangle=0$' 'rand, $\langle{alt}\rangle=0$' 'sf, $\langle{alt}\rangle=0.5$' 'exp, $\langle{alt}\rangle=0.5$' 'rand, $\langle{alt}\rangle=0.5$' 'sf, $\langle{alt}\rangle=1$' 'exp, $\langle{alt}\rangle=1$' 'rand, $\langle{alt}\rangle=1$' \
+-loc 2 -axisfsize large -ylim 0.18
+# set ncol = 3, prop size = 14, numpoints = 1
 
 #    simdata/svcsimn_10k_10k_d2_a1_i10_avg1_8.json \
 #    simdata/expsvcsimn_10k_10k_d2_a1_i10_avg1_8.json \
