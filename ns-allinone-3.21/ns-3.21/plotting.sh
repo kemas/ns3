@@ -808,7 +808,35 @@ python scratch/plot.py -fc \
 -t 'Cascading failure with different $\langle{dep}\rangle$ on generated networks' \
 -m tricol \
 -l 'sf, $\langle{dep}\rangle=1$' 'exp, $\langle{dep}\rangle=1$' 'rand, $\langle{dep}\rangle=1$' 'sf, $\langle{dep}\rangle=1.5$' 'exp, $\langle{dep}\rangle=1.5$' 'rand, $\langle{dep}\rangle=1.5$' 'sf, $\langle{dep}\rangle=2$' 'exp, $\langle{dep}\rangle=2$' 'rand, $\langle{dep}\rangle=2$' \
--loc 2 -axisfsize large -ylim 0.36 -loc 2
+-loc 2 -axisfsize large -ylim 0.36
+# set ncol = 3, prop size = 14, numpoints = 1
+
+# the effect of degree of dependency <dep> on cascading failure in color
+python scratch/plot.py -fc \
+    simdata/svcsimn_10k_10k_d2_a1_i10_avg1_8.json \
+    simdata/svcsimn_10k_10k_d3_a1_i10_avg1_8.json \
+    simdata/svcsimn_10k_10k_d4_a1_i10_avg1_8.json \
+    simdata/expsvcsimn_10k_10k_d2_a1_i10_avg1_8.json \
+    simdata/expsvcsimn_10k_10k_d3_a1_i10_avg1_8.json \
+    simdata/expsvcsimn_10k_10k_d4_a1_i10_avg1_8.json \
+    simdata/randsvcsimn_10k_10k_d2_a1_i10_avg1_8.json \
+    simdata/randsvcsimn_10k_10k_d3_a1_i10_avg1_8.json \
+    simdata/randsvcsimn_10k_10k_d4_a1_i10_avg1_8.json \
+-xl 'Random failed services $n_r$ (in fraction)' \
+-yl 'Cascade failed services $n_c$ (in fraction)' \
+-t 'Cascading failure with different $\langle{dep}\rangle$ on generated networks' \
+-m tricol \
+-l \
+    'sf, $\langle{dep}\rangle=1$' \
+    'sf, $\langle{dep}\rangle=1.5$' \
+    'sf, $\langle{dep}\rangle=2$' \
+    'exp, $\langle{dep}\rangle=1$' \
+    'exp, $\langle{dep}\rangle=1.5$' \
+    'exp, $\langle{dep}\rangle=2$' \
+    'rand, $\langle{dep}\rangle=1$' \
+    'rand, $\langle{dep}\rangle=1.5$' \
+    'rand, $\langle{dep}\rangle=2$' \
+-loc 2 -axisfsize large -ylim 0.36
 # set ncol = 3, prop size = 14, numpoints = 1
 
 #    simdata/svcsimn_10k_10k_d5_a1_i10_avg1_8.json \

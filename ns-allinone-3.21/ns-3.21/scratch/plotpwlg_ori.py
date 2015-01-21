@@ -1,18 +1,3 @@
-#python scratch/plot.py -fc \
-#    simdata/pwsvcsim_avg1_16.json \
-#    simdata/pwsvcsim_a2_avg1_16.json \
-#    simdata/pwsvcsim_a3_avg1_16.json \
-#-xl 'Random failed services $r$ (in fraction)' \
-#-yl 'Cascade failed services $n_c$ (in fraction)' \
-#-t 'Cascading failure with different $\langle{alt}\rangle$ on real networks' \
-#-m green -j 500
-#
-#python scratch/plot.py -fc \
-#    simdata/lgsvcsim_avg1_16.json \
-#    simdata/lgsvcsim_a2_avg1_16.json \
-#    simdata/lgsvcsim_a3_avg1_16.json \
-#-m magenta -j 10
-
 import sys
 import json
 import plot as p
@@ -25,7 +10,7 @@ def getargval(dictarg, key, ifnone=p.IFNONE):
 
 def main(argv):
     lsarg = []
-    lsarg.append({'func':['-fc'], 'files':['simdata/pwsvcsim_avg1_16.json'], '-m':['plus'], '-j':[500], '-l':['ProgrammableWeb'], '-axisfsize':['large']})
+    lsarg.append({'func':['-fc'], 'files':['simdata/pwsvcsim_avg1_16.json'], '-m':['diamond'], '-j':[500], '-l':['ProgrammableWeb'], '-axisfsize':['large']})
     lsarg.append({'func':['-fc'], 'files':['simdata/lgsvcsim_avg1_16.json'], '-m':['star'], '-j':[10], '-t':['Cascading failure on real networks'], '-xl':['Random failed services $n_r$ (in fraction)'], '-yl':['Cascade failed services $n_c$ (in fraction)'], '-l':['The Language Grid'], '-loc':[2], '-axisfsize':['large']})
 
     for i in range(len(lsarg)):

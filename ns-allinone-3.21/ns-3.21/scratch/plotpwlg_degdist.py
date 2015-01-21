@@ -13,8 +13,11 @@ def getargval(dictarg, key, ifnone=p.IFNONE):
 
 def main(argv):
     lsarg = []
-    lsarg.append({'func':['-li'], 'files':['simdata/pwsvcsim_1.json'], '-m':['plus'], '-l':['ProgrammableWeb'], '-axisfsize':['large'], '-lb':[1.21]})
-    lsarg.append({'func':['-di'], 'files':['simdata/lg_comp.json'], '-m':['star'], '-t':['In-degree distribution of the service network'], '-xl':['Random failed services $n_r$ (in fraction)'], '-yl':['Cascade failed services $n_c$ (in fraction)'], '-l':['The Language Grid'], '-loc':[1], '-axisfsize':['large']})
+    lsarg.append({'func':['-di'], 'files':['simdata/lg_comp.json'], '-m':['star'], '-t':['In-degree distribution of the Language Grid and ProgrammableWeb service networks'], '-xl':['In-degree $k_{in}$'], '-yl':['Probability distribution $P(k_{in})$\nThe Language Grid'], '-l':['The Language Grid'], '-loc':[2], '-axisfsize':['large'], '-logx':[1], '-logy':[1]})
+    lsarg.append({'func':['-li'], 'files':['simdata/pwsvcsim_1.json'], '-m':['diamond'], '-yl':['ProgrammableWeb'], '-l':['ProgrammableWeb'], '-axisfsize':['large'], '-loc':[4], '-lb':[1.21], '-xlim':[-1,10000], '-logx':[1], '-logy':[1]})
+
+    ax = p.plt.axes([0.13, 0.12, 0.6, 0.78])
+    ax2 = p.plt.twinx(ax)
 
     for i in range(len(lsarg)):
         ds = []
@@ -60,23 +63,9 @@ def main(argv):
         except:
             pass
 
-        if func == p.FUNC_LOGINDEG:
-            p.drawloglogdist(ds
-                , xlabel=getargval(lsarg[i], '-xl', [''])[0]
-                , ylabel=getargval(lsarg[i], '-yl', [''])[0]
-                , title=getargval(lsarg[i], '-t', [''])[0]
-                , labels=getargval(lsarg[i], '-l')
-                , markset=getargval(lsarg[i], '-m', ['var'])[0]
-                , xlim=xlim
-                , ylim=ylim
-                , axisfsize=axisfsize
-                , logbinbase=lb
-                , showexp=int(getargval(lsarg[i], '-g', [1])[0]))
 
-        elif func == p.FUNC_DISTINDEG:
-            title = getargval(lsarg[i], '-t', ['Degree distribution of exponential network'])[0]
-            xylabels = {'x':getargval(lsarg[i], '-xl', ['k (degree)'])[0], 'y':getargval(lsarg[i], '-yl', ['P(k)'])[0]}
-
+        if i == 0:
+            #func == p.FUNC_DISTINDEG:
             p.plotdegdist(ds
                 , getargval(lsarg[i], '-l')
                 , getargval(lsarg[i], '-m', ['var'])[0]
@@ -86,9 +75,38 @@ def main(argv):
                 , logx=logx, logy=logy
                 , xlim=xlim
                 , ylim=ylim
+                , legloc=int(getargval(lsarg[i], '-loc', [2])[0])
                 , axisfsize=axisfsize
-                , ax=p.plt.twinx(p.plt.gca()))
+                , ax=ax)
+                #, ax=p.plt.twinx(p.plt.gca()))
                 #, ax=p.plt.gca())
+
+            ax.set_ylabel(ax.get_ylabel(), color='#460046')
+            for tl in ax.get_yticklabels():
+                tl.set_color('#460046')
+
+        elif i == 1:
+            #func == p.FUNC_LOGINDEG:
+
+            p.drawloglogdist(ds
+                , xlabel=getargval(lsarg[i], '-xl', [''])[0]
+                , ylabel=getargval(lsarg[i], '-yl', [''])[0]
+                , title=getargval(lsarg[i], '-t', [''])[0]
+                , labels=getargval(lsarg[i], '-l')
+                , markset=getargval(lsarg[i], '-m', ['var'])[0]
+                , xlim=xlim
+                , ylim=ylim
+                , axisfsize=axisfsize
+                , legloc=int(getargval(lsarg[i], '-loc', [2])[0])
+                , logbinbase=lb
+                , showexp=int(getargval(lsarg[i], '-g', [1])[0])
+                , ax=ax2)
+                #, ax=p.plt.twinx(ax))
+                #, ax=p.plt.twinx(p.plt.gca()))
+
+            ax2.set_ylabel(ax2.get_ylabel(), color='#003200')
+            for tl in ax2.get_yticklabels():
+                tl.set_color('#003200')
 
     p.processplot(p.plt, getargval(lsarg[i], '-s', [None])[0])
 

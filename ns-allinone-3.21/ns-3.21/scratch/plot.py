@@ -61,8 +61,10 @@ MARKERS = {'var-':['wo-', 'ks-', 'wv-', 'kD-', 'w+-', 'kx-', 'w*-', 'k|-', 'wp-'
         , 'blue':['bo', 'bs', 'b^', 'bv', 'bD', 'b+', 'bx', 'b*', 'b|', 'bp', 'b.', 'b,', 'b1', 'b2', 'b3', 'b4']
         , 'magenta':['mo', 'ms', 'm^', 'mv', 'mD', 'm+', 'mx', 'm*', 'm|', 'mp', 'm.', 'm,', 'm1', 'm2', 'm3', 'm4']
         , 'cyan':['co', 'cs', 'c^', 'cv', 'cD', 'c+', 'cx', 'c*', 'c|', 'cp', 'c.', 'c,', 'c1', 'c2', 'c3', 'c4']
-        , 'plus':['w+', 'k+']
-        , 'star':['w*', 'k*']
+        , 'plus':['k+']
+        , 'diamond':['gd']
+        , 'triplus':{'linestyle':'', 'markers':['+'],  'markerfacecolors':['sienna']}
+        , 'star':['m*']
 }
 
 def preparetrimarker(markset):
@@ -153,8 +155,25 @@ def logbins(amax, amin=0, base=LOGBINBASE):
  
     return bins
 
-def drawloglogdist(ds, xlabel, ylabel, title, labels, markset='var', density=True, xlim=None, ylim=None, axisfsize=None, logbinbase=LOGBINBASE, showexp=True, isline=False):
+def drawloglogdist(ds, xlabel, ylabel, title
+    , labels
+    , markset='var'
+    , density=True
+    , xlim=None, ylim=None
+    , axisfsize=None
+    , logbinbase=LOGBINBASE
+    , showexp=True
+    , isline=False
+    , legloc=2
+    , ax=None
+    , ncol=1
+    , numpoints=1):
     # degree distribution in loglog scale
+
+    if not ax:
+        # ax not defined, add axes
+        #ax = plt.axes([0.1, 0.1, 0.6, 0.78])
+        ax = plt.gca()
 
     lblgamma = u'%s = %%#.2f' % (GAMMA)
 
@@ -194,7 +213,6 @@ def drawloglogdist(ds, xlabel, ylabel, title, labels, markset='var', density=Tru
             else:
                 label = labels[j]
             #plt.plot(x, y, mark[:-1], label = '%s, %s' % (labels[j], lblgamma % (-1 * gamma)))
-            plt.plot(x, y, marker=marker, markerfacecolor=markerfacecolor, linestyle=linestyle, label=label)
             j += 1
         else:
             if showexp:
@@ -202,19 +220,49 @@ def drawloglogdist(ds, xlabel, ylabel, title, labels, markset='var', density=Tru
             else:
                 label = ''
             #plt.plot(x, y, mark[:-1], label = lblgamma % (-1 * gamma))
-            plt.plot(x, y, marker=marker, markerfacecolor=markerfacecolor, linestyle=linestyle, label=label)
+
+        #plt.plot(x, y, marker=marker, markerfacecolor=markerfacecolor, linestyle=linestyle, label=label)
+        ax.plot(x, y, marker=marker, markerfacecolor=markerfacecolor, linestyle=linestyle, label=label, color=markerfacecolor)
 
         #plt.plot(xforlog, 10**p(logx), mark[0] + ':')
-        plt.plot(xforlog, 10**p(logx), markerfacecolor=markerfacecolor, linestyle=':')
+        #plt.plot(xforlog, 10**p(logx), markerfacecolor=markerfacecolor, linestyle=':')
+        ax.plot(xforlog, 10**p(logx), markerfacecolor=markerfacecolor, linestyle=':')
 
-    setaxislim(xlim, ylim, plt=plt)
+    #setaxislim(xlim, ylim, plt=plt)
+    setaxislim(xlim, ylim, ax=ax)
 
-    plt.loglog()
-    plt.title('\n'.join(textwrap.wrap(title, 50)))
-    plt.xlabel(xlabel, fontsize=axisfsize)
-    plt.ylabel(ylabel, fontsize=axisfsize)
+    #plt.loglog()
+    #plt.title('\n'.join(textwrap.wrap(title, 50)))
+    #plt.xlabel(xlabel, fontsize=axisfsize)
+    #plt.ylabel(ylabel, fontsize=axisfsize)
+    #plt.legend(numpoints=1, loc=4)
 
-    plt.legend(numpoints=1, loc=4)
+    ax.loglog()
+    ax.set_title('\n'.join(textwrap.wrap(title, 50)))
+    ax.set_xlabel(xlabel, fontsize=axisfsize)
+    ax.set_ylabel(ylabel, fontsize=axisfsize)
+
+    if len(labels) > 0: 
+        if legloc < LOCONPLOT:
+            # legend is located according to legloc position
+            #ax.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+            #ax.legend(bbox_to_anchor=(0, 1), ncol=2, loc=2, borderaxespad=0.)
+            #ax.legend(ncol=2, loc=legloc, borderaxespad=0.)
+            axpos = ax.get_position()
+            ax.set_position([axpos.x0, axpos.y0, 0.76, axpos.height])
+            ax.legend(ncol=ncol, loc=legloc, borderaxespad=0., prop={'size':14}, numpoints=numpoints)
+            #ax.legend(ncol=1, loc=legloc, borderaxespad=0., prop={'size':14}, numpoints=1)
+
+        elif legloc == LOCOUTRIGHT:
+            # legend is located on the right of the graph
+            ax.legend(bbox_to_anchor=(1.02, 1.), loc=2, borderaxespad=0., ncol=ncol, numpoints=numpoints)
+
+        elif legloc == LOCOUTBELOW:
+            # legend is located below the graph 
+            # shrink the axis
+            axpos = ax.get_position()
+            ax.set_position([axpos.x0, axpos.y0 + axpos.height * 0.2, 0.78, axpos.height * 0.8])
+            ax.legend(bbox_to_anchor=(0.5, -0.15), loc=9, borderaxespad=0., numpoints=numpoints, ncol=ncol, prop={'size':13})
 
 #    # inset
 #    from mpl_toolkits.axes_grid1.inset_locator import zoomed_inset_axes
@@ -249,13 +297,16 @@ def plotdata(ds, labels, title
     , legloc=2
     , axisfsize=None
     , ax=None
-    , polyfit=False):
+    , polyfit=False
+    , ncol=1
+    , numpoints=1):
     # plot degree distribution from data set
     # data set is a list of x and y data to plot
 
     if not ax:
         # ax not defined, add axes
         ax = plt.axes([0.1, 0.1, 0.6, 0.78])
+        #ax = plt.gca()
 
     if markset[:3] == 'tri':
         markers, markerfacecolors, linestyle = preparetrimarker(markset)
@@ -321,19 +372,19 @@ def plotdata(ds, labels, title
             #ax.legend(ncol=2, loc=legloc, borderaxespad=0.)
             axpos = ax.get_position()
             ax.set_position([axpos.x0, axpos.y0, 0.76, axpos.height])
-            #ax.legend(ncol=3, loc=legloc, borderaxespad=0., prop={'size':14})
-            ax.legend(ncol=1, loc=legloc, borderaxespad=0., prop={'size':14}, numpoints=1)
+            ax.legend(ncol=ncol, loc=legloc, borderaxespad=0., prop={'size':14}, numpoints=numpoints)
+            #ax.legend(ncol=1, loc=legloc, borderaxespad=0., prop={'size':14}, numpoints=1)
 
         elif legloc == LOCOUTRIGHT:
             # legend is located on the right of the graph
-            ax.legend(bbox_to_anchor=(1.02, 1.), loc=2, borderaxespad=0., numpoints=1)
+            ax.legend(bbox_to_anchor=(1.02, 1.), loc=2, borderaxespad=0., ncol=ncol, numpoints=numpoints)
 
         elif legloc == LOCOUTBELOW:
             # legend is located below the graph 
             # shrink the axis
             axpos = ax.get_position()
             ax.set_position([axpos.x0, axpos.y0 + axpos.height * 0.2, 0.78, axpos.height * 0.8])
-            ax.legend(bbox_to_anchor=(0.5, -0.15), loc=9, borderaxespad=0., numpoints=1, ncol=3, prop={'size':13})
+            ax.legend(bbox_to_anchor=(0.5, -0.15), loc=9, borderaxespad=0., ncol=ncol, numpoints=numpoints, prop={'size':13})
 
     if logx and logy:
         ax.loglog()
@@ -359,9 +410,12 @@ def plotdegdist(ds, labels, markset='var'
     , norm=True
     , xlim=None
     , ylim=None
+    , legloc=2
     , axisfsize=None
     , ax=None
-    , polyfit=False):
+    , polyfit=False
+    , ncol=1
+    , numpoints=1):
     # plot degree distribution from data set
     # data set is a list of x and y data to plot
 
@@ -388,7 +442,8 @@ def plotdegdist(ds, labels, markset='var'
 #        lsdeg.append([x, y])
 
     plotdata(lsdeg, labels, title, xylabels
-        , markset, isbase=False, logx=logx, logy=logy, xlim=xlim, ylim=ylim, isline=False, axisfsize=axisfsize, ax=ax, polyfit=polyfit)
+        , markset, isbase=False, logx=logx, logy=logy, xlim=xlim, ylim=ylim, isline=False, legloc=legloc, axisfsize=axisfsize, ax=ax, polyfit=polyfit
+        , ncol=ncol, numpoints=numpoints)
 
     #print lsdeg
 
@@ -400,13 +455,16 @@ def plotfailnodes(ds, labels, markset='var'
     , xlim=None
     , ylim=None
     , axisfsize=None
-    , ax=None):
+    , ax=None
+    , ncol=1
+    , numpoints=1):
 
     # plot fail nodes from data set
     # data set is a list of x and y data to plot
 
     return plotdata(ds, labels, title, xylabels
-        , markset, isbase, legloc=legloc, xlim=xlim, ylim=ylim, axisfsize=axisfsize, ax=ax)
+        , markset, isbase, legloc=legloc, xlim=xlim, ylim=ylim, axisfsize=axisfsize, ax=ax
+        , ncol=ncol, numpoints=numpoints)
 
 def plotcasceff(ds, labels, randomfails, xylabels, xaxis
     , markset='var'
@@ -416,7 +474,9 @@ def plotcasceff(ds, labels, randomfails, xylabels, xaxis
     , xlim=None
     , ylim=None
     , plotfile=None
-    , axisfsize=None):
+    , axisfsize=None
+    , ncol=1
+    , numpoints=1):
     # plot cascading effect where the data series are different number of nodes fail randomly
     # the y axis (cascading effect, number of active nodes) is the number of cascading fail nodes
     # the x axis is either the number of alternative, the number of dependency, the combination of both
@@ -458,7 +518,8 @@ def plotcasceff(ds, labels, randomfails, xylabels, xaxis
             f.close()
 
     plotdata(plots, labels, title, xylabels
-        , markset, isbase, legloc=legloc, xlim=xlim, ylim=ylim, axisfsize=axisfsize)
+        , markset, isbase, legloc=legloc, xlim=xlim, ylim=ylim, axisfsize=axisfsize
+        , ncol=ncol, numpoints=numpoints)
 
 def printdepth(ds, filename):
     if not filename:
@@ -482,7 +543,6 @@ def printdepth(ds, filename):
             i += 1
 
 def setaxislim(xlim, ylim, plt=None, ax=None):
-
     if xlim:
         if plt:
             plt.xlim(xmax=float(xlim[-1]))
@@ -604,7 +664,7 @@ def readargv(argv, pos=1, opt='', dictarg={}):
             dictarg['func'] = currarg
             currarg = 'files'
 
-        elif currarg not in ['-l', '-m', '-s', '-x', '-r', '-xl', '-yl', '-t', '-logx', '-logy', '-loc', '-b', '-xlim', '-ylim', '-v', '-axisfsize', '-j', '-lb', '-g']:
+        elif currarg not in ['-l', '-m', '-s', '-x', '-r', '-xl', '-yl', '-t', '-logx', '-logy', '-loc', '-b', '-xlim', '-ylim', '-v', '-axisfsize', '-j', '-lb', '-g', '-ncol', '-numpoints']:
             print "*** %s" % currarg
             printusage()
             return
@@ -738,7 +798,6 @@ def main(argv):
     elif func in [FUNC_HISTINDEG, FUNC_HISTOUTDEG]:
         # histogram degree distribution
         drawhistogram(ds, xlabel, getargval(dictarg, '-l'))
-
         processplot(plt, getargval(dictarg, '-s', [None])[0])
 
     elif func in [FUNC_DISTINDEG, FUNC_DISTOUTDEG]:
@@ -781,7 +840,9 @@ def main(argv):
             , logy=logy
             , xlim=xlim
             , ylim=ylim
-            , legloc=int(getargval(dictarg, '-loc', ['1'])[0]))
+            , legloc=int(getargval(dictarg, '-loc', ['1'])[0])
+            , ncol=int(getargval(dictarg, '-ncol', ['1'])[0])
+            , numpoints=int(getargval(dictarg, '-numpoints', ['1'])[0]))
 
         processplot(plt, getargval(dictarg, '-s', [None])[0])
 
