@@ -63,6 +63,12 @@ MARKERS = {'var-':['wo-', 'ks-', 'wv-', 'kD-', 'w+-', 'kx-', 'w*-', 'k|-', 'wp-'
         , 'cyan':['co', 'cs', 'c^', 'cv', 'cD', 'c+', 'cx', 'c*', 'c|', 'cp', 'c.', 'c,', 'c1', 'c2', 'c3', 'c4']
         , 'plus':['k+']
         , 'diamond':['gd']
+        , 'reddia':['rd']
+        , 'reddia-':['rd-']
+        , 'bluepenta':['bp']
+        , 'bluepenta-':['bp-']
+        , 'trihexaorg':{'linestyle':'', 'markers':['v'],  'markerfacecolors':['orange']}
+        , 'trihexaorg-':{'linestyle':'-', 'markers':['v'],  'markerfacecolors':['orange']}
         , 'triplus':{'linestyle':'', 'markers':['+'],  'markerfacecolors':['sienna']}
         , 'star':['m*']
 }
@@ -305,8 +311,8 @@ def plotdata(ds, labels, title
 
     if not ax:
         # ax not defined, add axes
-        ax = plt.axes([0.1, 0.1, 0.6, 0.78])
-        #ax = plt.gca()
+        #ax = plt.axes([0.1, 0.1, 0.6, 0.78])
+        ax = plt.gca()
 
     if markset[:3] == 'tri':
         markers, markerfacecolors, linestyle = preparetrimarker(markset)
@@ -746,6 +752,9 @@ def main(argv):
     except:
         pass
 
+    ncol = int(getargval(dictarg, '-ncol', [1])[0])
+    numpoints = int(getargval(dictarg, '-numpoints', [1])[0])
+
     if func in [FUNC_FAIL, FUNC_FAILCASC]:
 #        if func == FUNC_FAIL:
 #            xylabels={'x':'Number of nodes fail randomly', 'y':'Total number of nodes fail (randomly + cascaded fail)'}
@@ -762,7 +771,9 @@ def main(argv):
             , legloc=int(getargval(dictarg, '-loc', [2])[0])
             , xlim=xlim
             , ylim=ylim
-            , axisfsize=axisfsize)
+            , axisfsize=axisfsize
+            , ncol=ncol
+            , numpoints=numpoints)
 
         processplot(plt, getargval(dictarg, '-s', [None])[0])
 
@@ -842,7 +853,8 @@ def main(argv):
             , ylim=ylim
             , legloc=int(getargval(dictarg, '-loc', ['1'])[0])
             , ncol=int(getargval(dictarg, '-ncol', ['1'])[0])
-            , numpoints=int(getargval(dictarg, '-numpoints', ['1'])[0]))
+            , numpoints=int(getargval(dictarg, '-numpoints', ['1'])[0])
+            , axisfsize=axisfsize)
 
         processplot(plt, getargval(dictarg, '-s', [None])[0])
 
