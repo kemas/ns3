@@ -610,7 +610,8 @@ def loaddata(ds, func, data, filename, step=STEP, norm=True):
                 # for y axis, only calculate the number of nodes that fail because of cascading failure
                 # excluding those randomly chosen to be fail
 
-                for j in range(i, len(nodesremoved), step):
+                #for j in range(i, len(nodesremoved), step):
+                for j in range(len(nodesremoved)-1, i-1, -step):
                     xval = nodesremoved[j] / nbofnodes
                     yval = data['nodesfail'][j] / nbofnodes - xval
 #                    yval = (data['nodesfail'][j] - nodesremoved[j]) / nbofcomps
@@ -628,8 +629,15 @@ def loaddata(ds, func, data, filename, step=STEP, norm=True):
             else:
                 # FUNC_FAIL, FUNC_EFF
 
-                x = [rmv / nbofnodes for rmv in nodesremoved[i::step]]
-                y = [fail / nbofnodes for fail in data['nodesfail'][i::step]]
+                #x = [rmv / nbofnodes for rmv in nodesremoved[i::step]]
+                #y = [fail / nbofnodes for fail in data['nodesfail'][i::step]]
+                if i == 0:
+                    x = [rmv / nbofnodes for rmv in nodesremoved[::-step]]
+                    y = [fail / nbofnodes for fail in data['nodesfail'][::-step]]
+                else:
+                    stop = i - 1
+                    x = [rmv / nbofnodes for rmv in nodesremoved[:stop:-step]]
+                    y = [fail / nbofnodes for fail in data['nodesfail'][:stop:-step]]
 
         ds.append([x, y])
 
