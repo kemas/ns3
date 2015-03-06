@@ -305,7 +305,9 @@ def plotdata(ds, labels, title
     , ax=None
     , polyfit=False
     , ncol=1
-    , numpoints=1):
+    , numpoints=1
+    , legmode='normal'
+    , bbox_to_anchor=None):
     # plot degree distribution from data set
     # data set is a list of x and y data to plot
 
@@ -378,19 +380,20 @@ def plotdata(ds, labels, title
             #ax.legend(ncol=2, loc=legloc, borderaxespad=0.)
             axpos = ax.get_position()
             ax.set_position([axpos.x0, axpos.y0, 0.76, axpos.height])
-            ax.legend(ncol=ncol, loc=legloc, borderaxespad=0., prop={'size':14}, numpoints=numpoints)
+            ax.legend(ncol=ncol, loc=legloc, borderaxespad=0., prop={'size':14}, numpoints=numpoints, mode=legmode, bbox_to_anchor=bbox_to_anchor)
             #ax.legend(ncol=1, loc=legloc, borderaxespad=0., prop={'size':14}, numpoints=1)
 
         elif legloc == LOCOUTRIGHT:
             # legend is located on the right of the graph
-            ax.legend(bbox_to_anchor=(1.02, 1.), loc=2, borderaxespad=0., ncol=ncol, numpoints=numpoints)
+            ax.legend(bbox_to_anchor=(1.02, 1.), loc=2, borderaxespad=0., ncol=ncol, numpoints=numpoints, mode=legmode)
+
 
         elif legloc == LOCOUTBELOW:
             # legend is located below the graph 
             # shrink the axis
             axpos = ax.get_position()
             ax.set_position([axpos.x0, axpos.y0 + axpos.height * 0.2, 0.78, axpos.height * 0.8])
-            ax.legend(bbox_to_anchor=(0.5, -0.15), loc=9, borderaxespad=0., ncol=ncol, numpoints=numpoints, prop={'size':13})
+            ax.legend(bbox_to_anchor=(0.5, -0.15), loc=9, borderaxespad=0., ncol=ncol, numpoints=numpoints, prop={'size':13}, mode=legmode)
 
     if logx and logy:
         ax.loglog()
@@ -463,14 +466,16 @@ def plotfailnodes(ds, labels, markset='var'
     , axisfsize=None
     , ax=None
     , ncol=1
-    , numpoints=1):
+    , numpoints=1
+    , legmode='normal'
+    , bbox_to_anchor=None):
 
     # plot fail nodes from data set
     # data set is a list of x and y data to plot
 
     return plotdata(ds, labels, title, xylabels
         , markset, isbase, legloc=legloc, xlim=xlim, ylim=ylim, axisfsize=axisfsize, ax=ax
-        , ncol=ncol, numpoints=numpoints)
+        , ncol=ncol, numpoints=numpoints, legmode=legmode, bbox_to_anchor=bbox_to_anchor)
 
 def plotcasceff(ds, labels, randomfails, xylabels, xaxis
     , markset='var'
@@ -670,7 +675,7 @@ def readargv(argv, pos=1, opt='', dictarg={}):
             dictarg['func'] = currarg
             currarg = 'files'
 
-        elif currarg not in ['-l', '-m', '-s', '-x', '-r', '-xl', '-yl', '-t', '-logx', '-logy', '-loc', '-b', '-xlim', '-ylim', '-v', '-axisfsize', '-j', '-lb', '-g', '-ncol', '-numpoints']:
+        elif currarg not in ['-l', '-m', '-s', '-x', '-r', '-xl', '-yl', '-t', '-logx', '-logy', '-loc', '-b', '-xlim', '-ylim', '-v', '-axisfsize', '-j', '-lb', '-g', '-ncol', '-numpoints', '-lm', '-lbb']:
             print "*** %s" % currarg
             printusage()
             return
@@ -755,6 +760,9 @@ def main(argv):
     ncol = int(getargval(dictarg, '-ncol', [1])[0])
     numpoints = int(getargval(dictarg, '-numpoints', [1])[0])
 
+    legmode = getargval(dictarg, '-lm', ['normal'])[0]
+    bbox_to_anchor = getargval(dictarg, '-lbb', None)
+
     if func in [FUNC_FAIL, FUNC_FAILCASC]:
 #        if func == FUNC_FAIL:
 #            xylabels={'x':'Number of nodes fail randomly', 'y':'Total number of nodes fail (randomly + cascaded fail)'}
@@ -773,7 +781,9 @@ def main(argv):
             , ylim=ylim
             , axisfsize=axisfsize
             , ncol=ncol
-            , numpoints=numpoints)
+            , numpoints=numpoints
+            , legmode=legmode
+            , bbox_to_anchor=bbox_to_anchor)
 
         processplot(plt, getargval(dictarg, '-s', [None])[0])
 

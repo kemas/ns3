@@ -63,7 +63,6 @@ def main(argv):
         except:
             pass
 
-
         if i == 0:
             #func == p.FUNC_DISTINDEG:
             p.plotdegdist(ds

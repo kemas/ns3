@@ -15,7 +15,7 @@ def main(argv):
 
     lsarg.append({'func':['-pl'], 'files':['simdata/plotfunceff_tri-sf_a1_a9.json'], '-m':['reddia-'], '-l':['scale-free']}) 
     lsarg.append({'func':['-pl'], 'files':['simdata/plotfunceff_tri-exp_a1_a9.json'], '-m':['bluepenta-'], '-l':['exponential']})
-    lsarg.append({'func':['-pl'], 'files':['simdata/plotfunceff_tri-rand_a1_a9.json'], '-m':['trihexaorg-'], '-l':['random'], '-t':['The effect of $\langle alt \\rangle$ on cascading failure in service networks'], '-xl':['Degree of dependency $\langle alt \\rangle$'], '-yl':['Cascade failed services $n_c$ (in fraction)'], '-axisfsize':['large'], '-ncol':[3]})
+    lsarg.append({'func':['-pl'], 'files':['simdata/plotfunceff_tri-rand_a1_a9.json'], '-m':['trihexaorg-'], '-l':['random'], '-t':['The effect of $\langle alt \\rangle$ on cascading failure in service networks'], '-xl':['Degree of alternative $\langle alt \\rangle$'], '-yl':['Cascade failed services $n_c$ (in fraction)'], '-axisfsize':['large'], '-ncol':[3]})
 
     for i in range(len(lsarg)):
         ds = []
