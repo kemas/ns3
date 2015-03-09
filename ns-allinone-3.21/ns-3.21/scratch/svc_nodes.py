@@ -732,7 +732,8 @@ class Vertices:
 
         # disconnect from all incoming links
         for idxneighbor in vertex._inlinks:
-            self.disconnect(index, idxneighbor)
+            self.disconnect(idxneighbor, index)
+            #self.disconnect(index, idxneighbor)
 
 #        ###
 #        if lsdepth:

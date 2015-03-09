@@ -47,13 +47,15 @@ def randomfail(vertices):
     #print 'index: '+ str(idx)
     #print 'indegree: '+ str(vertices.getvertex(idx).getindegree())
     #print '========'
-    vertices.dofail(vertices.getindexbyact(index))
+    vertices.dofail(idx)
 
     vertices.analyzer.fail(
         vertices.getnbofremoved()
         , vertices.getnboffail()
         , vertices.analyzer.getmandfail() + totmandlinks - vertices.gettotmandlinks()
-        , vertices.analyzer.getaltfail() + totaltlinks - vertices.gettotaltlinks())
+        , vertices.analyzer.getaltfail() + totaltlinks - vertices.gettotaltlinks()
+        , vertices.getvertex(idx).getindegree()
+        , vertices.getvertex(idx).getoutdegree())
 
 def connect(vertices, indexp, indexq, indexexst=None):
     # connect node p to node q
