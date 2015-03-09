@@ -43,15 +43,19 @@ def randomfail(vertices):
 
     index = random.randrange(nact)
     idx = vertices.getindexbyact(index)
-#    print 'index: '+ str(idx)
-#    print 'indegree: '+ str(vertices.getvertex(idx).getindegree())
-    vertices.dofail(vertices.getindexbyact(index))
+    ###
+    #print 'index: '+ str(idx)
+    #print 'indegree: '+ str(vertices.getvertex(idx).getindegree())
+    #print '========'
+    vertices.dofail(idx)
 
     vertices.analyzer.fail(
         vertices.getnbofremoved()
         , vertices.getnboffail()
         , vertices.analyzer.getmandfail() + totmandlinks - vertices.gettotmandlinks()
-        , vertices.analyzer.getaltfail() + totaltlinks - vertices.gettotaltlinks())
+        , vertices.analyzer.getaltfail() + totaltlinks - vertices.gettotaltlinks()
+        , vertices.getvertex(idx).getindegree()
+        , vertices.getvertex(idx).getoutdegree())
 
 def connect(vertices, indexp, indexq, indexexst=None):
     # connect node p to node q
@@ -246,7 +250,7 @@ def addpwvertex(vertices, dictvid, vid, pwapis, m_dep, m_alt, alpha, model):
         # add to the directory of added vids
         dictvid[vid] = indexp
 
-    lscompvid = pwapis[vid][pwj.IDX_CHILDREN] # list of list of vid
+    lscompvid = pwapis[str(vid)][pwj.IDX_CHILDREN] # list of list of vid
     lsoutlink = [] # list of list of index
 
     # process the children/component if any
@@ -328,11 +332,34 @@ def addpwvertex(vertices, dictvid, vid, pwapis, m_dep, m_alt, alpha, model):
 
     return indexp
 
-def buildfromjson(vertices, filename, m_dep, m_alt, alpha, model):
+def snapshottopwapis(snapshot):
+    # convert snapshot to pwapis format
+    # snapshot {vid:[isactive, outlinks, inlinks, altls, altref], ...}
+    # pwapis {vid:[indegree, outdegree, name, mashuptype, [[compvid, ...], ...]], ...}
+
+    pwapis = {}
+    for vid in snapshot.keys():
+
+        vsnap = snapshot[vid]
+
+        indegree = len(vsnap[2]); outdegree = len(vsnap[1])
+        name = str(vid)
+        mashuptype = outdegree > 0
+        lscomp = vsnap[3]
+
+        pwapis[vid] = [indegree, outdegree, name, mashuptype, lscomp]
+
+    return pwapis
+
+def buildfromjson(vertices, filename, m_dep, m_alt, alpha, model, fmt=0):
     # build network from programmable web apis
 
     # pwapis {vid:[indegree, outdegree, name, mashuptype, [[compvid, ...], ...]], ...}
     pwapis = pwj.load(filename)
+
+    if fmt:
+        # fmt != 0, "snapshot" format
+        pwapis = snapshottopwapis(pwapis["snapshot"][0])
 
     dictvid = {}
     for vid in pwapis.keys():

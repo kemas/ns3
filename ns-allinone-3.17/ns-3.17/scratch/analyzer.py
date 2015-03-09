@@ -28,6 +28,8 @@ class Analyzer:
         self.avgdepth = 0
         self.avgmeandepth = 0
         self.snapshot = {}
+        self.indegfail = []
+        self.outdegfail = []
 
     def advancetime(self):
         # advance to the next timestep
@@ -46,6 +48,8 @@ class Analyzer:
             self.altfail.append(self.altfail[self.lastid])
             self.mandcreated.append(self.mandcreated[self.lastid])
             self.mandfail.append(self.mandfail[self.lastid])
+            self.indegfail.append(self.indegfail[self.lastid])
+            self.outdegfail.append(self.outdegfail[self.lastid])
 
         else:
             # first element, add 0
@@ -58,6 +62,8 @@ class Analyzer:
             self.altfail.append(0)
             self.mandcreated.append(0)
             self.mandfail.append(0)
+            self.indegfail.append(0)
+            self.outdegfail.append(0)
 
         self.lastid += 1
 
@@ -120,19 +126,28 @@ class Analyzer:
         self.faillinks(n)
         self.mandfail[self.lastid] = n
 
+    def failindeg(self, n):
+        self.indegfail[self.lastid] = n
+
+    def failoutdeg(self, n):
+        self.outdegfail[self.lastid] = n
+
     def grow(self, nodes, mands, alts):
         self.advancetime()
         self.addnodes(nodes)
         self.createmands(mands)
         self.createalts(alts)
 
-    def fail(self, removed, fail, mands, alts):
+    def fail(self, removed, fail, mands, alts, indegree, outdegree):
         self.advancetime()
         self.removenodes(removed)
-#        print 'an.fail: '+ str(fail)
+        ###
+        #print 'an.fail: '+ str(fail)
         self.failnodes(fail)
         self.failmands(mands)
         self.failalts(alts)
+        self.failindeg(indegree)
+        self.failoutdeg(outdegree)
 
     def takesnapshot(self, vertices):
         for i in range(len(vertices._vertices)):
@@ -203,32 +218,43 @@ class Analyzer:
 
         plt.show()
 
-    def savetofile(self, filename='svcsim.json', isall=False, isnodescreated=True, isnodesremoved=True, isnodesfail=True, islinkscreated=True, islinksfail=True, isaltcreated=True, isaltfail=True, ismandcreated=True, ismandfail=True, isindegree=True, isoutdegree=True, isdepth=True, issnapshot=True):
+    def savetofile(self, filename='svcsim.json', isall=False, isnodescreated=True, isnodesremoved=True, isnodesfail=True, islinkscreated=True, islinksfail=True, isaltcreated=True, isaltfail=True, ismandcreated=True, ismandfail=True, isindegree=True, isoutdegree=True, isdepth=True, issnapshot=True, isindegfail=True, isoutdegfail=True):
         obj = {}
         if isall or isnodescreated:
             obj['nodescreated'] = self.nodescreated
+
         if isall or isnodesremoved:
             obj['nodesremoved'] = self.nodesremoved
+
         if isall or isnodesfail:
             obj['nodesfail'] = self.nodesfail
+
         if isall or islinkscreated:
             obj['linkscreated'] = self.linkscreated
+
         if isall or islinksfail:
             obj['linksfail'] = self.linksfail
+
         if isall or isaltcreated:
             obj['altcreated'] = self.altcreated
+
         if isall or isaltfail:
             obj['altfail'] = self.altfail
+
         if isall or ismandcreated:
             obj['mandcreated'] = self.mandcreated
+
         if isall or ismandfail:
             obj['mandfail'] = self.mandfail
+
         if isall or isindegree:
             obj['indegree'] = self.indegree
             obj['maxindegree'] = self.maxindegree
+
         if isall or isoutdegree:
             obj['outdegree'] = self.outdegree
             obj['maxoutdegree'] = self.maxoutdegree
+
         if isall or isdepth:
             obj['depth'] = self.depth
             obj['maxdepth'] = self.maxdepth
@@ -236,8 +262,15 @@ class Analyzer:
             obj['meandepth'] = self.meandepth
             obj['maxmeandepth'] = self.maxmeandepth
             obj['avgmeandepth'] = self.avgmeandepth
+
         if isall or issnapshot:
             obj['snapshot'] = self.snapshot
+
+        if isall or isindegfail:
+            obj['indegfail'] = self.indegfail
+
+        if isall or isoutdegfail:
+            obj['outdegfail'] = self.outdegfail
 
         f = open(filename, 'w')
         try:
