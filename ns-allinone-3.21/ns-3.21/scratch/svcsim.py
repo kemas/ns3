@@ -58,6 +58,9 @@ def main(argv):
     cmd.fjson = None
     cmd.AddValue("fjson", "The json file to load a network")
 
+    cmd.fmt = None
+    cmd.AddValue("fmt", "The json file format (if fjson parameter is used)")
+
     cmd.comp = None
     cmd.AddValue("comp", "The probability to find a composite service in the network")
 
@@ -96,6 +99,10 @@ def main(argv):
     fjson = None
     if cmd.fjson is not None:
         fjson = cmd.fjson
+
+    fmt = 0
+    if cmd.fmt is not None:
+        fmt = int(cmd.fmt)
 
     if cmd.comp is None:
         comp = svcmodel.COMP
@@ -190,7 +197,7 @@ def main(argv):
 
     if fjson:
         # create a network from a json file
-        svcmodel.buildfromjson(vertices, fjson, m_dep, m_alt, alpha, model)
+        svcmodel.buildfromjson(vertices, fjson, m_dep, m_alt, alpha, model, fmt)
     else:
         # initialize the network with some number of nodes
         svcmodel.initnetwork(vertices, m_init)
