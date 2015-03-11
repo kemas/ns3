@@ -288,9 +288,11 @@ class Vertex:
                 # no alternative, deactivate this vertex
                 # all incoming and outgoing links will be disconnected
                 self._nbofmandlinks -= 1
+                # deactivation is not needed, handled in fail()
                 # is it necessary to check isactive?
-                if self.isactive():
-                    self.deactivate()
+                #if self.isactive():
+                #    print "** deactivate aft disc"
+                #    self.deactivate()
 
     def disconnectfrom(self, index):
         # disconnect another vertex from this vertex (connected by inlink)
@@ -655,6 +657,8 @@ class Vertices:
 
     def disconnect(self, indexp, indexq, isupddepth=False):
         # diconnect the link from vertex p to vertex q
+        # not the opposite (from vertex q to vertex p)
+
         vertexp = self.getvertex(indexp)
         vertexq = self.getvertex(indexq)
 
@@ -707,33 +711,52 @@ class Vertices:
         # to the other fully dependent nodes
 
         self._nboffail += 1
+        #print "_nboffail "+ str(self._nboffail)
 
         vertex = self.getvertex(index)
-        # deactivate
-        vertex.deactivate()
+        ## deactivate
+        #vertex.deactivate()
 
-        # verbose
-        #print "** On fail node **"
-        #vertex.printinfo()
+#        # verbose
+#        print "** On fail node **"
+#        print "index "+ str(index)
+#        vertex.printinfo()
 
         # propagate failure
         #lsdepth = []
-        for idxneighbor in vertex._inlinks:
+        #inlinks = vertex._inlinks[:] # copy values
+        #for idxneighbor in inlinks:
+        while len(vertex._inlinks):
+            idxneighbor = vertex._inlinks[0]
             neighbor = self.getvertex(idxneighbor)
-            if not neighbor.ispartiallydepend(index) and neighbor.isactive():
-                # neighbor is fully depend and active
+            #print "in-neighbor "+ str(idxneighbor)
+            #if not neighbor.ispartiallydepend(index) and neighbor.isactive():
+            if not neighbor.ispartiallydepend(index):
+                # neighbor fully depends on vertex at index
                 # propagate the failure
+                #print "## cascade failure"
                 self.fail(idxneighbor)
                 #lsdepth.append(self.fail(idxneighbor, depth))
+            else:
+                # disconnect the other incoming links
+                #print "## disconnect inlink"
+                self.disconnect(idxneighbor, index)
 
+        #outlinks = vertex._outlinks[:] # copy values
         # disconnect to all outgoing links
-        for idxneighbor in vertex._outlinks:
+        #for idxneighbor in outlinks:
+        while len(vertex._outlinks):
+            idxneighbor = vertex._outlinks[0]
+            #print "out-neighbor "+ str(idxneighbor)
             self.disconnect(index, idxneighbor)
 
-        # disconnect from all incoming links
-        for idxneighbor in vertex._inlinks:
-            self.disconnect(idxneighbor, index)
-            #self.disconnect(index, idxneighbor)
+#        # disconnect from all incoming links
+#        for idxneighbor in vertex._inlinks:
+#            self.disconnect(idxneighbor, index)
+#            #self.disconnect(index, idxneighbor)
+
+        # deactivate
+        vertex.deactivate()
 
 #        ###
 #        if lsdepth:
