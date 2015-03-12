@@ -197,7 +197,9 @@ def main(argv):
 
     if fjson:
         # create a network from a json file
-        svcmodel.buildfromjson(vertices, fjson, m_dep, m_alt, alpha, model, fmt)
+        #svcmodel.buildfromjson(vertices, fjson, m_dep, m_alt, alpha, model, fmt)
+        svcmodel.buildfromjson(vertices, fjson, fmt, model=='rand')
+        timegrow = 0
     else:
         # initialize the network with some number of nodes
         svcmodel.initnetwork(vertices, m_init)
@@ -230,6 +232,8 @@ def main(argv):
 
     # network failure
     timelimit = timegrow + 1 + timefail
+    print "timegrow "+ str(timegrow)
+    print "timelimit "+ str(timelimit)
     for i in range(timegrow + 1, timelimit):
         for j in range(freq):
             ns.core.Simulator.Schedule(ns.core.Seconds(i), svcmodel.randomfail, vertices)

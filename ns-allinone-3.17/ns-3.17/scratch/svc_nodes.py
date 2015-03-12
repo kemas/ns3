@@ -288,9 +288,11 @@ class Vertex:
                 # no alternative, deactivate this vertex
                 # all incoming and outgoing links will be disconnected
                 self._nbofmandlinks -= 1
+                # deactivation is not needed, handled in fail()
                 # is it necessary to check isactive?
-                if self.isactive():
-                    self.deactivate()
+                #if self.isactive():
+                #    print "** deactivate aft disc"
+                #    self.deactivate()
 
     def disconnectfrom(self, index):
         # disconnect another vertex from this vertex (connected by inlink)
@@ -632,6 +634,7 @@ class Vertices:
             #    vertexp.upddepth(1, indexq)
             if depth_q >= depth_p:
                 depth_p = depth_q + 1
+            ###!!! this is maybe not accurate for random topology
             vertexp.upddepth(depth_p, meandepth, indexq)
 
             # update stats
@@ -655,6 +658,8 @@ class Vertices:
 
     def disconnect(self, indexp, indexq, isupddepth=False):
         # diconnect the link from vertex p to vertex q
+        # not the opposite (from vertex q to vertex p)
+
         vertexp = self.getvertex(indexp)
         vertexq = self.getvertex(indexq)
 
@@ -677,6 +682,7 @@ class Vertices:
 
     def upddepth(self, indexp):
         # update the depth of vertex at indexp
+        ###!!! this is maybe not accurate for random topology
 
         vertexp = self.getvertex(indexp)
 
@@ -702,38 +708,63 @@ class Vertices:
         # check if vertex p is connected to vertex q
         return self.getvertex(indexp).isconnectedto(indexq)
 
-    def fail(self, index, depth=0):
+    def fail(self, index, visitedidx, depth=0):
         # deactivate a node and propagate the failure 
         # to the other fully dependent nodes
-
-        self._nboffail += 1
+        # visitedidx is the list of index that has been visited by this function (random fail node)
+        # visitedidx is required to prevent infinite recursion
 
         vertex = self.getvertex(index)
-        # deactivate
-        vertex.deactivate()
+        ## deactivate
+        #vertex.deactivate()
 
-        # verbose
-        #print "** On fail node **"
-        #vertex.printinfo()
+#        # verbose
+#        print "** On fail node **"
+#        print "index "+ str(index)
+#        vertex.printinfo()
 
         # propagate failure
         #lsdepth = []
-        for idxneighbor in vertex._inlinks:
+        #inlinks = vertex._inlinks[:] # copy values
+        #for idxneighbor in inlinks:
+        while len(vertex._inlinks):
+            idxneighbor = vertex._inlinks[0]
             neighbor = self.getvertex(idxneighbor)
-            if not neighbor.ispartiallydepend(index) and neighbor.isactive():
-                # neighbor is fully depend and active
+            #print "in-neighbor "+ str(idxneighbor)
+            #if not neighbor.ispartiallydepend(index) and neighbor.isactive():
+            if not neighbor.ispartiallydepend(index) and idxneighbor not in visitedidx:
+                # neighbor fully depends on vertex at index
                 # propagate the failure
-                self.fail(idxneighbor)
+                #print "## cascade failure"
+                #try:
+                visitedidx.append(idxneighbor)
+                self.fail(idxneighbor, visitedidx)
+                #except Exception as e:
+                #    print "%d %s" % (idxneighbor, str(visitedidx))
                 #lsdepth.append(self.fail(idxneighbor, depth))
+            else:
+                # disconnect the other incoming links
+                #print "## disconnect inlink"
+                self.disconnect(idxneighbor, index)
 
+        #outlinks = vertex._outlinks[:] # copy values
         # disconnect to all outgoing links
-        for idxneighbor in vertex._outlinks:
+        #for idxneighbor in outlinks:
+        while len(vertex._outlinks):
+            idxneighbor = vertex._outlinks[0]
+            #print "out-neighbor "+ str(idxneighbor)
             self.disconnect(index, idxneighbor)
 
-        # disconnect from all incoming links
-        for idxneighbor in vertex._inlinks:
-            self.disconnect(idxneighbor, index)
-            #self.disconnect(index, idxneighbor)
+#        # disconnect from all incoming links
+#        for idxneighbor in vertex._inlinks:
+#            self.disconnect(idxneighbor, index)
+#            #self.disconnect(index, idxneighbor)
+
+        # deactivate
+        vertex.deactivate()
+
+        self._nboffail += 1
+        #print "_nboffail "+ str(self._nboffail)
 
 #        ###
 #        if lsdepth:
@@ -743,7 +774,7 @@ class Vertices:
 
     def dofail(self, index):
         self._nbofremoved += 1
-        self.fail(index)
+        self.fail(index, [index])
         #print self.fail(index)
 
         # verbose

@@ -47,15 +47,23 @@ def randomfail(vertices):
     #print 'index: '+ str(idx)
     #print 'indegree: '+ str(vertices.getvertex(idx).getindegree())
     #print '========'
+    #print "nbactive "+ str(vertices.getnbofactive())
+
+    indegfail = vertices.getvertex(idx).getindegree()
+    outdegfail = vertices.getvertex(idx).getoutdegree()
+    #print "indegree %d %d " % (idx, indegfail)
+    #print "outdegree %d %d " % (idx, outdegfail)
+
     vertices.dofail(idx)
+    #print "nbactive after "+ str(vertices.getnbofactive())
 
     vertices.analyzer.fail(
         vertices.getnbofremoved()
         , vertices.getnboffail()
         , vertices.analyzer.getmandfail() + totmandlinks - vertices.gettotmandlinks()
         , vertices.analyzer.getaltfail() + totaltlinks - vertices.gettotaltlinks()
-        , vertices.getvertex(idx).getindegree()
-        , vertices.getvertex(idx).getoutdegree())
+        , indegfail
+        , outdegfail)
 
 def connect(vertices, indexp, indexq, indexexst=None):
     # connect node p to node q
@@ -236,7 +244,95 @@ def grow(vertices, comp, m_add, m_dep, m_alt, alpha, model=MODEL_SF):
     # verbose
     #vertices.printinfo()
 
-def addpwvertex(vertices, dictvid, vid, pwapis, m_dep, m_alt, alpha, model):
+def addpwvertexssrand(vertices, snapshot):
+    # add a pw api to vertices as a new vertex if not exist in dictvid
+    # add the nodes and their connections from the lowest id to the highest
+    # for random network
+
+    # snapshot {vid:[isactive, outlinks, inlinks, altls, altref], ...}
+
+    # firstly, create all nodes
+    # this is intended to maintain both the topology and
+    # the index of the nodes
+    compidx = [] # list of node indices with outlink, i.e. composite service nodes
+    for indexp in range(len(snapshot)):
+        addnode(vertices)
+
+        if len(snapshot[str(indexp)][1]):
+            # node has outlinks
+            compidx.append(indexp)
+
+    # create connections from nodes with outlinks
+    for indexp in compidx:
+        node = snapshot[str(indexp)]
+        altls = node[3] # list of list of node id, only those connected by alternate links
+        outlinks = node[1] # list of node id
+
+        # create alternate links
+        for lsalt in altls:
+            # connect indexp to indexdep, the first elmt of lsalt
+            indexdep = lsalt[0]
+            if indexp != indexdep and not vertices.isconnected(indexp, indexdep):
+                connect(vertices, indexp, indexdep)
+
+            # remove the connected node id from outlinks
+            outlinks.pop(outlinks.index(indexdep))
+
+            # connect indexp to the other elmts as alternate of indexdep
+            for indexalt in lsalt[1:]:
+                # connect indexp to compvid node as alternative of indexdep
+                if indexp != indexalt and not vertices.isconnected(indexp, indexalt):
+                    connect(vertices, indexp, indexalt, indexdep)
+
+                # remove the connected node id from outlinks
+                outlinks.pop(outlinks.index(indexalt))
+
+        # create dependency links
+        for indexq in outlinks:
+            if indexp != indexq and not vertices.isconnected(indexp, indexq):
+                connect(vertices, indexp, indexq)
+
+def addpwvertexss(vertices, snapshot):
+    # add a pw api to vertices as a new vertex if not exist in dictvid
+    # for growing network
+    # does not need to be recursive for growing network,
+    # because younger nodes always choose older nodes
+    # add the nodes and their connections from the lowest id to the highest
+
+    # snapshot {vid:[isactive, outlinks, inlinks, altls, altref], ...}
+
+    for indexp in range(len(snapshot)):
+        node = snapshot[str(indexp)]
+        addnode(vertices)
+
+        altls = node[3] # list of list of node id, only those connected by alternate links
+        outlinks = node[1] # list of node id
+
+        # create alternate links
+        for lsalt in altls:
+            # connect indexp to indexdep, the first elmt of lsalt
+            indexdep = lsalt[0]
+            if indexp != indexdep and not vertices.isconnected(indexp, indexdep):
+                connect(vertices, indexp, indexdep)
+
+            # remove the connected node id from outlinks
+            outlinks.pop(outlinks.index(indexdep))
+
+            # connect indexp to the other elmts as alternate of indexdep
+            for indexalt in lsalt[1:]:
+                # connect indexp to compvid node as alternative of indexdep
+                if indexp != indexalt and not vertices.isconnected(indexp, indexalt):
+                    connect(vertices, indexp, indexalt, indexdep)
+
+                # remove the connected node id from outlinks
+                outlinks.pop(outlinks.index(indexalt))
+
+        # create dependency links
+        for indexq in outlinks:
+            if indexp != indexq and not vertices.isconnected(indexp, indexq):
+                connect(vertices, indexp, indexq)
+
+def addpwvertex(vertices, dictvid, vid, pwapis):
     # add a pw api to vertices as a new vertex if not exist in dictvid
     # process recursively to its component/children
 
@@ -252,67 +348,66 @@ def addpwvertex(vertices, dictvid, vid, pwapis, m_dep, m_alt, alpha, model):
 
     lscompvid = pwapis[str(vid)][pwj.IDX_CHILDREN] # list of list of vid
     lsoutlink = [] # list of list of index
-
     # process the children/component if any
     # convert list of list of vid (lscompvid) into list of list of index (lsoutlink)
-    for altgrp in lscompvid:
+    for altgr in lscompvid:
         lsalt = []
 
-        for compvid in altgrp:
+        for compvid in altgr:
             # recursively add compvid node to vertices and create connection
-            lsalt.append(addpwvertex(vertices, dictvid, compvid, pwapis, m_dep, m_alt, alpha, model))
+            lsalt.append(addpwvertex(vertices, dictvid, compvid, pwapis))
 
         if lsalt:
             # len(lsalt) > 0
             lsoutlink.append(lsalt)
 
-    nver = vertices.getnbofvertices()
-    nverless = nver - 1
-
-    # choose more vertices according to m_dep_i (defined below)
-    if m_dep > 1:
-        m_dep_i = random.randrange(1, m_dep)
-
-        if m_dep_i > nver:
-            m_dep_i = nver
-
-        if model == MODEL_SF:
-            # choose existing nodes to be connected using preferential attachment
-            lsdepadd = choosepref(vertices, alpha, m_dep_i)
-        else:
-            # model == MODEL_EXP or MODEL_RAND
-            # choose existing nodes randomly
-            lsdepadd = chooserandom(vertices, m_dep_i)
-
-        # add indexes in lsdepadd to lsoutlink as strong dependency links
-        for indexdepadd in lsdepadd:
-            if [indexdepadd] not in lsoutlink:
-                lsoutlink.append([indexdepadd])
-
-    # for each lsalt in lsoutlink,
-    # choose existing nodes to be connected as alternative
-#    print "m_alt "+ str(m_alt)
-    if m_alt > 0:
-        for lsalt in lsoutlink:
-            # generate m_alt_j, the number of alternate links
-            m_alt_j = random.randrange(m_alt)
-            if m_alt_j > nverless:
-                m_alt_j = nverless
-
-            # create m_alt_j links
-            if model == MODEL_SF:
-                # choose alternatives using preferential attachment
-                lsaltidx = choosepref(vertices, alpha, m_alt_j)
-            else:
-                # model == MODEL_EXP or MODEL_RAND
-                # choose alternatives randomly
-                lsaltidx = chooserandom(vertices, m_alt_j)
-
-#            print "len lsaltidx "+ str(len(lsaltidx))
-            # add indexes in lsaltidx to lsoutlink as alternate links
-            for indexalt in lsaltidx:
-                if indexalt not in lsalt:
-                    lsalt.append(indexalt)
+#    nver = vertices.getnbofvertices()
+#    nverless = nver - 1
+#
+#    # choose more vertices according to m_dep_i (defined below)
+#    if m_dep > 1:
+#        m_dep_i = random.randrange(1, m_dep)
+#
+#        if m_dep_i > nver:
+#            m_dep_i = nver
+#
+#        if model == MODEL_SF:
+#            # choose existing nodes to be connected using preferential attachment
+#            lsdepadd = choosepref(vertices, alpha, m_dep_i)
+#        else:
+#            # model == MODEL_EXP or MODEL_RAND
+#            # choose existing nodes randomly
+#            lsdepadd = chooserandom(vertices, m_dep_i)
+#
+#        # add indexes in lsdepadd to lsoutlink as strong dependency links
+#        for indexdepadd in lsdepadd:
+#            if [indexdepadd] not in lsoutlink:
+#                lsoutlink.append([indexdepadd])
+#
+#    # for each lsalt in lsoutlink,
+#    # choose existing nodes to be connected as alternative
+##    print "m_alt "+ str(m_alt)
+#    if m_alt > 0:
+#        for lsalt in lsoutlink:
+#            # generate m_alt_j, the number of alternate links
+#            m_alt_j = random.randrange(m_alt)
+#            if m_alt_j > nverless:
+#                m_alt_j = nverless
+#
+#            # create m_alt_j links
+#            if model == MODEL_SF:
+#                # choose alternatives using preferential attachment
+#                lsaltidx = choosepref(vertices, alpha, m_alt_j)
+#            else:
+#                # model == MODEL_EXP or MODEL_RAND
+#                # choose alternatives randomly
+#                lsaltidx = chooserandom(vertices, m_alt_j)
+#
+##            print "len lsaltidx "+ str(len(lsaltidx))
+#            # add indexes in lsaltidx to lsoutlink as alternate links
+#            for indexalt in lsaltidx:
+#                if indexalt not in lsalt:
+#                    lsalt.append(indexalt)
 
     # create connection based on lsoutlink
     for lsalt in lsoutlink:
@@ -332,38 +427,52 @@ def addpwvertex(vertices, dictvid, vid, pwapis, m_dep, m_alt, alpha, model):
 
     return indexp
 
-def snapshottopwapis(snapshot):
-    # convert snapshot to pwapis format
-    # snapshot {vid:[isactive, outlinks, inlinks, altls, altref], ...}
-    # pwapis {vid:[indegree, outdegree, name, mashuptype, [[compvid, ...], ...]], ...}
+#def snapshottopwapis(snapshot):
+#    # convert snapshot to pwapis format
+#    # snapshot {vid:[isactive, outlinks, inlinks, altls, altref], ...}
+#    # pwapis {vid:[indegree, outdegree, name, mashuptype, [[compvid, ...], ...]], ...}
+#
+#    pwapis = {}
+#    for vid in snapshot.keys():
+#
+#        vsnap = snapshot[vid]
+#        if vsnap[0]:
+#
+#            indegree = len(vsnap[2]); outdegree = len(vsnap[1])
+#            name = str(vid)
+#            mashuptype = outdegree > 0
+#            lscomp = vsnap[3]
+#
+#            pwapis[vid] = [indegree, outdegree, name, mashuptype, lscomp]
+#            print "vid "+ str(vid)
+#            print pwapis[vid]
+#
+#    return pwapis
 
-    pwapis = {}
-    for vid in snapshot.keys():
-
-        vsnap = snapshot[vid]
-
-        indegree = len(vsnap[2]); outdegree = len(vsnap[1])
-        name = str(vid)
-        mashuptype = outdegree > 0
-        lscomp = vsnap[3]
-
-        pwapis[vid] = [indegree, outdegree, name, mashuptype, lscomp]
-
-    return pwapis
-
-def buildfromjson(vertices, filename, m_dep, m_alt, alpha, model, fmt=0):
+#def buildfromjson(vertices, filename, m_dep, m_alt, alpha, model, fmt=0):
+def buildfromjson(vertices, filename, fmt=0, rand=False):
     # build network from programmable web apis
 
-    # pwapis {vid:[indegree, outdegree, name, mashuptype, [[compvid, ...], ...]], ...}
     pwapis = pwj.load(filename)
 
     if fmt:
         # fmt != 0, "snapshot" format
-        pwapis = snapshottopwapis(pwapis["snapshot"][0])
+        snapshot = pwapis["snapshot"]
+        if not isinstance(snapshot, dict):
+            # the value of snapshot in old format is stored as a json array "[{..}]"
+            snapshot = snapshot[0]
 
-    dictvid = {}
-    for vid in pwapis.keys():
-        addpwvertex(vertices, dictvid, vid, pwapis, m_dep, m_alt, alpha, model)
+        if not rand:
+            # growing network
+            addpwvertexss(vertices, snapshot)
+        else:
+            # random network
+            addpwvertexssrand(vertices, snapshot)
+    else:
+        dictvid = {}
+
+        for vid in pwapis.keys():
+            addpwvertex(vertices, dictvid, vid, pwapis)
 
     vertices.analyzer.grow(
         vertices.getnbofvertices()
