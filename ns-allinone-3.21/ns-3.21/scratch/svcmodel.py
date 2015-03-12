@@ -244,9 +244,59 @@ def grow(vertices, comp, m_add, m_dep, m_alt, alpha, model=MODEL_SF):
     # verbose
     #vertices.printinfo()
 
+def addpwvertexssrand(vertices, snapshot):
+    # add a pw api to vertices as a new vertex if not exist in dictvid
+    # add the nodes and their connections from the lowest id to the highest
+    # for random network
+
+    # snapshot {vid:[isactive, outlinks, inlinks, altls, altref], ...}
+
+    # firstly, create all nodes
+    # this is intended to maintain both the topology and
+    # the index of the nodes
+    compidx = [] # list of node indices with outlink, i.e. composite service nodes
+    for indexp in range(len(snapshot)):
+        addnode(vertices)
+
+        if len(snapshot[str(indexp)][1]):
+            # node has outlinks
+            compidx.append(indexp)
+
+    # create connections from nodes with outlinks
+    for indexp in compidx:
+        node = snapshot[str(indexp)]
+        altls = node[3] # list of list of node id, only those connected by alternate links
+        outlinks = node[1] # list of node id
+
+        # create alternate links
+        for lsalt in altls:
+            # connect indexp to indexdep, the first elmt of lsalt
+            indexdep = lsalt[0]
+            if indexp != indexdep and not vertices.isconnected(indexp, indexdep):
+                connect(vertices, indexp, indexdep)
+
+            # remove the connected node id from outlinks
+            outlinks.pop(outlinks.index(indexdep))
+
+            # connect indexp to the other elmts as alternate of indexdep
+            for indexalt in lsalt[1:]:
+                # connect indexp to compvid node as alternative of indexdep
+                if indexp != indexalt and not vertices.isconnected(indexp, indexalt):
+                    connect(vertices, indexp, indexalt, indexdep)
+
+                # remove the connected node id from outlinks
+                outlinks.pop(outlinks.index(indexalt))
+
+        # create dependency links
+        for indexq in outlinks:
+            if indexp != indexq and not vertices.isconnected(indexp, indexq):
+                connect(vertices, indexp, indexq)
+
 def addpwvertexss(vertices, snapshot):
     # add a pw api to vertices as a new vertex if not exist in dictvid
-    # does not need to be recursive
+    # for growing network
+    # does not need to be recursive for growing network,
+    # because younger nodes always choose older nodes
     # add the nodes and their connections from the lowest id to the highest
 
     # snapshot {vid:[isactive, outlinks, inlinks, altls, altref], ...}
@@ -400,7 +450,7 @@ def addpwvertex(vertices, dictvid, vid, pwapis):
 #    return pwapis
 
 #def buildfromjson(vertices, filename, m_dep, m_alt, alpha, model, fmt=0):
-def buildfromjson(vertices, filename, fmt=0):
+def buildfromjson(vertices, filename, fmt=0, rand=False):
     # build network from programmable web apis
 
     pwapis = pwj.load(filename)
@@ -412,7 +462,12 @@ def buildfromjson(vertices, filename, fmt=0):
             # the value of snapshot in old format is stored as a json array "[{..}]"
             snapshot = snapshot[0]
 
-        addpwvertexss(vertices, snapshot)
+        if not rand:
+            # growing network
+            addpwvertexss(vertices, snapshot)
+        else:
+            # random network
+            addpwvertexssrand(vertices, snapshot)
     else:
         dictvid = {}
 

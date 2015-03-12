@@ -634,6 +634,7 @@ class Vertices:
             #    vertexp.upddepth(1, indexq)
             if depth_q >= depth_p:
                 depth_p = depth_q + 1
+            ###!!! this is maybe not accurate for random topology
             vertexp.upddepth(depth_p, meandepth, indexq)
 
             # update stats
@@ -681,6 +682,7 @@ class Vertices:
 
     def upddepth(self, indexp):
         # update the depth of vertex at indexp
+        ###!!! this is maybe not accurate for random topology
 
         vertexp = self.getvertex(indexp)
 
@@ -706,12 +708,11 @@ class Vertices:
         # check if vertex p is connected to vertex q
         return self.getvertex(indexp).isconnectedto(indexq)
 
-    def fail(self, index, depth=0):
+    def fail(self, index, visitedidx, depth=0):
         # deactivate a node and propagate the failure 
         # to the other fully dependent nodes
-
-        self._nboffail += 1
-        #print "_nboffail "+ str(self._nboffail)
+        # visitedidx is the list of index that has been visited by this function (random fail node)
+        # visitedidx is required to prevent infinite recursion
 
         vertex = self.getvertex(index)
         ## deactivate
@@ -731,11 +732,15 @@ class Vertices:
             neighbor = self.getvertex(idxneighbor)
             #print "in-neighbor "+ str(idxneighbor)
             #if not neighbor.ispartiallydepend(index) and neighbor.isactive():
-            if not neighbor.ispartiallydepend(index):
+            if not neighbor.ispartiallydepend(index) and idxneighbor not in visitedidx:
                 # neighbor fully depends on vertex at index
                 # propagate the failure
                 #print "## cascade failure"
-                self.fail(idxneighbor)
+                #try:
+                visitedidx.append(idxneighbor)
+                self.fail(idxneighbor, visitedidx)
+                #except Exception as e:
+                #    print "%d %s" % (idxneighbor, str(visitedidx))
                 #lsdepth.append(self.fail(idxneighbor, depth))
             else:
                 # disconnect the other incoming links
@@ -758,6 +763,9 @@ class Vertices:
         # deactivate
         vertex.deactivate()
 
+        self._nboffail += 1
+        #print "_nboffail "+ str(self._nboffail)
+
 #        ###
 #        if lsdepth:
 #            return max(lsdepth) + 1
@@ -766,7 +774,7 @@ class Vertices:
 
     def dofail(self, index):
         self._nbofremoved += 1
-        self.fail(index)
+        self.fail(index, [index])
         #print self.fail(index)
 
         # verbose
