@@ -20,9 +20,13 @@ FUNC_HISTINDEG = '-hi'
 FUNC_HISTOUTDEG = '-ho'
 FUNC_DISTINDEG = '-di'
 FUNC_DISTOUTDEG = '-do'
+FUNC_INDEGEVOL = '-id'
+FUNC_OUTDEGEVOL = '-od'
+FUNC_TOTINDEGEVOL = '-ti'
+FUNC_TOTOUTDEGEVOL = '-to'
 FUNC_PLOTFROMFILE = '-pl'
 FUNC_PRINTDEPTH = '-pd'
-FUNCOPTS = (FUNC_FAIL, FUNC_FAILCASC, FUNC_EFF, FUNC_LOGINDEG, FUNC_LOGOUTDEG, FUNC_HISTINDEG, FUNC_HISTOUTDEG, FUNC_DISTINDEG, FUNC_DISTOUTDEG, FUNC_PRINTDEPTH, FUNC_PLOTFROMFILE)
+FUNCOPTS = (FUNC_FAIL, FUNC_FAILCASC, FUNC_EFF, FUNC_LOGINDEG, FUNC_LOGOUTDEG, FUNC_HISTINDEG, FUNC_HISTOUTDEG, FUNC_DISTINDEG, FUNC_DISTOUTDEG, FUNC_INDEGEVOL, FUNC_OUTDEGEVOL, FUNC_TOTINDEGEVOL, FUNC_TOTOUTDEGEVOL, FUNC_PRINTDEPTH, FUNC_PLOTFROMFILE)
 LINESTYLES = ('-', '--', '-.', ':')
 FILENAME = 'depthstat.csv'
 LOCONPLOT = 11 # legend is written at the end of each series
@@ -659,8 +663,31 @@ def loaddata(ds, func, data, filename, step=STEP, norm=True):
     elif func in [FUNC_LOGOUTDEG, FUNC_HISTOUTDEG]:
         ds.append([data['outdegree'], data['maxoutdegree']])
 
-    elif func in FUNC_PRINTDEPTH:
+    elif func == FUNC_PRINTDEPTH:
         ds.append([filename, data['maxdepth'], data['avgdepth'], data['maxmeandepth'], data['avgmeandepth']])
+
+    elif func in [FUNC_INDEGEVOL, FUNC_OUTDEGEVOL, FUNC_TOTINDEGEVOL, FUNC_TOTOUTDEGEVOL]:
+        if func in [FUNC_INDEGEVOL, FUNC_TOTINDEGEVOL]:
+            field = 'indegfail'
+        else:
+            # func in FUNC_OUTDEGEVOL, FUNC_TOTOUTDEGEVOL
+            field = 'outdegfail'
+
+        degfail = data[field]
+
+        lsx = []; lsy = []
+
+        if func in [FUNC_INDEGEVOL, FUNC_OUTDEGEVOL]:
+            for i in range(len(degfail)-1, -1, -step):
+                lsx.append(i)
+                lsy.append(degfail[i])
+        else:
+            func in [FUNC_TOTINDEGEVOL, FUNC_TOTOUTDEGEVOL]:
+            for i in range(len(degfail)-1, -1, -step):
+                lsx.append(i)
+                lsy.append(degfail[i])
+
+        ds.append([lsx, lsy])
 
 def addtodictarg(dictarg, key, arg):
     # assert arguments for -m (markset)
@@ -851,6 +878,9 @@ def main(argv):
             , axisfsize=axisfsize)
 
         processplot(plt, getargval(dictarg, '-s', [None])[0])
+
+    elif func == FUNC_INDEGEVOL: 
+        pass
 
     elif func == FUNC_PLOTFROMFILE:
         f = open(dictarg['files'][0])
