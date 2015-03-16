@@ -22,11 +22,12 @@ FUNC_DISTINDEG = '-di'
 FUNC_DISTOUTDEG = '-do'
 FUNC_INDEGEVOL = '-id'
 FUNC_OUTDEGEVOL = '-od'
-FUNC_TOTINDEGEVOL = '-ti'
-FUNC_TOTOUTDEGEVOL = '-to'
+#FUNC_CASCINDEGEVOL = '-ci'
+#FUNC_CASCOUTDEGEVOL = '-co'
+FUNC_TOTDEGEVOL = '-td'
 FUNC_PLOTFROMFILE = '-pl'
 FUNC_PRINTDEPTH = '-pd'
-FUNCOPTS = (FUNC_FAIL, FUNC_FAILCASC, FUNC_EFF, FUNC_LOGINDEG, FUNC_LOGOUTDEG, FUNC_HISTINDEG, FUNC_HISTOUTDEG, FUNC_DISTINDEG, FUNC_DISTOUTDEG, FUNC_INDEGEVOL, FUNC_OUTDEGEVOL, FUNC_TOTINDEGEVOL, FUNC_TOTOUTDEGEVOL, FUNC_PRINTDEPTH, FUNC_PLOTFROMFILE)
+FUNCOPTS = (FUNC_FAIL, FUNC_FAILCASC, FUNC_EFF, FUNC_LOGINDEG, FUNC_LOGOUTDEG, FUNC_HISTINDEG, FUNC_HISTOUTDEG, FUNC_DISTINDEG, FUNC_DISTOUTDEG, FUNC_INDEGEVOL, FUNC_OUTDEGEVOL, FUNC_TOTDEGEVOL, FUNC_PRINTDEPTH, FUNC_PLOTFROMFILE)
 LINESTYLES = ('-', '--', '-.', ':')
 FILENAME = 'depthstat.csv'
 LOCONPLOT = 11 # legend is written at the end of each series
@@ -70,6 +71,7 @@ MARKERS = {'var-':['wo-', 'ks-', 'wv-', 'kD-', 'w+-', 'kx-', 'w*-', 'k|-', 'wp-'
         , 'reddia':['rd']
         , 'reddia-':['rd-']
         , 'bluepenta':['bp']
+        , 'bluepenta-':['bp-']
         , 'bluepenta-':['bp-']
         , 'trihexaorg':{'linestyle':'', 'markers':['v'],  'markerfacecolors':['orange']}
         , 'trihexaorg-':{'linestyle':'-', 'markers':['v'],  'markerfacecolors':['orange']}
@@ -438,6 +440,7 @@ def plotdegdist(ds, labels, markset='var'
     for degrees in ds:
         y, bins = np.histogram(degrees, bins=nbins, density=density, normed=False)
         x = bins[:-1]
+        print x
 
         if norm:
             nbofnodes = float(sum(y))
@@ -666,26 +669,26 @@ def loaddata(ds, func, data, filename, step=STEP, norm=True):
     elif func == FUNC_PRINTDEPTH:
         ds.append([filename, data['maxdepth'], data['avgdepth'], data['maxmeandepth'], data['avgmeandepth']])
 
-    elif func in [FUNC_INDEGEVOL, FUNC_OUTDEGEVOL, FUNC_TOTINDEGEVOL, FUNC_TOTOUTDEGEVOL]:
-        if func in [FUNC_INDEGEVOL, FUNC_TOTINDEGEVOL]:
-            field = 'indegfail'
+    elif func in [FUNC_INDEGEVOL, FUNC_OUTDEGEVOL]:
+        if func == FUNC_INDEGEVOL:
+            degfail = data['indegfail']
         else:
-            # func in FUNC_OUTDEGEVOL, FUNC_TOTOUTDEGEVOL
-            field = 'outdegfail'
-
-        degfail = data[field]
+            # func == FUNC_OUTDEGEVOL:
+            degfail = data['outdegfail']
 
         lsx = []; lsy = []
+        for i in range(len(degfail)-1, -1, -step):
+            lsx.append(i)
+            lsy.append(degfail[i])
 
-        if func in [FUNC_INDEGEVOL, FUNC_OUTDEGEVOL]:
-            for i in range(len(degfail)-1, -1, -step):
-                lsx.append(i)
-                lsy.append(degfail[i])
-        else:
-            func in [FUNC_TOTINDEGEVOL, FUNC_TOTOUTDEGEVOL]:
-            for i in range(len(degfail)-1, -1, -step):
-                lsx.append(i)
-                lsy.append(degfail[i])
+        ds.append([lsx, lsy])
+
+    elif func == FUNC_TOTDEGEVOL:
+        lsx = []; lsy = []
+        totdegree = sum(data['indegree']) # total degree that has been created
+        for i in range(len(data['mandfail'])-1, -1, -step):
+            lsx.append(i)
+            lsy.append(totdegree - data['mandfail'][i] - data['altfail'][i])
 
         ds.append([lsx, lsy])
 
@@ -879,8 +882,23 @@ def main(argv):
 
         processplot(plt, getargval(dictarg, '-s', [None])[0])
 
-    elif func == FUNC_INDEGEVOL: 
-        pass
+    elif func in [FUNC_INDEGEVOL, FUNC_OUTDEGEVOL, FUNC_TOTDEGEVOL]:
+        plotdata(ds
+            , getargval(dictarg, '-l')
+            , getargval(dictarg, '-t')[0]
+            , {'x': getargval(dictarg, '-xl', ['Time'])[0], 'y': getargval(dictarg, '-yl', ['Degree'])[0]}
+            , getargval(dictarg, '-m', ['var'])[0]
+            , isbase=False
+            , logx=logx
+            , logy=logy
+            , xlim=xlim
+            , ylim=ylim
+            , legloc=int(getargval(dictarg, '-loc', ['1'])[0])
+            , ncol=int(getargval(dictarg, '-ncol', ['1'])[0])
+            , numpoints=int(getargval(dictarg, '-numpoints', ['1'])[0])
+            , axisfsize=axisfsize)
+
+        processplot(plt, getargval(dictarg, '-s', [None])[0])
 
     elif func == FUNC_PLOTFROMFILE:
         f = open(dictarg['files'][0])
