@@ -1026,3 +1026,768 @@
 #    simdata/pwsvcsim_d4_16.json \
 #-c "*"
 #
+
+#python scratch/simdata.py -a \
+#    simdata/pwsvc_avg1_16.json -f \
+#    simdata/pwsvc_1.json \
+#    simdata/pwsvc_2.json \
+#    simdata/pwsvc_3.json \
+#    simdata/pwsvc_4.json \
+#    simdata/pwsvc_5.json \
+#    simdata/pwsvc_6.json \
+#    simdata/pwsvc_7.json \
+#    simdata/pwsvc_8.json \
+#    simdata/pwsvc_9.json \
+#    simdata/pwsvc_10.json \
+#    simdata/pwsvc_11.json \
+#    simdata/pwsvc_12.json \
+#    simdata/pwsvc_13.json \
+#    simdata/pwsvc_14.json \
+#    simdata/pwsvc_15.json \
+#    simdata/pwsvc_16.json \
+#-c "*"
+
+#python scratch/simdata.py -a \
+#    simdata/lgsvc_avg1_16.json -f \
+#    simdata/lgsvc_1.json \
+#    simdata/lgsvc_2.json \
+#    simdata/lgsvc_3.json \
+#    simdata/lgsvc_4.json \
+#    simdata/lgsvc_5.json \
+#    simdata/lgsvc_6.json \
+#    simdata/lgsvc_7.json \
+#    simdata/lgsvc_8.json \
+#    simdata/lgsvc_9.json \
+#    simdata/lgsvc_10.json \
+#    simdata/lgsvc_11.json \
+#    simdata/lgsvc_12.json \
+#    simdata/lgsvc_13.json \
+#    simdata/lgsvc_14.json \
+#    simdata/lgsvc_15.json \
+#    simdata/lgsvc_16.json \
+#-c "*"
+
+#python scratch/simdata.py -a \
+#    simdata/svcsimn_d2a1_avg1_8.json -f \
+#    simdata/svcsimn_d2a1_1.json \
+#    simdata/svcsimn_d2a1_2.json \
+#    simdata/svcsimn_d2a1_3.json \
+#    simdata/svcsimn_d2a1_4.json \
+#    simdata/svcsimn_d2a1_5.json \
+#    simdata/svcsimn_d2a1_6.json \
+#    simdata/svcsimn_d2a1_7.json \
+#    simdata/svcsimn_d2a1_8.json \
+#-c "*"
+#
+#python scratch/simdata.py -a \
+#    simdata/svcsimn_d2a2_avg1_8.json -f \
+#    simdata/svcsimn_d2a2_1.json \
+#    simdata/svcsimn_d2a2_2.json \
+#    simdata/svcsimn_d2a2_3.json \
+#    simdata/svcsimn_d2a2_4.json \
+#    simdata/svcsimn_d2a2_5.json \
+#    simdata/svcsimn_d2a2_6.json \
+#    simdata/svcsimn_d2a2_7.json \
+#    simdata/svcsimn_d2a2_8.json \
+#-c "*"
+#
+#python scratch/simdata.py -a \
+#    simdata/svcsimn_d2a3_avg1_8.json -f \
+#    simdata/svcsimn_d2a3_1.json \
+#    simdata/svcsimn_d2a3_2.json \
+#    simdata/svcsimn_d2a3_3.json \
+#    simdata/svcsimn_d2a3_4.json \
+#    simdata/svcsimn_d2a3_5.json \
+#    simdata/svcsimn_d2a3_6.json \
+#    simdata/svcsimn_d2a3_7.json \
+#    simdata/svcsimn_d2a3_8.json \
+#-c "*"
+#
+#python scratch/simdata.py -a \
+#    simdata/svcsimn_d2a4_avg1_8.json -f \
+#    simdata/svcsimn_d2a4_1.json \
+#    simdata/svcsimn_d2a4_2.json \
+#    simdata/svcsimn_d2a4_3.json \
+#    simdata/svcsimn_d2a4_4.json \
+#    simdata/svcsimn_d2a4_5.json \
+#    simdata/svcsimn_d2a4_6.json \
+#    simdata/svcsimn_d2a4_7.json \
+#    simdata/svcsimn_d2a4_8.json \
+#-c "*"
+#
+#python scratch/simdata.py -a \
+#    simdata/svcsimn_d2a5_avg1_8.json -f \
+#    simdata/svcsimn_d2a5_1.json \
+#    simdata/svcsimn_d2a5_2.json \
+#    simdata/svcsimn_d2a5_3.json \
+#    simdata/svcsimn_d2a5_4.json \
+#    simdata/svcsimn_d2a5_5.json \
+#    simdata/svcsimn_d2a5_6.json \
+#    simdata/svcsimn_d2a5_7.json \
+#    simdata/svcsimn_d2a5_8.json \
+#-c "*"
+#
+#python scratch/simdata.py -a \
+#    simdata/svcsimn_d2a6_avg1_8.json -f \
+#    simdata/svcsimn_d2a6_1.json \
+#    simdata/svcsimn_d2a6_2.json \
+#    simdata/svcsimn_d2a6_3.json \
+#    simdata/svcsimn_d2a6_4.json \
+#    simdata/svcsimn_d2a6_5.json \
+#    simdata/svcsimn_d2a6_6.json \
+#    simdata/svcsimn_d2a6_7.json \
+#    simdata/svcsimn_d2a6_8.json \
+#-c "*"
+#
+#python scratch/simdata.py -a \
+#    simdata/svcsimn_d2a7_avg1_8.json -f \
+#    simdata/svcsimn_d2a7_1.json \
+#    simdata/svcsimn_d2a7_2.json \
+#    simdata/svcsimn_d2a7_3.json \
+#    simdata/svcsimn_d2a7_4.json \
+#    simdata/svcsimn_d2a7_5.json \
+#    simdata/svcsimn_d2a7_6.json \
+#    simdata/svcsimn_d2a7_7.json \
+#    simdata/svcsimn_d2a7_8.json \
+#-c "*"
+#
+#python scratch/simdata.py -a \
+#    simdata/svcsimn_d2a8_avg1_8.json -f \
+#    simdata/svcsimn_d2a8_1.json \
+#    simdata/svcsimn_d2a8_2.json \
+#    simdata/svcsimn_d2a8_3.json \
+#    simdata/svcsimn_d2a8_4.json \
+#    simdata/svcsimn_d2a8_5.json \
+#    simdata/svcsimn_d2a8_6.json \
+#    simdata/svcsimn_d2a8_7.json \
+#    simdata/svcsimn_d2a8_8.json \
+#-c "*"
+#
+#python scratch/simdata.py -a \
+#    simdata/svcsimn_d2a9_avg1_8.json -f \
+#    simdata/svcsimn_d2a9_1.json \
+#    simdata/svcsimn_d2a9_2.json \
+#    simdata/svcsimn_d2a9_3.json \
+#    simdata/svcsimn_d2a9_4.json \
+#    simdata/svcsimn_d2a9_5.json \
+#    simdata/svcsimn_d2a9_6.json \
+#    simdata/svcsimn_d2a9_7.json \
+#    simdata/svcsimn_d2a9_8.json \
+#-c "*"
+#
+#python scratch/simdata.py -a \
+#    simdata/svcsimn_d2a10_avg1_8.json -f \
+#    simdata/svcsimn_d2a10_1.json \
+#    simdata/svcsimn_d2a10_2.json \
+#    simdata/svcsimn_d2a10_3.json \
+#    simdata/svcsimn_d2a10_4.json \
+#    simdata/svcsimn_d2a10_5.json \
+#    simdata/svcsimn_d2a10_6.json \
+#    simdata/svcsimn_d2a10_7.json \
+#    simdata/svcsimn_d2a10_8.json \
+#-c "*"
+#
+#python scratch/simdata.py -a \
+#    simdata/svcsimn_d2a11_avg1_8.json -f \
+#    simdata/svcsimn_d2a11_1.json \
+#    simdata/svcsimn_d2a11_2.json \
+#    simdata/svcsimn_d2a11_3.json \
+#    simdata/svcsimn_d2a11_4.json \
+#    simdata/svcsimn_d2a11_5.json \
+#    simdata/svcsimn_d2a11_6.json \
+#    simdata/svcsimn_d2a11_7.json \
+#    simdata/svcsimn_d2a11_8.json \
+#-c "*"
+#
+#python scratch/simdata.py -a \
+#    simdata/svcsimn_d3a1_avg1_8.json -f \
+#    simdata/svcsimn_d3a1_1.json \
+#    simdata/svcsimn_d3a1_2.json \
+#    simdata/svcsimn_d3a1_3.json \
+#    simdata/svcsimn_d3a1_4.json \
+#    simdata/svcsimn_d3a1_5.json \
+#    simdata/svcsimn_d3a1_6.json \
+#    simdata/svcsimn_d3a1_7.json \
+#    simdata/svcsimn_d3a1_8.json \
+#-c "*"
+#
+#python scratch/simdata.py -a \
+#    simdata/svcsimn_d4a1_avg1_8.json -f \
+#    simdata/svcsimn_d4a1_1.json \
+#    simdata/svcsimn_d4a1_2.json \
+#    simdata/svcsimn_d4a1_3.json \
+#    simdata/svcsimn_d4a1_4.json \
+#    simdata/svcsimn_d4a1_5.json \
+#    simdata/svcsimn_d4a1_6.json \
+#    simdata/svcsimn_d4a1_7.json \
+#    simdata/svcsimn_d4a1_8.json \
+#-c "*"
+#
+#python scratch/simdata.py -a \
+#    simdata/svcsimn_d5a1_avg1_8.json -f \
+#    simdata/svcsimn_d5a1_1.json \
+#    simdata/svcsimn_d5a1_2.json \
+#    simdata/svcsimn_d5a1_3.json \
+#    simdata/svcsimn_d5a1_4.json \
+#    simdata/svcsimn_d5a1_5.json \
+#    simdata/svcsimn_d5a1_6.json \
+#    simdata/svcsimn_d5a1_7.json \
+#    simdata/svcsimn_d5a1_8.json \
+#-c "*"
+#
+#python scratch/simdata.py -a \
+#    simdata/svcsimn_d6a1_avg1_8.json -f \
+#    simdata/svcsimn_d6a1_1.json \
+#    simdata/svcsimn_d6a1_2.json \
+#    simdata/svcsimn_d6a1_3.json \
+#    simdata/svcsimn_d6a1_4.json \
+#    simdata/svcsimn_d6a1_5.json \
+#    simdata/svcsimn_d6a1_6.json \
+#    simdata/svcsimn_d6a1_7.json \
+#    simdata/svcsimn_d6a1_8.json \
+#-c "*"
+#
+#python scratch/simdata.py -a \
+#    simdata/svcsimn_d7a1_avg1_8.json -f \
+#    simdata/svcsimn_d7a1_1.json \
+#    simdata/svcsimn_d7a1_2.json \
+#    simdata/svcsimn_d7a1_3.json \
+#    simdata/svcsimn_d7a1_4.json \
+#    simdata/svcsimn_d7a1_5.json \
+#    simdata/svcsimn_d7a1_6.json \
+#    simdata/svcsimn_d7a1_7.json \
+#    simdata/svcsimn_d7a1_8.json \
+#-c "*"
+#
+#python scratch/simdata.py -a \
+#    simdata/svcsimn_d8a1_avg1_8.json -f \
+#    simdata/svcsimn_d8a1_1.json \
+#    simdata/svcsimn_d8a1_2.json \
+#    simdata/svcsimn_d8a1_3.json \
+#    simdata/svcsimn_d8a1_4.json \
+#    simdata/svcsimn_d8a1_5.json \
+#    simdata/svcsimn_d8a1_6.json \
+#    simdata/svcsimn_d8a1_7.json \
+#    simdata/svcsimn_d8a1_8.json \
+#-c "*"
+#
+#python scratch/simdata.py -a \
+#    simdata/svcsimn_d9a1_avg1_8.json -f \
+#    simdata/svcsimn_d9a1_1.json \
+#    simdata/svcsimn_d9a1_2.json \
+#    simdata/svcsimn_d9a1_3.json \
+#    simdata/svcsimn_d9a1_4.json \
+#    simdata/svcsimn_d9a1_5.json \
+#    simdata/svcsimn_d9a1_6.json \
+#    simdata/svcsimn_d9a1_7.json \
+#    simdata/svcsimn_d9a1_8.json \
+#-c "*"
+#
+#python scratch/simdata.py -a \
+#    simdata/svcsimn_d10a1_avg1_8.json -f \
+#    simdata/svcsimn_d10a1_1.json \
+#    simdata/svcsimn_d10a1_2.json \
+#    simdata/svcsimn_d10a1_3.json \
+#    simdata/svcsimn_d10a1_4.json \
+#    simdata/svcsimn_d10a1_5.json \
+#    simdata/svcsimn_d10a1_6.json \
+#    simdata/svcsimn_d10a1_7.json \
+#    simdata/svcsimn_d10a1_8.json \
+#-c "*"
+#
+#python scratch/simdata.py -a \
+#    simdata/svcsimn_d11a1_avg1_8.json -f \
+#    simdata/svcsimn_d11a1_1.json \
+#    simdata/svcsimn_d11a1_2.json \
+#    simdata/svcsimn_d11a1_3.json \
+#    simdata/svcsimn_d11a1_4.json \
+#    simdata/svcsimn_d11a1_5.json \
+#    simdata/svcsimn_d11a1_6.json \
+#    simdata/svcsimn_d11a1_7.json \
+#    simdata/svcsimn_d11a1_8.json \
+#-c "*"
+#
+###
+
+#python scratch/simdata.py -a \
+#    simdata/expsvcsimn_d2a1_avg1_8.json -f \
+#    simdata/expsvcsimn_d2a1_1.json \
+#    simdata/expsvcsimn_d2a1_2.json \
+#    simdata/expsvcsimn_d2a1_3.json \
+#    simdata/expsvcsimn_d2a1_4.json \
+#    simdata/expsvcsimn_d2a1_5.json \
+#    simdata/expsvcsimn_d2a1_6.json \
+#    simdata/expsvcsimn_d2a1_7.json \
+#    simdata/expsvcsimn_d2a1_8.json \
+#-c "*"
+#
+#python scratch/simdata.py -a \
+#    simdata/expsvcsimn_d2a2_avg1_8.json -f \
+#    simdata/expsvcsimn_d2a2_1.json \
+#    simdata/expsvcsimn_d2a2_2.json \
+#    simdata/expsvcsimn_d2a2_3.json \
+#    simdata/expsvcsimn_d2a2_4.json \
+#    simdata/expsvcsimn_d2a2_5.json \
+#    simdata/expsvcsimn_d2a2_6.json \
+#    simdata/expsvcsimn_d2a2_7.json \
+#    simdata/expsvcsimn_d2a2_8.json \
+#-c "*"
+#
+#python scratch/simdata.py -a \
+#    simdata/expsvcsimn_d2a3_avg1_8.json -f \
+#    simdata/expsvcsimn_d2a3_1.json \
+#    simdata/expsvcsimn_d2a3_2.json \
+#    simdata/expsvcsimn_d2a3_3.json \
+#    simdata/expsvcsimn_d2a3_4.json \
+#    simdata/expsvcsimn_d2a3_5.json \
+#    simdata/expsvcsimn_d2a3_6.json \
+#    simdata/expsvcsimn_d2a3_7.json \
+#    simdata/expsvcsimn_d2a3_8.json \
+#-c "*"
+#
+#python scratch/simdata.py -a \
+#    simdata/expsvcsimn_d2a4_avg1_8.json -f \
+#    simdata/expsvcsimn_d2a4_1.json \
+#    simdata/expsvcsimn_d2a4_2.json \
+#    simdata/expsvcsimn_d2a4_3.json \
+#    simdata/expsvcsimn_d2a4_4.json \
+#    simdata/expsvcsimn_d2a4_5.json \
+#    simdata/expsvcsimn_d2a4_6.json \
+#    simdata/expsvcsimn_d2a4_7.json \
+#    simdata/expsvcsimn_d2a4_8.json \
+#-c "*"
+#
+#python scratch/simdata.py -a \
+#    simdata/expsvcsimn_d2a5_avg1_8.json -f \
+#    simdata/expsvcsimn_d2a5_1.json \
+#    simdata/expsvcsimn_d2a5_2.json \
+#    simdata/expsvcsimn_d2a5_3.json \
+#    simdata/expsvcsimn_d2a5_4.json \
+#    simdata/expsvcsimn_d2a5_5.json \
+#    simdata/expsvcsimn_d2a5_6.json \
+#    simdata/expsvcsimn_d2a5_7.json \
+#    simdata/expsvcsimn_d2a5_8.json \
+#-c "*"
+#
+#python scratch/simdata.py -a \
+#    simdata/expsvcsimn_d2a6_avg1_8.json -f \
+#    simdata/expsvcsimn_d2a6_1.json \
+#    simdata/expsvcsimn_d2a6_2.json \
+#    simdata/expsvcsimn_d2a6_3.json \
+#    simdata/expsvcsimn_d2a6_4.json \
+#    simdata/expsvcsimn_d2a6_5.json \
+#    simdata/expsvcsimn_d2a6_6.json \
+#    simdata/expsvcsimn_d2a6_7.json \
+#    simdata/expsvcsimn_d2a6_8.json \
+#-c "*"
+#
+#python scratch/simdata.py -a \
+#    simdata/expsvcsimn_d2a7_avg1_8.json -f \
+#    simdata/expsvcsimn_d2a7_1.json \
+#    simdata/expsvcsimn_d2a7_2.json \
+#    simdata/expsvcsimn_d2a7_3.json \
+#    simdata/expsvcsimn_d2a7_4.json \
+#    simdata/expsvcsimn_d2a7_5.json \
+#    simdata/expsvcsimn_d2a7_6.json \
+#    simdata/expsvcsimn_d2a7_7.json \
+#    simdata/expsvcsimn_d2a7_8.json \
+#-c "*"
+#
+#python scratch/simdata.py -a \
+#    simdata/expsvcsimn_d2a8_avg1_8.json -f \
+#    simdata/expsvcsimn_d2a8_1.json \
+#    simdata/expsvcsimn_d2a8_2.json \
+#    simdata/expsvcsimn_d2a8_3.json \
+#    simdata/expsvcsimn_d2a8_4.json \
+#    simdata/expsvcsimn_d2a8_5.json \
+#    simdata/expsvcsimn_d2a8_6.json \
+#    simdata/expsvcsimn_d2a8_7.json \
+#    simdata/expsvcsimn_d2a8_8.json \
+#-c "*"
+#
+#python scratch/simdata.py -a \
+#    simdata/expsvcsimn_d2a9_avg1_8.json -f \
+#    simdata/expsvcsimn_d2a9_1.json \
+#    simdata/expsvcsimn_d2a9_2.json \
+#    simdata/expsvcsimn_d2a9_3.json \
+#    simdata/expsvcsimn_d2a9_4.json \
+#    simdata/expsvcsimn_d2a9_5.json \
+#    simdata/expsvcsimn_d2a9_6.json \
+#    simdata/expsvcsimn_d2a9_7.json \
+#    simdata/expsvcsimn_d2a9_8.json \
+#-c "*"
+#
+#python scratch/simdata.py -a \
+#    simdata/expsvcsimn_d2a10_avg1_8.json -f \
+#    simdata/expsvcsimn_d2a10_1.json \
+#    simdata/expsvcsimn_d2a10_2.json \
+#    simdata/expsvcsimn_d2a10_3.json \
+#    simdata/expsvcsimn_d2a10_4.json \
+#    simdata/expsvcsimn_d2a10_5.json \
+#    simdata/expsvcsimn_d2a10_6.json \
+#    simdata/expsvcsimn_d2a10_7.json \
+#    simdata/expsvcsimn_d2a10_8.json \
+#-c "*"
+#
+#python scratch/simdata.py -a \
+#    simdata/expsvcsimn_d2a11_avg1_8.json -f \
+#    simdata/expsvcsimn_d2a11_1.json \
+#    simdata/expsvcsimn_d2a11_2.json \
+#    simdata/expsvcsimn_d2a11_3.json \
+#    simdata/expsvcsimn_d2a11_4.json \
+#    simdata/expsvcsimn_d2a11_5.json \
+#    simdata/expsvcsimn_d2a11_6.json \
+#    simdata/expsvcsimn_d2a11_7.json \
+#    simdata/expsvcsimn_d2a11_8.json \
+#-c "*"
+#
+#python scratch/simdata.py -a \
+#    simdata/expsvcsimn_d3a1_avg1_8.json -f \
+#    simdata/expsvcsimn_d3a1_1.json \
+#    simdata/expsvcsimn_d3a1_2.json \
+#    simdata/expsvcsimn_d3a1_3.json \
+#    simdata/expsvcsimn_d3a1_4.json \
+#    simdata/expsvcsimn_d3a1_5.json \
+#    simdata/expsvcsimn_d3a1_6.json \
+#    simdata/expsvcsimn_d3a1_7.json \
+#    simdata/expsvcsimn_d3a1_8.json \
+#-c "*"
+#
+#python scratch/simdata.py -a \
+#    simdata/expsvcsimn_d4a1_avg1_8.json -f \
+#    simdata/expsvcsimn_d4a1_1.json \
+#    simdata/expsvcsimn_d4a1_2.json \
+#    simdata/expsvcsimn_d4a1_3.json \
+#    simdata/expsvcsimn_d4a1_4.json \
+#    simdata/expsvcsimn_d4a1_5.json \
+#    simdata/expsvcsimn_d4a1_6.json \
+#    simdata/expsvcsimn_d4a1_7.json \
+#    simdata/expsvcsimn_d4a1_8.json \
+#-c "*"
+#
+#python scratch/simdata.py -a \
+#    simdata/expsvcsimn_d5a1_avg1_8.json -f \
+#    simdata/expsvcsimn_d5a1_1.json \
+#    simdata/expsvcsimn_d5a1_2.json \
+#    simdata/expsvcsimn_d5a1_3.json \
+#    simdata/expsvcsimn_d5a1_4.json \
+#    simdata/expsvcsimn_d5a1_5.json \
+#    simdata/expsvcsimn_d5a1_6.json \
+#    simdata/expsvcsimn_d5a1_7.json \
+#    simdata/expsvcsimn_d5a1_8.json \
+#-c "*"
+#
+#python scratch/simdata.py -a \
+#    simdata/expsvcsimn_d6a1_avg1_8.json -f \
+#    simdata/expsvcsimn_d6a1_1.json \
+#    simdata/expsvcsimn_d6a1_2.json \
+#    simdata/expsvcsimn_d6a1_3.json \
+#    simdata/expsvcsimn_d6a1_4.json \
+#    simdata/expsvcsimn_d6a1_5.json \
+#    simdata/expsvcsimn_d6a1_6.json \
+#    simdata/expsvcsimn_d6a1_7.json \
+#    simdata/expsvcsimn_d6a1_8.json \
+#-c "*"
+#
+#python scratch/simdata.py -a \
+#    simdata/expsvcsimn_d7a1_avg1_8.json -f \
+#    simdata/expsvcsimn_d7a1_1.json \
+#    simdata/expsvcsimn_d7a1_2.json \
+#    simdata/expsvcsimn_d7a1_3.json \
+#    simdata/expsvcsimn_d7a1_4.json \
+#    simdata/expsvcsimn_d7a1_5.json \
+#    simdata/expsvcsimn_d7a1_6.json \
+#    simdata/expsvcsimn_d7a1_7.json \
+#    simdata/expsvcsimn_d7a1_8.json \
+#-c "*"
+#
+#python scratch/simdata.py -a \
+#    simdata/expsvcsimn_d8a1_avg1_8.json -f \
+#    simdata/expsvcsimn_d8a1_1.json \
+#    simdata/expsvcsimn_d8a1_2.json \
+#    simdata/expsvcsimn_d8a1_3.json \
+#    simdata/expsvcsimn_d8a1_4.json \
+#    simdata/expsvcsimn_d8a1_5.json \
+#    simdata/expsvcsimn_d8a1_6.json \
+#    simdata/expsvcsimn_d8a1_7.json \
+#    simdata/expsvcsimn_d8a1_8.json \
+#-c "*"
+#
+#python scratch/simdata.py -a \
+#    simdata/expsvcsimn_d9a1_avg1_8.json -f \
+#    simdata/expsvcsimn_d9a1_1.json \
+#    simdata/expsvcsimn_d9a1_2.json \
+#    simdata/expsvcsimn_d9a1_3.json \
+#    simdata/expsvcsimn_d9a1_4.json \
+#    simdata/expsvcsimn_d9a1_5.json \
+#    simdata/expsvcsimn_d9a1_6.json \
+#    simdata/expsvcsimn_d9a1_7.json \
+#    simdata/expsvcsimn_d9a1_8.json \
+#-c "*"
+#
+#python scratch/simdata.py -a \
+#    simdata/expsvcsimn_d10a1_avg1_8.json -f \
+#    simdata/expsvcsimn_d10a1_1.json \
+#    simdata/expsvcsimn_d10a1_2.json \
+#    simdata/expsvcsimn_d10a1_3.json \
+#    simdata/expsvcsimn_d10a1_4.json \
+#    simdata/expsvcsimn_d10a1_5.json \
+#    simdata/expsvcsimn_d10a1_6.json \
+#    simdata/expsvcsimn_d10a1_7.json \
+#    simdata/expsvcsimn_d10a1_8.json \
+#-c "*"
+#
+#python scratch/simdata.py -a \
+#    simdata/expsvcsimn_d11a1_avg1_8.json -f \
+#    simdata/expsvcsimn_d11a1_1.json \
+#    simdata/expsvcsimn_d11a1_2.json \
+#    simdata/expsvcsimn_d11a1_3.json \
+#    simdata/expsvcsimn_d11a1_4.json \
+#    simdata/expsvcsimn_d11a1_5.json \
+#    simdata/expsvcsimn_d11a1_6.json \
+#    simdata/expsvcsimn_d11a1_7.json \
+#    simdata/expsvcsimn_d11a1_8.json \
+#-c "*"
+
+###
+
+#python scratch/simdata.py -a \
+#    simdata/randsvcsimn_d2a1_avg1_8.json -f \
+#    simdata/randsvcsimn_d2a1_1.json \
+#    simdata/randsvcsimn_d2a1_2.json \
+#    simdata/randsvcsimn_d2a1_3.json \
+#    simdata/randsvcsimn_d2a1_4.json \
+#    simdata/randsvcsimn_d2a1_5.json \
+#    simdata/randsvcsimn_d2a1_6.json \
+#    simdata/randsvcsimn_d2a1_7.json \
+#    simdata/randsvcsimn_d2a1_8.json \
+#-c "*"
+#
+#python scratch/simdata.py -a \
+#    simdata/randsvcsimn_d2a2_avg1_8.json -f \
+#    simdata/randsvcsimn_d2a2_1.json \
+#    simdata/randsvcsimn_d2a2_2.json \
+#    simdata/randsvcsimn_d2a2_3.json \
+#    simdata/randsvcsimn_d2a2_4.json \
+#    simdata/randsvcsimn_d2a2_5.json \
+#    simdata/randsvcsimn_d2a2_6.json \
+#    simdata/randsvcsimn_d2a2_7.json \
+#    simdata/randsvcsimn_d2a2_8.json \
+#-c "*"
+#
+#python scratch/simdata.py -a \
+#    simdata/randsvcsimn_d2a3_avg1_8.json -f \
+#    simdata/randsvcsimn_d2a3_1.json \
+#    simdata/randsvcsimn_d2a3_2.json \
+#    simdata/randsvcsimn_d2a3_3.json \
+#    simdata/randsvcsimn_d2a3_4.json \
+#    simdata/randsvcsimn_d2a3_5.json \
+#    simdata/randsvcsimn_d2a3_6.json \
+#    simdata/randsvcsimn_d2a3_7.json \
+#    simdata/randsvcsimn_d2a3_8.json \
+#-c "*"
+#
+#python scratch/simdata.py -a \
+#    simdata/randsvcsimn_d2a4_avg1_8.json -f \
+#    simdata/randsvcsimn_d2a4_1.json \
+#    simdata/randsvcsimn_d2a4_2.json \
+#    simdata/randsvcsimn_d2a4_3.json \
+#    simdata/randsvcsimn_d2a4_4.json \
+#    simdata/randsvcsimn_d2a4_5.json \
+#    simdata/randsvcsimn_d2a4_6.json \
+#    simdata/randsvcsimn_d2a4_7.json \
+#    simdata/randsvcsimn_d2a4_8.json \
+#-c "*"
+#
+#python scratch/simdata.py -a \
+#    simdata/randsvcsimn_d2a5_avg1_8.json -f \
+#    simdata/randsvcsimn_d2a5_1.json \
+#    simdata/randsvcsimn_d2a5_2.json \
+#    simdata/randsvcsimn_d2a5_3.json \
+#    simdata/randsvcsimn_d2a5_4.json \
+#    simdata/randsvcsimn_d2a5_5.json \
+#    simdata/randsvcsimn_d2a5_6.json \
+#    simdata/randsvcsimn_d2a5_7.json \
+#    simdata/randsvcsimn_d2a5_8.json \
+#-c "*"
+#
+#python scratch/simdata.py -a \
+#    simdata/randsvcsimn_d2a6_avg1_8.json -f \
+#    simdata/randsvcsimn_d2a6_1.json \
+#    simdata/randsvcsimn_d2a6_2.json \
+#    simdata/randsvcsimn_d2a6_3.json \
+#    simdata/randsvcsimn_d2a6_4.json \
+#    simdata/randsvcsimn_d2a6_5.json \
+#    simdata/randsvcsimn_d2a6_6.json \
+#    simdata/randsvcsimn_d2a6_7.json \
+#    simdata/randsvcsimn_d2a6_8.json \
+#-c "*"
+#
+#python scratch/simdata.py -a \
+#    simdata/randsvcsimn_d2a7_avg1_8.json -f \
+#    simdata/randsvcsimn_d2a7_1.json \
+#    simdata/randsvcsimn_d2a7_2.json \
+#    simdata/randsvcsimn_d2a7_3.json \
+#    simdata/randsvcsimn_d2a7_4.json \
+#    simdata/randsvcsimn_d2a7_5.json \
+#    simdata/randsvcsimn_d2a7_6.json \
+#    simdata/randsvcsimn_d2a7_7.json \
+#    simdata/randsvcsimn_d2a7_8.json \
+#-c "*"
+#
+#python scratch/simdata.py -a \
+#    simdata/randsvcsimn_d2a8_avg1_8.json -f \
+#    simdata/randsvcsimn_d2a8_1.json \
+#    simdata/randsvcsimn_d2a8_2.json \
+#    simdata/randsvcsimn_d2a8_3.json \
+#    simdata/randsvcsimn_d2a8_4.json \
+#    simdata/randsvcsimn_d2a8_5.json \
+#    simdata/randsvcsimn_d2a8_6.json \
+#    simdata/randsvcsimn_d2a8_7.json \
+#    simdata/randsvcsimn_d2a8_8.json \
+#-c "*"
+#
+#python scratch/simdata.py -a \
+#    simdata/randsvcsimn_d2a9_avg1_8.json -f \
+#    simdata/randsvcsimn_d2a9_1.json \
+#    simdata/randsvcsimn_d2a9_2.json \
+#    simdata/randsvcsimn_d2a9_3.json \
+#    simdata/randsvcsimn_d2a9_4.json \
+#    simdata/randsvcsimn_d2a9_5.json \
+#    simdata/randsvcsimn_d2a9_6.json \
+#    simdata/randsvcsimn_d2a9_7.json \
+#    simdata/randsvcsimn_d2a9_8.json \
+#-c "*"
+#
+#python scratch/simdata.py -a \
+#    simdata/randsvcsimn_d2a10_avg1_8.json -f \
+#    simdata/randsvcsimn_d2a10_1.json \
+#    simdata/randsvcsimn_d2a10_2.json \
+#    simdata/randsvcsimn_d2a10_3.json \
+#    simdata/randsvcsimn_d2a10_4.json \
+#    simdata/randsvcsimn_d2a10_5.json \
+#    simdata/randsvcsimn_d2a10_6.json \
+#    simdata/randsvcsimn_d2a10_7.json \
+#    simdata/randsvcsimn_d2a10_8.json \
+#-c "*"
+#
+#python scratch/simdata.py -a \
+#    simdata/randsvcsimn_d2a11_avg1_8.json -f \
+#    simdata/randsvcsimn_d2a11_1.json \
+#    simdata/randsvcsimn_d2a11_2.json \
+#    simdata/randsvcsimn_d2a11_3.json \
+#    simdata/randsvcsimn_d2a11_4.json \
+#    simdata/randsvcsimn_d2a11_5.json \
+#    simdata/randsvcsimn_d2a11_6.json \
+#    simdata/randsvcsimn_d2a11_7.json \
+#    simdata/randsvcsimn_d2a11_8.json \
+#-c "*"
+#
+#python scratch/simdata.py -a \
+#    simdata/randsvcsimn_d3a1_avg1_8.json -f \
+#    simdata/randsvcsimn_d3a1_1.json \
+#    simdata/randsvcsimn_d3a1_2.json \
+#    simdata/randsvcsimn_d3a1_3.json \
+#    simdata/randsvcsimn_d3a1_4.json \
+#    simdata/randsvcsimn_d3a1_5.json \
+#    simdata/randsvcsimn_d3a1_6.json \
+#    simdata/randsvcsimn_d3a1_7.json \
+#    simdata/randsvcsimn_d3a1_8.json \
+#-c "*"
+#
+#python scratch/simdata.py -a \
+#    simdata/randsvcsimn_d4a1_avg1_8.json -f \
+#    simdata/randsvcsimn_d4a1_1.json \
+#    simdata/randsvcsimn_d4a1_2.json \
+#    simdata/randsvcsimn_d4a1_3.json \
+#    simdata/randsvcsimn_d4a1_4.json \
+#    simdata/randsvcsimn_d4a1_5.json \
+#    simdata/randsvcsimn_d4a1_6.json \
+#    simdata/randsvcsimn_d4a1_7.json \
+#    simdata/randsvcsimn_d4a1_8.json \
+#-c "*"
+#
+#python scratch/simdata.py -a \
+#    simdata/randsvcsimn_d5a1_avg1_8.json -f \
+#    simdata/randsvcsimn_d5a1_1.json \
+#    simdata/randsvcsimn_d5a1_2.json \
+#    simdata/randsvcsimn_d5a1_3.json \
+#    simdata/randsvcsimn_d5a1_4.json \
+#    simdata/randsvcsimn_d5a1_5.json \
+#    simdata/randsvcsimn_d5a1_6.json \
+#    simdata/randsvcsimn_d5a1_7.json \
+#    simdata/randsvcsimn_d5a1_8.json \
+#-c "*"
+#
+#python scratch/simdata.py -a \
+#    simdata/randsvcsimn_d6a1_avg1_8.json -f \
+#    simdata/randsvcsimn_d6a1_1.json \
+#    simdata/randsvcsimn_d6a1_2.json \
+#    simdata/randsvcsimn_d6a1_3.json \
+#    simdata/randsvcsimn_d6a1_4.json \
+#    simdata/randsvcsimn_d6a1_5.json \
+#    simdata/randsvcsimn_d6a1_6.json \
+#    simdata/randsvcsimn_d6a1_7.json \
+#    simdata/randsvcsimn_d6a1_8.json \
+#-c "*"
+#
+#python scratch/simdata.py -a \
+#    simdata/randsvcsimn_d7a1_avg1_8.json -f \
+#    simdata/randsvcsimn_d7a1_1.json \
+#    simdata/randsvcsimn_d7a1_2.json \
+#    simdata/randsvcsimn_d7a1_3.json \
+#    simdata/randsvcsimn_d7a1_4.json \
+#    simdata/randsvcsimn_d7a1_5.json \
+#    simdata/randsvcsimn_d7a1_6.json \
+#    simdata/randsvcsimn_d7a1_7.json \
+#    simdata/randsvcsimn_d7a1_8.json \
+#-c "*"
+#
+#python scratch/simdata.py -a \
+#    simdata/randsvcsimn_d8a1_avg1_8.json -f \
+#    simdata/randsvcsimn_d8a1_1.json \
+#    simdata/randsvcsimn_d8a1_2.json \
+#    simdata/randsvcsimn_d8a1_3.json \
+#    simdata/randsvcsimn_d8a1_4.json \
+#    simdata/randsvcsimn_d8a1_5.json \
+#    simdata/randsvcsimn_d8a1_6.json \
+#    simdata/randsvcsimn_d8a1_7.json \
+#    simdata/randsvcsimn_d8a1_8.json \
+#-c "*"
+#
+#python scratch/simdata.py -a \
+#    simdata/randsvcsimn_d9a1_avg1_8.json -f \
+#    simdata/randsvcsimn_d9a1_1.json \
+#    simdata/randsvcsimn_d9a1_2.json \
+#    simdata/randsvcsimn_d9a1_3.json \
+#    simdata/randsvcsimn_d9a1_4.json \
+#    simdata/randsvcsimn_d9a1_5.json \
+#    simdata/randsvcsimn_d9a1_6.json \
+#    simdata/randsvcsimn_d9a1_7.json \
+#    simdata/randsvcsimn_d9a1_8.json \
+#-c "*"
+#
+#python scratch/simdata.py -a \
+#    simdata/randsvcsimn_d10a1_avg1_8.json -f \
+#    simdata/randsvcsimn_d10a1_1.json \
+#    simdata/randsvcsimn_d10a1_2.json \
+#    simdata/randsvcsimn_d10a1_3.json \
+#    simdata/randsvcsimn_d10a1_4.json \
+#    simdata/randsvcsimn_d10a1_5.json \
+#    simdata/randsvcsimn_d10a1_6.json \
+#    simdata/randsvcsimn_d10a1_7.json \
+#    simdata/randsvcsimn_d10a1_8.json \
+#-c "*"
+#
+#python scratch/simdata.py -a \
+#    simdata/randsvcsimn_d11a1_avg1_8.json -f \
+#    simdata/randsvcsimn_d11a1_1.json \
+#    simdata/randsvcsimn_d11a1_2.json \
+#    simdata/randsvcsimn_d11a1_3.json \
+#    simdata/randsvcsimn_d11a1_4.json \
+#    simdata/randsvcsimn_d11a1_5.json \
+#    simdata/randsvcsimn_d11a1_6.json \
+#    simdata/randsvcsimn_d11a1_7.json \
+#    simdata/randsvcsimn_d11a1_8.json \
+#-c "*"
+#

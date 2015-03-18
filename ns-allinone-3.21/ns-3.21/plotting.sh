@@ -1150,3 +1150,270 @@ python scratch/plot.py -fc \
     simdata/lgsvcsim_a3_avg1_16.json \
 -m magenta -j 10
 
+# finding the best plot for scale-free topology
+
+python scratch/plot.py -li \
+    simdata/svcsimn_d2a1_1.json \
+    simdata/svcsimn_d2a1_2.json \
+    simdata/svcsimn_d2a1_3.json \
+    simdata/svcsimn_d2a1_4.json \
+    simdata/svcsimn_d2a1_5.json \
+    simdata/svcsimn_d2a1_6.json \
+    simdata/svcsimn_d2a1_7.json \
+    simdata/svcsimn_d2a1_8.json \
+    simdata/svcsimn_d2a1_avg1_8.json \
+-g -l 1 2 3 4 5 6 7 8 avg -lb 1.21 -loc 1
+
+python scratch/plot.py -li simdata/svcsimn_d2a1_6.json -g 1 -l 1 -lb 1.21
+
+python scratch/plot.py -li \
+    simdata/svcsimn_d3a1_1.json \
+    simdata/svcsimn_d3a1_2.json \
+    simdata/svcsimn_d3a1_3.json \
+    simdata/svcsimn_d3a1_4.json \
+    simdata/svcsimn_d3a1_5.json \
+    simdata/svcsimn_d3a1_6.json \
+    simdata/svcsimn_d3a1_7.json \
+    simdata/svcsimn_d3a1_8.json \
+    simdata/svcsimn_d3a1_avg1_8.json \
+-g -l 1 2 3 4 5 6 7 8 avg -lb 1.21 -loc 1
+
+python scratch/plot.py -li simdata/svcsimn_d3a1_2.json -g 1 -l 1 -lb 1.21
+
+python scratch/plot.py -li \
+    simdata/svcsimn_d4a1_1.json \
+    simdata/svcsimn_d4a1_2.json \
+    simdata/svcsimn_d4a1_3.json \
+    simdata/svcsimn_d4a1_4.json \
+    simdata/svcsimn_d4a1_5.json \
+    simdata/svcsimn_d4a1_6.json \
+    simdata/svcsimn_d4a1_7.json \
+    simdata/svcsimn_d4a1_8.json \
+    simdata/svcsimn_d4a1_avg1_8.json \
+-g -l 1 2 3 4 5 6 7 8 avg -lb 1.21 -loc 1
+
+python scratch/plot.py -li simdata/svcsimn_d4a1_2.json -g 1 -l 1 -lb 1.21
+
+python scratch/plot.py -li \
+    simdata/svcsimn_d2a2_1.json \
+    simdata/svcsimn_d2a2_2.json \
+    simdata/svcsimn_d2a2_3.json \
+    simdata/svcsimn_d2a2_4.json \
+    simdata/svcsimn_d2a2_5.json \
+    simdata/svcsimn_d2a2_6.json \
+    simdata/svcsimn_d2a2_7.json \
+    simdata/svcsimn_d2a2_8.json \
+    simdata/svcsimn_d2a2_avg1_8.json \
+-g -l 1 2 3 4 5 6 7 8 avg -lb 1.21 -loc 1
+
+python scratch/plot.py -li simdata/svcsimn_d2a2_4.json -g 1 -l 1 -lb 1.21
+
+python scratch/plot.py -li \
+    simdata/svcsimn_d2a3_1.json \
+    simdata/svcsimn_d2a3_2.json \
+    simdata/svcsimn_d2a3_3.json \
+    simdata/svcsimn_d2a3_4.json \
+    simdata/svcsimn_d2a3_5.json \
+    simdata/svcsimn_d2a3_6.json \
+    simdata/svcsimn_d2a3_7.json \
+    simdata/svcsimn_d2a3_8.json \
+    simdata/svcsimn_d2a3_avg1_8.json \
+-g -l 1 2 3 4 5 6 7 8 avg -lb 1.21 -loc 1
+
+python scratch/plot.py -li simdata/svcsimn_d2a3_6.json -g 1 -l 1 -lb 1.21
+
+python scratch/plot.py -li \
+    simdata/svcsimn_d2a4_1.json \
+    simdata/svcsimn_d2a4_2.json \
+    simdata/svcsimn_d2a4_3.json \
+    simdata/svcsimn_d2a4_4.json \
+    simdata/svcsimn_d2a4_5.json \
+    simdata/svcsimn_d2a4_6.json \
+    simdata/svcsimn_d2a4_7.json \
+    simdata/svcsimn_d2a4_8.json \
+    simdata/svcsimn_d2a4_avg1_8.json \
+-g -l 1 2 3 4 5 6 7 8 avg -lb 1.21 -loc 1
+
+python scratch/plot.py -li simdata/svcsimn_d2a4_2.json -g 1 -l 1 -lb 1.21
+
+# finding the best plot for exponential topology
+
+python scratch/plot.py -di \
+    simdata/expsvcsimn_d2a1_1.json \
+    simdata/expsvcsimn_d2a1_2.json \
+    simdata/expsvcsimn_d2a1_3.json \
+    simdata/expsvcsimn_d2a1_4.json \
+    simdata/expsvcsimn_d2a1_5.json \
+    simdata/expsvcsimn_d2a1_6.json \
+    simdata/expsvcsimn_d2a1_7.json \
+    simdata/expsvcsimn_d2a1_8.json \
+    simdata/expsvcsimn_d2a1_avg1_8.json \
+-l 1 2 3 4 5 6 7 8 avg -b 100 -loc 1
+
+python scratch/plot.py -di simdata/expsvcsimn_d2a1_5.json -b 100 -logy 1
+
+python scratch/plot.py -di \
+    simdata/expsvcsimn_d3a1_1.json \
+    simdata/expsvcsimn_d3a1_2.json \
+    simdata/expsvcsimn_d3a1_3.json \
+    simdata/expsvcsimn_d3a1_4.json \
+    simdata/expsvcsimn_d3a1_5.json \
+    simdata/expsvcsimn_d3a1_6.json \
+    simdata/expsvcsimn_d3a1_7.json \
+    simdata/expsvcsimn_d3a1_8.json \
+    simdata/expsvcsimn_d3a1_avg1_8.json \
+-l 1 2 3 4 5 6 7 8 avg -b 100 -loc 1
+
+python scratch/plot.py -di simdata/expsvcsimn_d3a1_2.json -b 100 -logy 1
+
+python scratch/plot.py -di \
+    simdata/expsvcsimn_d4a1_1.json \
+    simdata/expsvcsimn_d4a1_2.json \
+    simdata/expsvcsimn_d4a1_3.json \
+    simdata/expsvcsimn_d4a1_4.json \
+    simdata/expsvcsimn_d4a1_5.json \
+    simdata/expsvcsimn_d4a1_6.json \
+    simdata/expsvcsimn_d4a1_7.json \
+    simdata/expsvcsimn_d4a1_8.json \
+    simdata/expsvcsimn_d4a1_avg1_8.json \
+-l 1 2 3 4 5 6 7 8 avg -b 100 -loc 1
+
+python scratch/plot.py -di simdata/expsvcsimn_d4a1_3.json -b 100 -logy 1
+
+python scratch/plot.py -di \
+    simdata/expsvcsimn_d2a2_1.json \
+    simdata/expsvcsimn_d2a2_2.json \
+    simdata/expsvcsimn_d2a2_3.json \
+    simdata/expsvcsimn_d2a2_4.json \
+    simdata/expsvcsimn_d2a2_5.json \
+    simdata/expsvcsimn_d2a2_6.json \
+    simdata/expsvcsimn_d2a2_7.json \
+    simdata/expsvcsimn_d2a2_8.json \
+    simdata/expsvcsimn_d2a2_avg1_8.json \
+-l 1 2 3 4 5 6 7 8 avg -b 100 -loc 1
+
+python scratch/plot.py -di simdata/expsvcsimn_d2a2_5.json -b 100 -logy 1
+
+python scratch/plot.py -di \
+    simdata/expsvcsimn_d2a3_1.json \
+    simdata/expsvcsimn_d2a3_2.json \
+    simdata/expsvcsimn_d2a3_3.json \
+    simdata/expsvcsimn_d2a3_4.json \
+    simdata/expsvcsimn_d2a3_5.json \
+    simdata/expsvcsimn_d2a3_6.json \
+    simdata/expsvcsimn_d2a3_7.json \
+    simdata/expsvcsimn_d2a3_8.json \
+    simdata/expsvcsimn_d2a3_avg1_8.json \
+-l 1 2 3 4 5 6 7 8 avg -b 100 -loc 1
+
+python scratch/plot.py -di simdata/expsvcsimn_d2a3_6.json -b 100 -logy 1
+
+python scratch/plot.py -di \
+    simdata/expsvcsimn_d2a4_1.json \
+    simdata/expsvcsimn_d2a4_2.json \
+    simdata/expsvcsimn_d2a4_3.json \
+    simdata/expsvcsimn_d2a4_4.json \
+    simdata/expsvcsimn_d2a4_5.json \
+    simdata/expsvcsimn_d2a4_6.json \
+    simdata/expsvcsimn_d2a4_7.json \
+    simdata/expsvcsimn_d2a4_8.json \
+    simdata/expsvcsimn_d2a4_avg1_8.json \
+-l 1 2 3 4 5 6 7 8 avg -b 100 -loc 1
+
+python scratch/plot.py -di simdata/expsvcsimn_d2a4_1.json -b 100 -logy 1
+
+# finding the best plot for random topology
+
+python scratch/plot.py -di \
+    simdata/randsvcsimn_d2a1_1.json \
+    simdata/randsvcsimn_d2a1_2.json \
+    simdata/randsvcsimn_d2a1_3.json \
+    simdata/randsvcsimn_d2a1_4.json \
+    simdata/randsvcsimn_d2a1_5.json \
+    simdata/randsvcsimn_d2a1_6.json \
+    simdata/randsvcsimn_d2a1_7.json \
+    simdata/randsvcsimn_d2a1_8.json \
+    simdata/randsvcsimn_d2a1_avg1_8.json \
+-l 1 2 3 4 5 6 7 8 avg -b 100 -loc 1
+
+python scratch/plot.py -di simdata/randsvcsimn_d2a1_4.json -b 100
+
+python scratch/plot.py -di \
+    simdata/randsvcsimn_d3a1_1.json \
+    simdata/randsvcsimn_d3a1_2.json \
+    simdata/randsvcsimn_d3a1_3.json \
+    simdata/randsvcsimn_d3a1_4.json \
+    simdata/randsvcsimn_d3a1_5.json \
+    simdata/randsvcsimn_d3a1_6.json \
+    simdata/randsvcsimn_d3a1_7.json \
+    simdata/randsvcsimn_d3a1_8.json \
+    simdata/randsvcsimn_d3a1_avg1_8.json \
+-l 1 2 3 4 5 6 7 8 avg -b 100 -loc 1
+
+python scratch/plot.py -di simdata/randsvcsimn_d3a1_3.json -b 100 
+
+python scratch/plot.py -di \
+    simdata/randsvcsimn_d4a1_1.json \
+    simdata/randsvcsimn_d4a1_2.json \
+    simdata/randsvcsimn_d4a1_3.json \
+    simdata/randsvcsimn_d4a1_4.json \
+    simdata/randsvcsimn_d4a1_5.json \
+    simdata/randsvcsimn_d4a1_6.json \
+    simdata/randsvcsimn_d4a1_7.json \
+    simdata/randsvcsimn_d4a1_8.json \
+    simdata/randsvcsimn_d4a1_avg1_8.json \
+-l 1 2 3 4 5 6 7 8 avg -b 100 -loc 1
+
+python scratch/plot.py -di simdata/randsvcsimn_d4a1_2.json -b 100 
+
+python scratch/plot.py -di \
+    simdata/randsvcsimn_d2a2_1.json \
+    simdata/randsvcsimn_d2a2_2.json \
+    simdata/randsvcsimn_d2a2_3.json \
+    simdata/randsvcsimn_d2a2_4.json \
+    simdata/randsvcsimn_d2a2_5.json \
+    simdata/randsvcsimn_d2a2_6.json \
+    simdata/randsvcsimn_d2a2_7.json \
+    simdata/randsvcsimn_d2a2_8.json \
+    simdata/randsvcsimn_d2a2_avg1_8.json \
+-l 1 2 3 4 5 6 7 8 avg -b 100 -loc 1
+
+python scratch/plot.py -di simdata/randsvcsimn_d2a2_3.json -b 100 
+
+python scratch/plot.py -di \
+    simdata/randsvcsimn_d2a3_1.json \
+    simdata/randsvcsimn_d2a3_2.json \
+    simdata/randsvcsimn_d2a3_3.json \
+    simdata/randsvcsimn_d2a3_4.json \
+    simdata/randsvcsimn_d2a3_5.json \
+    simdata/randsvcsimn_d2a3_6.json \
+    simdata/randsvcsimn_d2a3_7.json \
+    simdata/randsvcsimn_d2a3_8.json \
+    simdata/randsvcsimn_d2a3_avg1_8.json \
+-l 1 2 3 4 5 6 7 8 avg -b 100 -loc 1
+
+python scratch/plot.py -di simdata/randsvcsimn_d2a3_5.json -b 100 
+
+python scratch/plot.py -di \
+    simdata/randsvcsimn_d2a4_1.json \
+    simdata/randsvcsimn_d2a4_2.json \
+    simdata/randsvcsimn_d2a4_3.json \
+    simdata/randsvcsimn_d2a4_4.json \
+    simdata/randsvcsimn_d2a4_5.json \
+    simdata/randsvcsimn_d2a4_6.json \
+    simdata/randsvcsimn_d2a4_7.json \
+    simdata/randsvcsimn_d2a4_8.json \
+    simdata/randsvcsimn_d2a4_avg1_8.json \
+-l 1 2 3 4 5 6 7 8 avg -b 100 -loc 1
+
+python scratch/plot.py -di simdata/randsvcsimn_d2a4_5.json -b 100 
+
+####
+
+python scratch/plot.py -li simdata/svcsimn_d2a1_6.json simdata/svcsimn_d3a1_2.json simdata/svcsimn_d4a1_2.json -l '$\langle{dep}\rangle = 1$' '$\langle{dep}\rangle \approx 1.5$' '$\langle{dep}\rangle \approx 2$' -m var -t 'In-degree distribution of some generated scale-free service networks' -xl 'In-degree $k_{in}$' -yl '$P(k_{in})$'
+python scratch/plot.py -di simdata/expsvcsimn_d2a1_5.json simdata/expsvcsimn_d3a1_2.json simdata/expsvcsimn_d4a1_3.json -l '$\langle{dep}\rangle = 1, \langle{alt}\rangle = 0$' '$\langle{dep}\rangle \approx 1.5, \langle{alt}\rangle = 0$' '$\langle{dep}\rangle \approx 2, \langle{alt}\rangle = 0$' -m var -t 'In-degree distribution of some generated exponential service networks' -xl 'In-degree $k_{in}$' -yl '$P(k_{in})$' -logy 1
+python scratch/plot.py -di simdata/randsvcsimn_d2a1_5.json simdata/randsvcsimn_d3a1_2.json simdata/randsvcsimn_d4a1_3.json -l '$\langle{dep}\rangle = 1, \langle{alt}\rangle = 0$' '$\langle{dep}\rangle \approx 1.5, \langle{alt}\rangle = 0$' '$\langle{dep}\rangle \approx 2, \langle{alt}\rangle = 0$' -m var -t 'In-degree distribution of some generated random service networks' -xl 'In-degree $k_{in}$' -yl '$P(k_{in})$'
+
+python scratch/plot.py -id simdata/svcsimn_d4a1_4.json -m plus -t 'In-degree of each random failed service during cascading failure simulation' -xl Timestep -yl 'In-degree' -axisfsize large -j 1
+python scratch/plot.py -ad simdata/svcsimn_d4a1_4.json -m plus -t 'Average in-degree of the available services during cascading failure simulation' -xl Timestep -yl 'Average in-degree' -axisfsize large -j 150    
+

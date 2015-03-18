@@ -8,7 +8,7 @@ import textwrap
 import csv
 
 GAMMA = u'\u03b3'
-LOGBINBASE = 1.1
+LOGBINBASE = 1.21
 STEP = 300 #300
 IFNONE = [] # to be returned when getargval does not find a key
 FUNC_FAIL = '-f'
@@ -25,9 +25,10 @@ FUNC_OUTDEGEVOL = '-od'
 #FUNC_CASCINDEGEVOL = '-ci'
 #FUNC_CASCOUTDEGEVOL = '-co'
 FUNC_TOTDEGEVOL = '-td'
+FUNC_AVGDEGEVOL = '-ad'
 FUNC_PLOTFROMFILE = '-pl'
 FUNC_PRINTDEPTH = '-pd'
-FUNCOPTS = (FUNC_FAIL, FUNC_FAILCASC, FUNC_EFF, FUNC_LOGINDEG, FUNC_LOGOUTDEG, FUNC_HISTINDEG, FUNC_HISTOUTDEG, FUNC_DISTINDEG, FUNC_DISTOUTDEG, FUNC_INDEGEVOL, FUNC_OUTDEGEVOL, FUNC_TOTDEGEVOL, FUNC_PRINTDEPTH, FUNC_PLOTFROMFILE)
+FUNCOPTS = (FUNC_FAIL, FUNC_FAILCASC, FUNC_EFF, FUNC_LOGINDEG, FUNC_LOGOUTDEG, FUNC_HISTINDEG, FUNC_HISTOUTDEG, FUNC_DISTINDEG, FUNC_DISTOUTDEG, FUNC_INDEGEVOL, FUNC_OUTDEGEVOL, FUNC_TOTDEGEVOL, FUNC_AVGDEGEVOL, FUNC_PRINTDEPTH, FUNC_PLOTFROMFILE)
 LINESTYLES = ('-', '--', '-.', ':')
 FILENAME = 'depthstat.csv'
 LOCONPLOT = 11 # legend is written at the end of each series
@@ -46,6 +47,7 @@ MARKERS = {'var-':['wo-', 'ks-', 'wv-', 'kD-', 'w+-', 'kx-', 'w*-', 'k|-', 'wp-'
         , 'trisym':{'linestyle':'', 'markers':['o', 's', '^', 'v', 'D', 'p', '+', 'x', '*', '|', '.', ',', '1', '2', '3', '4'],  'markerfacecolors':['0.3', 'white', 'black']}
         , 'tricol-':{'linestyle':'-', 'markers':['o', 's', '^', 'v', 'D', 'p', '+', 'x', '*', '|', '.', ',', '1', '2', '3', '4'],  'markerfacecolors':['red', 'blue', 'orange']}
         , 'tricol':{'linestyle':'', 'markers':['o', 's', '^', 'v', 'D', 'p', '+', 'x', '*', '|', '.', ',', '1', '2', '3', '4'],  'markerfacecolors':['red', 'blue', 'orange']}
+        , 'trirby':{'linestyle':'', 'markers':['o', 's', '^', 'v', 'D', 'p', '+', 'x', '*', '|', '.', ',', '1', '2', '3', '4'],  'markerfacecolors':['red', 'blue', 'yellow']}
         , 'trired-':{'linestyle':'-', 'markers':['o', 's', '^', 'v', 'D', 'p', '+', 'x', '*', '|', '.', ',', '1', '2', '3', '4'],  'markerfacecolors':['red']}
         , 'trired':{'linestyle':'', 'markers':['o', 's', '^', 'v', 'D', 'p', '+', 'x', '*', '|', '.', ',', '1', '2', '3', '4'],  'markerfacecolors':['red']}
         , 'triblue-':{'linestyle':'-', 'markers':['o', 's', '^', 'v', 'D', 'p', '+', 'x', '*', '|', '.', ',', '1', '2', '3', '4'],  'markerfacecolors':['blue']}
@@ -56,17 +58,20 @@ MARKERS = {'var-':['wo-', 'ks-', 'wv-', 'kD-', 'w+-', 'kx-', 'w*-', 'k|-', 'wp-'
         , 'triorange':{'linestyle':'', 'markers':['o', 's', '^', 'v', 'D', 'p', '+', 'x', '*', '|', '.', ',', '1', '2', '3', '4'],  'markerfacecolors':['orange']}
         , 'tribrown':{'linestyle':'', 'markers':['o', 's', '^', 'v', 'D', 'p', '+', 'x', '*', '|', '.', ',', '1', '2', '3', '4'],  'markerfacecolors':['sienna']}
         , 'trifive-':{'linestyle':'-', 'markers':['o', 's', '^', 'v', 'D', 'p', '+', 'x', '*', '|', '.', ',', '1', '2', '3', '4'],  'markerfacecolors':['red', 'blue', 'orange', 'green', 'cyan']}
+        , 'trifive':{'linestyle':'', 'markers':['o', 's', '^', 'v', 'D', 'p', '+', 'x', '*', '|', '.', ',', '1', '2', '3', '4'],  'markerfacecolors':['red', 'blue', 'orange', 'green', 'cyan']}
         , 'black-':['ko-', 'ks-', 'k^-', 'kv-', 'kD-', 'k+-', 'kx-', 'k*-', 'k|-', 'kp-', 'k.-', 'k,-', 'k1-', 'k2-', 'k3-', 'k4-']
         , 'black':['ko', 'ks', 'k^', 'kv', 'kD', 'k+', 'kx', 'k*', 'k|', 'kp', 'k.', 'k,', 'k1', 'k2', 'k3', 'k4']
         , 'white-':['wo-', 'ws-', 'w^-', 'wv-', 'wD-', 'w+-', 'wx-', 'w*-', 'w|-', 'wp-', 'w.-', 'w,-', 'w1-', 'w2-', 'w3-', 'w4-']
         , 'white':['wo', 'ws', 'w^', 'wv', 'wD', 'w+', 'wx', 'w*', 'w|', 'wp', 'w.', 'w,', 'w1', 'w2', 'w3', 'w4']
         , 'red-':['ro-', 'rs-', 'r^-', 'rv-', 'rD-', 'r+-', 'rx-', 'r*-', 'r|-', 'rp-', 'r.-', 'r,-', 'r1-', 'r2-', 'r3-', 'r4-']
         , 'red':['ro', 'rs', 'r^', 'rv', 'rD', 'r+', 'rx', 'r*', 'r|', 'rp', 'r.', 'r,', 'r1', 'r2', 'r3', 'r4']
+        , 'yellow':['yo', 'ys', 'y^', 'yv', 'yD', 'y+', 'yx', 'y*', 'y|', 'yp', 'y.', 'y,', 'y1', 'y2', 'y3', 'y4']
         , 'green':['go', 'gs', 'g^', 'gv', 'gD', 'g+', 'gx', 'g*', 'g|', 'gp', 'g.', 'g,', 'g1', 'g2', 'g3', 'g4']
         , 'blue':['bo', 'bs', 'b^', 'bv', 'bD', 'b+', 'bx', 'b*', 'b|', 'bp', 'b.', 'b,', 'b1', 'b2', 'b3', 'b4']
         , 'magenta':['mo', 'ms', 'm^', 'mv', 'mD', 'm+', 'mx', 'm*', 'm|', 'mp', 'm.', 'm,', 'm1', 'm2', 'm3', 'm4']
         , 'cyan':['co', 'cs', 'c^', 'cv', 'cD', 'c+', 'cx', 'c*', 'c|', 'cp', 'c.', 'c,', 'c1', 'c2', 'c3', 'c4']
         , 'plus':['k+']
+        , 'cross':['kx']
         , 'diamond':['gd']
         , 'reddia':['rd']
         , 'reddia-':['rd-']
@@ -179,7 +184,8 @@ def drawloglogdist(ds, xlabel, ylabel, title
     , legloc=2
     , ax=None
     , ncol=1
-    , numpoints=1):
+    , numpoints=1
+    , isexpline=True):
     # degree distribution in loglog scale
 
     if not ax:
@@ -238,7 +244,8 @@ def drawloglogdist(ds, xlabel, ylabel, title
 
         #plt.plot(xforlog, 10**p(logx), mark[0] + ':')
         #plt.plot(xforlog, 10**p(logx), markerfacecolor=markerfacecolor, linestyle=':')
-        ax.plot(xforlog, 10**p(logx), markerfacecolor=markerfacecolor, linestyle=':')
+        if isexpline:
+            ax.plot(xforlog, 10**p(logx), markerfacecolor=markerfacecolor, linestyle=':')
 
     #setaxislim(xlim, ylim, plt=plt)
     setaxislim(xlim, ylim, ax=ax)
@@ -434,13 +441,10 @@ def plotdegdist(ds, labels, markset='var'
     # plot degree distribution from data set
     # data set is a list of x and y data to plot
 
-#    print nbins
-
     lsdeg = []
     for degrees in ds:
         y, bins = np.histogram(degrees, bins=nbins, density=density, normed=False)
         x = bins[:-1]
-        print x
 
         if norm:
             nbofnodes = float(sum(y))
@@ -455,13 +459,10 @@ def plotdegdist(ds, labels, markset='var'
                 lsx.append(round(x[i]))
 
         lsdeg.append([lsx, lsy])
-#        lsdeg.append([x, y])
 
     plotdata(lsdeg, labels, title, xylabels
         , markset, isbase=False, logx=logx, logy=logy, xlim=xlim, ylim=ylim, isline=False, legloc=legloc, axisfsize=axisfsize, ax=ax, polyfit=polyfit
         , ncol=ncol, numpoints=numpoints)
-
-    #print lsdeg
 
 def plotfailnodes(ds, labels, markset='var'
     , isbase=True
@@ -653,11 +654,10 @@ def loaddata(ds, func, data, filename, step=STEP, norm=True):
 #            ds[-1].append(data['xval'])
 
     elif func in [FUNC_DISTINDEG, FUNC_DISTOUTDEG]:
-        if FUNC_DISTINDEG:
+        if func == FUNC_DISTINDEG:
             degrees = data['indegree']
         else:
             degrees = data['outdegree']
-
         ds.append(degrees)
 
     elif func in [FUNC_LOGINDEG, FUNC_HISTINDEG]:
@@ -683,12 +683,26 @@ def loaddata(ds, func, data, filename, step=STEP, norm=True):
 
         ds.append([lsx, lsy])
 
-    elif func == FUNC_TOTDEGEVOL:
+    elif func in [FUNC_TOTDEGEVOL, FUNC_AVGDEGEVOL]:
         lsx = []; lsy = []
-        totdegree = sum(data['indegree']) # total degree that has been created
-        for i in range(len(data['mandfail'])-1, -1, -step):
-            lsx.append(i)
-            lsy.append(totdegree - data['mandfail'][i] - data['altfail'][i])
+        linkscreated = data['mandcreated'][-1] + data['altcreated'][-1] # number of links created
+        
+        if func == FUNC_TOTDEGEVOL:
+            for i in range(len(data['mandfail'])-1, -1, -step):
+                lsx.append(i)
+                lsy.append(linkscreated - data['mandfail'][i] - data['altfail'][i])
+
+        else:
+            # func == FUNC_AVGDEGEVOL:
+            for i in range(len(data['mandfail'])-2, -1, -step):
+
+                linksact = linkscreated - data['mandfail'][i] - data['altfail'][i]
+                nodesact = data['nodescreated'][-1] - data['nodesfail'][i]
+                try:
+                    lsy.append(1.0 * linksact / nodesact)
+                    lsx.append(i)
+                except ZeroDivisionError:
+                    pass 
 
         ds.append([lsx, lsy])
 
@@ -713,7 +727,7 @@ def readargv(argv, pos=1, opt='', dictarg={}):
             dictarg['func'] = currarg
             currarg = 'files'
 
-        elif currarg not in ['-l', '-m', '-s', '-x', '-r', '-xl', '-yl', '-t', '-logx', '-logy', '-loc', '-b', '-xlim', '-ylim', '-v', '-axisfsize', '-j', '-lb', '-g', '-ncol', '-numpoints', '-lm', '-lbb']:
+        elif currarg not in ['-l', '-m', '-s', '-x', '-r', '-xl', '-yl', '-t', '-logx', '-logy', '-loc', '-b', '-xlim', '-ylim', '-v', '-axisfsize', '-j', '-lb', '-g', '-gl', '-ncol', '-numpoints', '-lm', '-lbb']:
             print "*** %s" % currarg
             printusage()
             return
@@ -850,7 +864,9 @@ def main(argv):
             , ylim=ylim
             , axisfsize=axisfsize
             , logbinbase=lb
-            , showexp=int(getargval(dictarg, '-g', [1])[0]))
+            , legloc=int(getargval(dictarg, '-loc', ['1'])[0])
+            , showexp=int(getargval(dictarg, '-g', [1])[0])
+            , isexpline=int(getargval(dictarg, '-gl', [1])[0]))
 
         processplot(plt, getargval(dictarg, '-s', [None])[0])
 
@@ -878,11 +894,12 @@ def main(argv):
             , logx=logx, logy=logy
             , xlim=xlim
             , ylim=ylim
+            , legloc=int(getargval(dictarg, '-loc', ['1'])[0])
             , axisfsize=axisfsize)
 
         processplot(plt, getargval(dictarg, '-s', [None])[0])
 
-    elif func in [FUNC_INDEGEVOL, FUNC_OUTDEGEVOL, FUNC_TOTDEGEVOL]:
+    elif func in [FUNC_INDEGEVOL, FUNC_OUTDEGEVOL, FUNC_TOTDEGEVOL, FUNC_AVGDEGEVOL]:
         plotdata(ds
             , getargval(dictarg, '-l')
             , getargval(dictarg, '-t')[0]
