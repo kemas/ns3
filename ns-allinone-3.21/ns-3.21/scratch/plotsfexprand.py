@@ -11,8 +11,7 @@ def getargval(dictarg, key, ifnone=p.IFNONE):
 def main(argv):
     lsarg = []
 
-
-    lsarg.append({'func':['-li'], 'files':['simdata/svcsimn_10k_10k_d2_a7_i10_avg1_8.json'], '-m':['reddia'], '-l':['scale-free'], '-g':[0], '-lb':['1.21']})
+    lsarg.append({'func':['-li'], 'files':['simdata/svcsimn_10k_10k_d2_a7_i10_avg1_8.json'], '-m':['reddia'], '-l':['scale-free'], '-g':[0], '-lb':['1.21'], '-gl':[0]})
     lsarg.append({'func':['-di'], 'files':['simdata/expsvcsimn_10k_10k_d2_a7_i10_avg1_8.json'], '-m':['bluepenta'], '-b':['100'], '-l':['exponential']})
     lsarg.append({'func':['-di'], 'files':['simdata/randsvcsimn_10k_10k_d2_a11_i10_avg1_8.json'], '-m':['trihexaorg'], '-b':['100'], '-l':['random'], '-logx':[1], '-logy':[1], '-xlim':[1, 500], '-ylim':[1e-6, 1], '-t':['Scale-free, exponential, and random network degree distribution'], '-xl':['In-degree $k_{in}$'], '-yl':['Probability distribution $P(k_{in})$'], '-axisfsize':['large'], '-ncol':[1], '-loc':[1]})
 
@@ -83,7 +82,8 @@ def main(argv):
                 , legloc=int(getargval(lsarg[i], '-loc', [1])[0])
                 , ax=p.plt.gca()
                 , ncol=ncol
-                , numpoints=numpoints)
+                , numpoints=numpoints
+                , isexpline=int(getargval(lsarg[i], '-gl', [1])[0]))
 
         elif func in [p.FUNC_DISTINDEG, p.FUNC_DISTOUTDEG]:
             # degree distribution plot
