@@ -173,7 +173,7 @@ def logbins(amax, amin=0, base=LOGBINBASE):
     return bins
 
 def drawloglogdist(ds, xlabel, ylabel, title
-    , labels
+    , labels=[]
     , markset='var'
     , density=True
     , xlim=None, ylim=None
@@ -304,8 +304,8 @@ def drawloglogdist(ds, xlabel, ylabel, title
 #    else:
 #        plt.show()
 
-def plotdata(ds, labels, title
-    , xylabels # {'x':'...', 'y':'...'}
+def plotdata(ds, labels=[], title=''
+    , xylabels={'x':'', 'y':''} # {'x':'...', 'y':'...'}
     , markset='var'
     , isbase=True
     , logx=False
@@ -422,7 +422,7 @@ def plotdata(ds, labels, title
 #    else:
 #        plt.show()
 
-def plotdegdist(ds, labels, markset='var' 
+def plotdegdist(ds, labels=[], markset='var' 
     , title='Degree distribution'
     , xylabels={'x':'Degree', 'y':'Number of Nodes'}
     , nbins=20
